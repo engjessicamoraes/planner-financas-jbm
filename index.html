@@ -275,6 +275,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
 @media(max-width:760px){.mes-color-grid{grid-template-columns:repeat(2,1fr)}.painel-salario-hero-v{font-size:28px}}
 
 #fat-cats.fat-full-list{max-height:none!important;overflow:visible!important}
+#conta-lista.fat-full-list{max-height:none!important;overflow:visible!important}
 </style>
 
 <style id="ajuste-v25-saldo-conta">
@@ -370,7 +371,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
     <div>
       <!-- Conta extra -->
       <div class="sec" style="margin-bottom:14px">
-        <div class="sec-h"><div class="sec-t">Conta corrente</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="conta-tot-hdr"></div><button class="mn-add" id="btn-add-conta" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-saldo-inicial" style="font-size:11px;padding:5px 10px">Saldo inicial</button><button onclick="toggleSection('conta-body','conta-chev')" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Minimizar/expandir"><svg id="conta-chev" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div><div id="conta-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease"><div id="saldo-inicial-display"></div>
+        <div class="sec-h"><div class="sec-t">Conta corrente</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="conta-tot-hdr"></div><button class="mn-add" id="btn-add-conta" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-saldo-inicial" style="font-size:11px;padding:5px 10px">Saldo inicial</button><button class="fb" id="btn-ver-tudo-conta" onclick="toggleVerTudoConta()" style="font-size:11px;padding:5px 10px">Ver tudo</button><button onclick="toggleSection('conta-body','conta-chev')" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Minimizar/expandir"><svg id="conta-chev" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div><div id="conta-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease"><div id="saldo-inicial-display"></div>
         <div id="conta-lista"></div>
       </div></div>
     </div>
@@ -6913,7 +6914,7 @@ renderContaLista=function(m){
   arr.forEach(function(i){var d=i.data||dataBase;if(d!==last){last=d;var totalDia=arr.filter(function(x){return (x.data||dataBase)===d;}).reduce(function(a,x){return a+signedVal(x);},0);h+='<div data-sep class="fat-date-sep"><span>'+fmtDataCurta(d)+'</span><div></div><em class="conta-day-total">'+(totalDia>=0?'+':'-')+RK(Math.abs(totalDia))+'</em></div>';}
     saldo+=signedVal(i); var entrada=signedVal(i)>=0; var cls=i._conc?'li conciliado':'li';
     if(i.base){h+='<div class="'+cls+'"><div class="li-dot" style="background:var(--ok)"></div><div class="li-info"><div class="li-nome">'+E(i.nome)+'</div><div class="li-sub">Entrada base · '+E(i.cat)+'</div></div><div class="li-val entrada">+'+RK(i.valor)+'</div><div class="saldo-after">Saldo após<strong style="color:'+(saldo>=0?'var(--ok)':'var(--bad)')+'">'+(saldo<0?'-':'')+RK(Math.abs(saldo))+'</strong></div></div>';}
-    else{h+='<div class="'+cls+'"><div class="li-dot" style="background:'+(entrada?'var(--ok)':(CORES[i.cat]||'var(--bad)'))+'"></div><div class="li-info"><div class="li-nome">'+E(i.nome)+'</div><div class="li-sub">'+E(i.cat||i.tipo)+' · '+E(i.tipo||'')+(i.obs?' · '+E(i.obs):'')+'</div></div><div class="li-val '+(entrada?'entrada':'saida')+'">'+(entrada?'+':'-')+RK(Math.abs(parseFloat(i.valor||0)||0))+'</div><div class="saldo-after">Saldo após<strong style="color:'+(saldo>=0?'var(--ok)':'var(--bad)')+'">'+(saldo<0?'-':'')+RK(Math.abs(saldo))+'</strong></div><button class="conc-btn '+(i._conc?'on':'')+'" data-conc="'+i.id+'">'+(i._conc?'Conferido':'Conferir')+'</button><div class="li-acts"><button class="li-btn e" data-edit="'+i.id+'"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button><button class="li-btn" data-del="'+i.id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button></div></div>';}
+    else{h+='<div class="'+cls+'"><div class="li-dot" style="background:'+(entrada?'var(--ok)':(CORES[i.cat]||'var(--bad)'))+'"></div><div class="li-info"><div class="li-nome">'+E(i.nome)+'</div><div class="li-sub">'+E(i.cat||i.tipo)+' · '+E(i.tipo||'')+(i.obs?' · '+E(i.obs):'')+'</div></div><div class="li-val '+(entrada?'entrada':'saida')+'">'+(entrada?'+':'-')+RK(Math.abs(parseFloat(i.valor||0)||0))+'</div><div class="saldo-after">Saldo após<strong style="color:'+(saldo>=0?'var(--ok)':'var(--bad)')+'">'+(saldo<0?'-':'')+RK(Math.abs(saldo))+'</strong></div><div class="li-acts"><button class="li-btn e" data-edit="'+i.id+'"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button><button class="li-btn" data-del="'+i.id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button></div></div>';}
   });
   if(!arr.length)h='<div class="empty" style="padding:14px">Nenhum lançamento.</div>'; sh('conta-lista',h); var hdr=el('conta-tot-hdr'); if(hdr){hdr.textContent=(saldo<0?'-':'')+RK(Math.abs(saldo)); hdr.style.color=saldo>=0?'var(--ok)':'var(--bad)';}
 };
@@ -7251,7 +7252,7 @@ renderContaLista=function(m){
       +'<div class="li-val '+(entrada?'entrada':'saida')+'">'+(entrada?'+':'-')+RK(valorAbs)+'</div>'
       +'<div class="saldo-after">Saldo após<strong style="color:'+(saldo>=0?'var(--ok)':'var(--bad)')+'">'+(saldo<0?'-':'')+RK(Math.abs(saldo))+'</strong></div>';
     if(!i.base){
-      h+='<button class="conc-btn '+(i._conc?'on':'')+'" data-conc="'+i.id+'">'+(i._conc?'Conferido':'Conferir')+'</button>'
+      h+=''
         +'<div class="li-acts"><button class="li-btn e" data-edit="'+i.id+'"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button><button class="li-btn" data-del="'+i.id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button></div>';
     }
     h+='</div>';
@@ -7546,6 +7547,14 @@ function toggleVerTudoCartao(){
   if(fc){ if(CARTAO_VER_TUDO)fc.classList.add('fat-full-list'); else fc.classList.remove('fat-full-list'); }
   if(b)b.textContent=CARTAO_VER_TUDO?'Ver menos':'Ver tudo';
 }
+var CONTA_VER_TUDO=false;
+function toggleVerTudoConta(){
+  CONTA_VER_TUDO=!CONTA_VER_TUDO;
+  var cl=el('conta-lista');
+  var b=el('btn-ver-tudo-conta');
+  if(cl){ if(CONTA_VER_TUDO)cl.classList.add('fat-full-list'); else cl.classList.remove('fat-full-list'); }
+  if(b)b.textContent=CONTA_VER_TUDO?'Ver menos':'Ver tudo';
+}
 
 
 /* V30: conta corrente em lista contínua, sem separadores por data. A data fica discreta na linha. */
@@ -7582,7 +7591,7 @@ renderContaLista=function(m){
       +'<div class="li-info"><div class="li-nome">'+E(i.nome||'Lançamento')+'</div>'+sub+'</div>'
       +'<div class="li-val '+(entrada?'entrada':'saida')+'">'+(entrada?'+':'-')+RK(valorAbs)+'</div>';
     if(!i.base){
-      h+='<button class="conc-btn '+(i._conc?'on':'')+'" data-conc="'+i.id+'">'+(i._conc?'Conferido':'Conferir')+'</button>'
+      h+=''
         +'<div class="li-acts"><button class="li-btn e" data-edit="'+i.id+'"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button><button class="li-btn" data-del="'+i.id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button></div>';
     }
     h+='</div>';
@@ -7782,7 +7791,7 @@ renderContaLista=function(m){
       +'<div class="li-info"><div class="li-nome">'+E(i.nome||'Lançamento')+'</div>'+v32ChipRow(i,{dataBase:dataBase,parcela:false})+'</div>'
       +'<div class="li-val '+(entrada?'entrada':'saida')+'">'+(entrada?'+':'-')+RK(valorAbs)+'</div>';
     if(!i.base){
-      h+='<button class="conc-btn '+(i._conc?'on':'')+'" data-conc="'+i.id+'">'+(i._conc?'Conferido':'Conferir')+'</button>'
+      h+=''
         +'<div class="li-acts"><button class="li-btn e" data-edit="'+i.id+'"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button><button class="li-btn" data-del="'+i.id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button></div>';
     }
     h+='</div>';
