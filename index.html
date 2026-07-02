@@ -41,7 +41,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
 .sb-foot-l{font-size:10.5px;color:var(--t3);margin-bottom:2px}
 .sb-foot-v{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:var(--ok)}
 .main{flex:1;overflow-y:auto;height:100vh;scroll-behavior:smooth}
-.page{display:none;padding:28px 36px 48px;max-width:1100px;animation:fadeIn .15s ease}.page.on{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.page{display:none;padding:28px 40px 48px;max-width:1440px;margin:0 auto;animation:fadeIn .15s ease}.page.on{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:700px){.sb{width:200px}.page{padding:18px 16px 40px}}
 .pg-title{font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;color:var(--t);letter-spacing:-.4px}
 .pg-sub{font-size:13px;color:var(--t2);margin-top:3px;margin-bottom:22px}
@@ -373,13 +373,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
         <div class="sec-h"><div class="sec-t">Conta corrente</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="conta-tot-hdr"></div><button class="mn-add" id="btn-add-conta" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-saldo-inicial" style="font-size:11px;padding:5px 10px">Saldo inicial</button><button onclick="toggleSection('conta-body','conta-chev')" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Minimizar/expandir"><svg id="conta-chev" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div><div id="conta-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease"><div id="saldo-inicial-display"></div>
         <div id="conta-lista"></div>
       </div></div>
-      <!-- Dani por ultimo -->
-      <div class="sec">
-        <div class="sec-h"><div class="sec-t">Gastos Dani</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="dani-tot-hdr"></div><button class="mn-add" id="btn-add-dani" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-exportar-dani" style="font-size:11px;padding:5px 10px;display:flex;align-items:center;gap:5px"><svg viewBox="0 0 16 16" style="width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M8 2v8M5 7l3 3 3-3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg> CSV</button></div></div>
-        <div id="dani-lista"></div>
-        <div class="tot-row" style="background:none"><div class="tot-l">Total Dani</div><div class="tot-v" style="color:var(--t3)" id="dani-tot-foot"></div></div>
-      </div>
     </div>
+  </div>
+  <!-- Dani por ultimo, agora em faixa própria -->
+  <div class="sec" style="margin-bottom:14px">
+    <div class="sec-h"><div class="sec-t">Gastos Dani</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="dani-tot-hdr"></div><button class="mn-add" id="btn-add-dani" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-exportar-dani" style="font-size:11px;padding:5px 10px;display:flex;align-items:center;gap:5px"><svg viewBox="0 0 16 16" style="width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M8 2v8M5 7l3 3 3-3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg> CSV</button></div></div>
+    <div id="dani-lista"></div>
+    <div class="tot-row" style="background:none"><div class="tot-l">Total Dani</div><div class="tot-v" style="color:var(--t3)" id="dani-tot-foot"></div></div>
   </div>
   <!-- Todos lancamentos -->
   
@@ -547,7 +547,7 @@ firebase.initializeApp(firebaseConfig);
 <script>
 
 function categoriaDespesaValida(cat){
-  return !!cat && cat!=='Salário' && cat!=='Reembolso' && cat!=='Outros recebimentos' && cat!=='Cofrinhos' && cat!=='Reembolso SENGE' && cat!=='Reembolso Dani' && cat!=='Movimentação financeira';
+  return !!cat && cat!=='Salário' && cat!=='Reembolso' && cat!=='Outros recebimentos' && cat!=='Cofrinhos' && cat!=='Reembolso SENGE' && cat!=='Reembolso Dani' && cat!=='Movimentação financeira' && cat!=='Financiamentos';
 }
 function valorDespesaCategoria(i){
   if(!i || !(i.tipo==='cartao' || i.tipo==='saida'))return 0;
@@ -926,10 +926,10 @@ function mesNumParc(p){
 }
 function refGrupoParc(p){var mn=mesNumParc(p);return mn>=1&&mn<=12?refMesLabel(mn):(p&&p.ref?p.ref:'Sem data definida');}
 
-var CATS_CARTAO=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Casa", "Saúde", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Revisar categoria"];
-var CATS_TODOS=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Casa", "Saúde", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Revisar categoria"];
-var METAS={"Supermercado": 2300, "Mercadinho": 200, "Restaurante": 300, "Delivery": 150, "Carro / Transporte": 800, "Casa": 300, "Saúde": 800, "Cuidados pessoais": 400, "Vestuário": 500, "Assinaturas / Apps": 300, "Lazer": 300, "Trabalho / Empresa": 500, "Estudos": 300, "SENGE": 0, "Dani": 0, "Presentes": 400, "Taxas / Impostos": 200, "Financiamentos": 0, "Movimentação financeira": 0, "Revisar categoria": 0};
-var CORES={"Supermercado": "#5C2444", "Mercadinho": "#7a3560", "Restaurante": "#c0622a", "Delivery": "#d4823a", "Carro / Transporte": "#1a4a6a", "Casa": "#3a5a1a", "Saúde": "#2a5a10", "Cuidados pessoais": "#8B1A1A", "Vestuário": "#4a1a6a", "Assinaturas / Apps": "#6a2a6a", "Lazer": "#1a6a4a", "Trabalho / Empresa": "#1a3a6a", "Estudos": "#5a4a1a", "SENGE": "#3a1a6a", "Dani": "#9e8e7a", "Presentes": "#6a1a3a", "Taxas / Impostos": "#8a5a00", "Financiamentos": "#465a69", "Movimentação financeira": "#777777", "Revisar categoria": "#5a5a5a"};
+var CATS_CARTAO=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Casa", "Saúde", "Farmácia", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Revisar categoria"];
+var CATS_TODOS=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Casa", "Saúde", "Farmácia", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Revisar categoria"];
+var METAS={"Supermercado": 2300, "Mercadinho": 200, "Restaurante": 300, "Delivery": 150, "Carro / Transporte": 800, "Casa": 300, "Saúde": 400, "Farmácia": 470, "Cuidados pessoais": 400, "Vestuário": 500, "Assinaturas / Apps": 300, "Lazer": 300, "Trabalho / Empresa": 500, "Estudos": 300, "SENGE": 0, "Dani": 0, "Presentes": 400, "Taxas / Impostos": 200, "Financiamentos": 0, "Movimentação financeira": 0, "Revisar categoria": 0};
+var CORES={"Supermercado": "#5C2444", "Mercadinho": "#7a3560", "Restaurante": "#c0622a", "Delivery": "#d4823a", "Carro / Transporte": "#1a4a6a", "Casa": "#3a5a1a", "Saúde": "#2a5a10", "Farmácia": "#4a8a2a", "Cuidados pessoais": "#8B1A1A", "Vestuário": "#4a1a6a", "Assinaturas / Apps": "#6a2a6a", "Lazer": "#1a6a4a", "Trabalho / Empresa": "#1a3a6a", "Estudos": "#5a4a1a", "SENGE": "#3a1a6a", "Dani": "#9e8e7a", "Presentes": "#6a1a3a", "Taxas / Impostos": "#8a5a00", "Financiamentos": "#465a69", "Movimentação financeira": "#777777", "Revisar categoria": "#5a5a5a"};
 
 /* Estrutura definitiva de análise: sem "Outros"; "Revisar categoria" é pendência temporária.
    Categorias de foco são as que indicam maior potencial de redução de gastos. */
@@ -1005,7 +1005,7 @@ if(saved&&saved.items){
   /* Migrar categorias para a estrutura v23: sem 'Outros' como categoria de gasto e com SENGE/Dani mantidos. */
   if(!DB._migracaoCategoriasV23){
     var mapaCatV23={
-      'Farmácia':'Saúde','Transporte':'Carro / Transporte','Abastecimento':'Carro / Transporte','Carro':'Carro / Transporte',
+      'Transporte':'Carro / Transporte','Abastecimento':'Carro / Transporte','Carro':'Carro / Transporte',
       'Assinaturas':'Assinaturas / Apps','Entretenimento':'Lazer','Viagens':'Lazer','Trabalho':'Trabalho / Empresa','Estudos':'Estudos',
       'Taxas':'Taxas / Impostos','Impostos':'Taxas / Impostos','Anuidades':'Taxas / Impostos','Cuidados Pessoais':'Cuidados pessoais',
       'Outros':'Revisar categoria'
@@ -1018,7 +1018,7 @@ if(saved&&saved.items){
         if(nm.indexOf('comercio vef')>=0)i.cat='Mercadinho';
         else if(nm.indexOf('99food')>=0||nm.indexOf('ifood')>=0)i.cat='Delivery';
         else if(nm.indexOf('uber')>=0||nm.indexOf('estacion')>=0||nm.indexOf('posto')>=0||nm.indexOf('tagitau')>=0)i.cat='Carro / Transporte';
-        else if(nm.indexOf('panvel')>=0||nm.indexOf('raia')>=0||nm.indexOf('farmacia')>=0||nm.indexOf('drogasil')>=0)i.cat='Saúde';
+        else if(nm.indexOf('panvel')>=0||nm.indexOf('raia')>=0||nm.indexOf('farmacia')>=0||nm.indexOf('drogasil')>=0||nm.indexOf('dimed')>=0)i.cat='Farmácia';
         else if(nm.indexOf('apple')>=0||nm.indexOf('spotify')>=0||nm.indexOf('google')>=0)i.cat='Assinaturas / Apps';
         else if(nm.indexOf('bourbon')>=0||nm.indexOf('zaffari')>=0||nm.indexOf('carrefour')>=0||nm.indexOf('bistek')>=0||nm.indexOf('gas e agua')>=0)i.cat='Supermercado';
       }
@@ -1257,7 +1257,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "PANVEL FARMACIAS",
     "valor": 113.46,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "02/02",
     "data": "2026-03-26",
@@ -1317,7 +1317,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "PANVEL FILIAL 313",
     "valor": 95.75,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "02/02",
     "data": "2026-04-20",
@@ -1457,7 +1457,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "PANVEL FILIAL 07",
     "valor": 74.94,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "01/02",
     "data": "2026-04-23",
@@ -1487,7 +1487,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1530",
     "valor": 83.85,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-04-23",
@@ -1657,7 +1657,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1530",
     "valor": 74.04,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-04-26",
@@ -1667,7 +1667,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RD SAUDE ONLINE",
     "valor": 128.67,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "01/03",
     "data": "2026-04-26",
@@ -1767,7 +1767,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1939",
     "valor": 84.0,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "01/02",
     "data": "2026-04-29",
@@ -1837,7 +1837,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1939",
     "valor": 85.81,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "01/02",
     "data": "2026-04-30",
@@ -1987,7 +1987,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA DROGASIL SA",
     "valor": 47.29,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-02",
@@ -2027,7 +2027,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "FARMACIA SAO JOAO",
     "valor": 55.28,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-03",
@@ -2037,7 +2037,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1530",
     "valor": 82.54,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "01/02",
     "data": "2026-05-03",
@@ -2137,7 +2137,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1939",
     "valor": 58.67,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-06",
@@ -2287,7 +2287,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1939",
     "valor": 66.23,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-08",
@@ -2407,7 +2407,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "PANVEL FILIAL 845",
     "valor": 55.63,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "01/02",
     "data": "2026-05-10",
@@ -2417,7 +2417,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "PANVEL MATRIZ",
     "valor": 47.96,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-10",
@@ -2497,7 +2497,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "JIM.COM* TOKA DAS CHA",
     "valor": 48.0,
-    "cat": "Revisar categoria",
+    "cat": "Restaurante",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-12",
@@ -2557,7 +2557,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "PANVEL FILIAL 60",
     "valor": 53.21,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-14",
@@ -2617,7 +2617,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "FARMACIA SAO JOAO",
     "valor": 49.98,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-15",
@@ -2627,7 +2627,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "RAIA1939",
     "valor": 53.91,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-15",
@@ -2967,7 +2967,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "COPROBEL",
     "valor": 52.99,
-    "cat": "Revisar categoria",
+    "cat": "Mercadinho",
     "tipo": "cartao",
     "parcela": "01/02",
     "data": "2026-04-25",
@@ -3027,7 +3027,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "IFD*DIMED SA DISTRIBUI",
     "valor": 90.57,
-    "cat": "Saúde",
+    "cat": "Farmácia",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-04-29",
@@ -3137,7 +3137,7 @@ var FATURA_MAIO_PDF_IMPORT=[
     "mes": 5,
     "nome": "TOKIO MARINE*AUTO10D10",
     "valor": 297.55,
-    "cat": "Revisar categoria",
+    "cat": "Carro / Transporte",
     "tipo": "cartao",
     "parcela": "",
     "data": "2026-05-13",
@@ -5459,7 +5459,7 @@ function atualizarVisibCat(){
   if(fparcWrap)fparcWrap.style.display=(tipoSel==='cartao')?'':'none';
   var s=el('f-cat');if(!s)return;
   if(tipoSel==='saida'){
-    var CATS_CONTA=['Supermercado','Mercadinho','Restaurante','Delivery','Carro / Transporte','Casa','Saúde','Cuidados pessoais','Vestuário','Assinaturas / Apps','Lazer','Trabalho / Empresa','Estudos','SENGE','Dani','Presentes','Taxas / Impostos','Financiamentos','Movimentação financeira','Revisar categoria'];
+    var CATS_CONTA=['Supermercado','Mercadinho','Restaurante','Delivery','Carro / Transporte','Casa','Saúde','Farmácia','Cuidados pessoais','Vestuário','Assinaturas / Apps','Lazer','Trabalho / Empresa','Estudos','SENGE','Dani','Presentes','Taxas / Impostos','Financiamentos','Movimentação financeira','Revisar categoria'];
     s.innerHTML=CATS_CONTA.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
   } else {
     popularCats('f-cat');
@@ -7189,6 +7189,7 @@ function v11DespesaCategoriaValida(i){
   if(tipo==='entrada'||tipo==='reembolso'||tipo==='outros')return false;
   if(tipo==='cofre')return false;          /* cofrinho fica separado, não como despesa por categoria */
   if(cat==='Dani'||cat==='SENGE')return false;
+  if(cat==='Movimentação financeira'||cat==='Financiamentos')return false;
   return tipo==='cartao'||tipo==='saida'||tipo==='conta';
 }
 function v11ChipParcela(parcela){
