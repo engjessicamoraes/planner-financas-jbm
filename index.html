@@ -514,6 +514,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
         <input id="p-auto-n" type="number" min="2" step="1" placeholder="Ex: 4 — deixe em branco para lançar uma parcela única">
         <div style="font-size:11px;color:var(--t3);margin-top:4px">Se preencher: o campo "Valor" acima passa a ser o <strong>valor total</strong> da cobrança, e o sistema cria automaticamente uma parcela em cada um dos meses seguintes, a partir do "Mês de recebimento". Os campos "Parcela" e "Mês de recebimento" acima são ignorados/preenchidos automaticamente nesse caso.</div>
       </div>
+      <div class="fl full" id="p-recorr-wrap" style="display:flex;align-items:flex-start;gap:8px">
+        <input id="p-recorrente" type="checkbox" style="margin-top:3px">
+        <label for="p-recorrente" style="font-weight:400;cursor:pointer">Pagamento recorrente — repete esse mesmo valor todo mês, sem fim definido, a partir do "Mês de recebimento" até dezembro. Use para clientes/condomínios com mensalidade fixa (ex: "recebo R$ 800/mês deste condomínio"). Cada mês entra como um lançamento separado, então você ainda pode marcar cada um como recebido ou excluir individualmente.</label>
+      </div>
       <div class="fl full">
         <label>Status</label>
         <div class="tipo-pills">
@@ -5580,7 +5584,9 @@ function abrirFormParc(id){
   el('p-val').value=p?p.v:'';el('p-parc').value=p?p.p:'';
   el('p-mes').value=p&&p.mes?p.mes:'';
   el('p-auto-n').value='';
+  el('p-recorrente').checked=false;el('p-auto-n').disabled=false;
   var autoWrap=el('p-auto-wrap');if(autoWrap)autoWrap.style.display=p?'none':'';
+  var recorrWrap=el('p-recorr-wrap');if(recorrWrap)recorrWrap.style.display=p?'none':'';
   parcSel=p?p.s:'pendente';
   document.querySelectorAll('.tp[data-s]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-s')===parcSel);});
   el('modal-parc').classList.add('open');setTimeout(function(){el('p-nome').focus();},100);
@@ -5592,11 +5598,34 @@ el('btn-parc-x').addEventListener('click',fecharFormParc);
 el('btn-parc-cancel').addEventListener('click',fecharFormParc);
 el('modal-parc').addEventListener('click',function(ev){if(ev.target===this)fecharFormParc();});
 document.querySelectorAll('.tp[data-s]').forEach(function(b){b.addEventListener('click',function(){parcSel=b.getAttribute('data-s');document.querySelectorAll('.tp[data-s]').forEach(function(x){x.classList.toggle('on',x===b);});});});
+el('p-recorrente').addEventListener('change',function(){
+  if(this.checked){
+    el('p-auto-n').value='';el('p-auto-n').disabled=true;
+    document.querySelectorAll('#tipo-parc-sel .tp').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-tp')==='mensal');});
+  }
+  else{el('p-auto-n').disabled=false;}
+});
+el('p-auto-n').addEventListener('input',function(){
+  if(this.value){el('p-recorrente').checked=false;}
+});
 el('btn-parc-save').addEventListener('click',function(){
   var nome=el('p-nome').value.trim();var val=parseFloat(el('p-val').value);
   var ref=el('p-ref').value.trim();var parc=el('p-parc').value.trim();var pmes=parseInt(el('p-mes').value)||null;
   var nParc=parseInt(el('p-auto-n').value)||0;
   if(!nome){toast('Informe o nome do cliente.');return;}if(isNaN(val)||val<=0){toast('Valor inválido.');return;}
+  var recorrente=el('p-recorrente').checked;
+  if(!editParcId&&recorrente){
+    var tipoParcRec='mensal';
+    var baseMesRec=pmes||mesAtual;
+    var criados=0;
+    for(var mr=baseMesRec;mr<=12;mr++){
+      DB.parcs.push({id:mkId(),n:nome,ref:ref,v:val,p:'-',s:parcSel,tipo:tipoParcRec,mes:mr});
+      criados++;
+    }
+    dbSave();fecharFormParc();renderParcelamentos();buildSb();
+    toast('Pagamento recorrente lançado em '+criados+' meses (de '+MESES[baseMesRec-1]+' a Dezembro)!');
+    return;
+  }
   if(!editParcId&&nParc>=2){
     var tipoParcAuto=document.querySelector('#tipo-parc-sel .tp.on');var tpValAuto=tipoParcAuto?tipoParcAuto.getAttribute('data-tp'):'etapa';
     var baseMes=pmes||mesAtual;
