@@ -8131,6 +8131,14 @@ function v35ChipRowCartao(i){
   return '<div class="v32-chip-row">'+chips+'</div>';
 }
 try{render();}catch(e){console.error(e);}
+/* Abrir direto no mês atual (em vez do Painel) ao carregar o site */
+try{
+  var hoje=new Date();
+  var mesReal=(hoje.getFullYear()===2026)?(hoje.getMonth()+1):mesAtual;
+  if(mesReal<5)mesReal=5;
+  if(mesReal>12)mesReal=12;
+  goTo('mes',mesReal);
+}catch(e){console.error(e);}
 </script>
 
 </body>
