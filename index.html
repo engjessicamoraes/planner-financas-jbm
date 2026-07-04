@@ -5432,7 +5432,7 @@ function abrirForm(tipoF){
   editId=null;tipoSel=tipoF||'cartao';
   popularCats('f-cat');
   el('f-nome').value='';el('f-valor').value='';el('f-parcela').value='';el('f-obs').value='';
-  el('f-data').value=new Date().toISOString().slice(0,10);
+  el('f-data').value=new Date(2026,mesAtual-1,1).toISOString().slice(0,10);
   document.querySelectorAll('.tp[data-t]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===tipoSel);});
   atualizarAvisoData();
   atualizarTituloModal();
@@ -5579,6 +5579,7 @@ function abrirFormParc(id){
   el('modal-parc').classList.add('open');setTimeout(function(){el('p-nome').focus();},100);
 }
 function fecharFormParc(){el('modal-parc').classList.remove('open');editParcId=null;}
+function abrirParc(){abrirFormParc(null);}
 el('btn-add-parc').addEventListener('click',function(){abrirFormParc(null);});
 el('btn-parc-x').addEventListener('click',fecharFormParc);
 el('btn-parc-cancel').addEventListener('click',fecharFormParc);
@@ -7083,7 +7084,7 @@ renderParcelamentos=function(){
   h+='<div class="v8-etapas"><div class="dv">Recebimentos por etapa</div>';
   var etapaOrdenada=etapa.sort(function(a,b){var ma=v8ParcMes(a),mb=v8ParcMes(b);if(ma!==mb)return ma-mb;return String(a.n||'').localeCompare(String(b.n||''));});
   if(etapaOrdenada.length){
-    var ultimo=null; etapaOrdenada.forEach(function(p){var m=v8ParcMes(p)||0;var label=m?MESES[m-1]:'Sem mês definido'; if(label!==ultimo){ultimo=label;h+='<div class="v8-parc-sub" style="padding-top:14px">'+E(label)+'</div>';} h+=v8ParcRow(p);});
+    var ultimo=null; etapaOrdenada.forEach(function(p){var m=v8ParcMes(p)||0;var label=(m>=1&&m<=12)?MESES[m-1]:'Sem mês definido'; if(label!==ultimo){ultimo=label;h+='<div class="v8-parc-sub" style="padding-top:14px">'+E(label)+'</div>';} h+=v8ParcRow(p);});
   }else{h+='<div class="empty">Nenhum recebimento por etapa lançado.</div>';}
   h+='</div>';
   sh('parc-lista',h); var btn=el('btn-add-parc'); if(btn)btn.onclick=function(){abrirParc();};
