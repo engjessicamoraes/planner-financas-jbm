@@ -509,6 +509,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
       <div class="fl"><label>Valor (R$)</label><input id="p-val" type="number" step="0.01" min="0" placeholder="0,00"></div>
       <div class="fl"><label>Parcela</label><input id="p-parc" placeholder="Ex: 02/04"></div>
       <div class="fl"><label>Mês de recebimento</label><select id="p-mes"></select></div>
+      <div class="fl full" id="p-auto-wrap">
+        <label>Dividir valor total em quantas parcelas mensais? (opcional)</label>
+        <input id="p-auto-n" type="number" min="2" step="1" placeholder="Ex: 4 — deixe em branco para lançar uma parcela única">
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">Se preencher: o campo "Valor" acima passa a ser o <strong>valor total</strong> da cobrança, e o sistema cria automaticamente uma parcela em cada um dos meses seguintes, a partir do "Mês de recebimento". Os campos "Parcela" e "Mês de recebimento" acima são ignorados/preenchidos automaticamente nesse caso.</div>
+      </div>
       <div class="fl full">
         <label>Status</label>
         <div class="tipo-pills">
@@ -5574,6 +5579,8 @@ function abrirFormParc(id){
   el('p-nome').value=p?p.n:'';el('p-ref').value=p?p.ref:'';
   el('p-val').value=p?p.v:'';el('p-parc').value=p?p.p:'';
   el('p-mes').value=p&&p.mes?p.mes:'';
+  el('p-auto-n').value='';
+  var autoWrap=el('p-auto-wrap');if(autoWrap)autoWrap.style.display=p?'none':'';
   parcSel=p?p.s:'pendente';
   document.querySelectorAll('.tp[data-s]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-s')===parcSel);});
   el('modal-parc').classList.add('open');setTimeout(function(){el('p-nome').focus();},100);
@@ -5588,7 +5595,25 @@ document.querySelectorAll('.tp[data-s]').forEach(function(b){b.addEventListener(
 el('btn-parc-save').addEventListener('click',function(){
   var nome=el('p-nome').value.trim();var val=parseFloat(el('p-val').value);
   var ref=el('p-ref').value.trim();var parc=el('p-parc').value.trim();var pmes=parseInt(el('p-mes').value)||null;
+  var nParc=parseInt(el('p-auto-n').value)||0;
   if(!nome){toast('Informe o nome do cliente.');return;}if(isNaN(val)||val<=0){toast('Valor inválido.');return;}
+  if(!editParcId&&nParc>=2){
+    var tipoParcAuto=document.querySelector('#tipo-parc-sel .tp.on');var tpValAuto=tipoParcAuto?tipoParcAuto.getAttribute('data-tp'):'etapa';
+    var baseMes=pmes||mesAtual;
+    var porParcela=Math.round((val/nParc)*100)/100;
+    var somaParciais=porParcela*(nParc-1);
+    var ultimaParcela=Math.round((val-somaParciais)*100)/100;
+    var truncou=false;
+    for(var ip=0;ip<nParc;ip++){
+      var mesIp=baseMes+ip;
+      if(mesIp>12){mesIp=12;truncou=true;}
+      var valorIp=(ip===nParc-1)?ultimaParcela:porParcela;
+      DB.parcs.push({id:mkId(),n:nome,ref:ref,v:valorIp,p:(ip+1)+'/'+nParc,s:parcSel,tipo:tpValAuto,mes:mesIp});
+    }
+    dbSave();fecharFormParc();renderParcelamentos();buildSb();
+    toast(truncou?'Parcelamentos salvos! Algumas parcelas ultrapassaram dezembro e foram agrupadas em Dezembro.':'Parcelamentos salvos em '+nParc+' meses!');
+    return;
+  }
   if(editParcId){var p=DB.parcs.filter(function(x){return x.id===editParcId;})[0];if(p){p.n=nome;p.ref=ref;p.v=val;p.p=parc||'-';p.s=parcSel;p.mes=pmes;var tpElEdit=document.querySelector('#tipo-parc-sel .tp.on');p.tipo=tpElEdit?tpElEdit.getAttribute('data-tp'):'etapa';}}
   else{var tipoParc=document.querySelector('#tipo-parc-sel .tp.on');var tpVal=tipoParc?tipoParc.getAttribute('data-tp'):'etapa';DB.parcs.push({id:mkId(),n:nome,ref:ref,v:val,p:parc||'-',s:parcSel,tipo:tpVal,mes:pmes});}
   dbSave();fecharFormParc();renderParcelamentos();buildSb();toast('Parcelamento salvo!');
@@ -7072,7 +7097,7 @@ renderParcelamentos=function(){
   var totPend=pend.reduce(function(a,p){return a+(parseFloat(p.v)||0);},0), totRec=rec.reduce(function(a,p){return a+(parseFloat(p.v)||0);},0);
   sh('parc-stats','<div class="sc bad"><div class="sc-v">'+RK(totPend)+'</div><div class="sc-l">A receber</div><div class="sc-s">'+pend.length+' pendentes</div></div><div class="sc ok"><div class="sc-v">'+RK(totRec)+'</div><div class="sc-l">Recebido</div><div class="sc-s">'+rec.length+' recebidos</div></div><div class="sc neu"><div class="sc-v">'+RK(totPend+totRec)+'</div><div class="sc-l">Carteira</div><div class="sc-s">'+parcs.length+' itens</div></div>');
   var h='<div class="dv">Recebimentos mensais</div>';
-  for(var m=5;m<=12;m++){
+  for(var m=4;m<=12;m++){
     var ms=mensal.filter(function(p){return v8ParcMes(p)===m;}).sort(function(a,b){return String(a.n||'').localeCompare(String(b.n||''));});
     var r=ms.filter(function(p){return p.s==='recebido';}).reduce(function(a,p){return a+(parseFloat(p.v)||0);},0);
     var pnd=ms.filter(function(p){return p.s==='pendente';}).reduce(function(a,p){return a+(parseFloat(p.v)||0);},0);
