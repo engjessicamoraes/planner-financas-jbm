@@ -3863,8 +3863,15 @@ var HT = (function() {
       + '<input id="qa-next" placeholder="Próxima ação objetiva, se já souber" onkeydown="if(event.key===\'Enter\') plannerQuickAdd()">'
       + '<button class="quick-btn" onclick="plannerQuickAdd()">Adicionar</button></div></div>';
   }
+  function useHtml2(){
+    return '<div class="use-card" id="planner-use-card"><div class="use-title">Como usar sem duplicar</div><div class="use-list">'
+      + '<div class="use-item"><span class="use-num">1</span><div><b>Capture tudo aqui.</b> O Planner é o repositório de prazos, pendências e cobranças.</div></div>'
+      + '<div class="use-item"><span class="use-num">2</span><div><b>Planeje o dia na agenda.</b> Copie só 3 prioridades, 1 cobrança e 1 tarefa leve.</div></div>'
+      + '<div class="use-item"><span class="use-num">3</span><div><b>Feche o dia aqui.</b> Marque etapas concluídas, atualize prazos e faça backup ao menos 1 vez por semana.</div></div>'
+      + '</div></div>';
+  }
   function asideHtml2(grupos){
-    return '<aside class="agenda-aside">'+quickHtml2()+weekCardHtml(grupos)+'</aside>';
+    return '<aside class="agenda-aside">'+quickHtml2()+weekCardHtml(grupos)+useHtml2()+'</aside>';
   }
   window.renderAgenda=function(){
     try{
@@ -3892,7 +3899,11 @@ var HT = (function() {
       var h='<div class="agenda-header"><div class="agenda-greet">'+greet+', Jéssica.</div><div class="agenda-date"><span>'+dStr.charAt(0).toUpperCase()+dStr.slice(1)+'</span><span class="agenda-week-pill">Semana '+semN+'</span></div><div class="agenda-frase">A tela inicial serve para escolher o que executar, não para controlar tudo ao mesmo tempo.</div></div>';
       h+='<div class="agenda-dash"><div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">resolver ou reagendar</div></div><div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div><div class="dash-card grn" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">base da agenda da semana</div></div><div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">cobranças e retornos</div></div></div>';
       h+='<div class="agenda-workspace"><section class="agenda-list">';
-      if(totalLista===0) h+='<div class="agenda-empty"><div class="agenda-empty-ico">✓</div><div class="agenda-empty-ttl">Nada crítico nesta visão</div><div class="agenda-empty-sub">Use as abas superiores para consultar listas completas por área.</div></div>';
+      var totalListaVisivel=grupos.reduce(function(a,g){return a+(g.key!=='x'&&g.key!=='ok'?g.items.length:0);},0);
+      if(totalListaVisivel===0){
+        var msgVazia=totalLista>0?('Nenhuma tarefa urgente agora. Você tem '+totalLista+' tarefa'+(totalLista>1?'s':'')+' sem prazo apertado — dá pra ver todas nas abas acima.'):'Use as abas superiores para consultar listas completas por área.';
+        h+='<div class="agenda-empty"><div class="agenda-empty-ico">✓</div><div class="agenda-empty-ttl">Nada crítico nesta visão</div><div class="agenda-empty-sub">'+msgVazia+'</div></div>';
+      }
       else grupos.forEach(function(gr){ if(gr.key!=='x' && gr.key!=='ok') h+=groupHtml2(gr,_agFiltro==='todos',_agFiltro!=='todos'); });
       h+='</section>'+asideHtml2(grupos)+'</div>';
       var ap=document.getElementById('agenda-page'); if(ap) ap.innerHTML=h;
@@ -4105,7 +4116,23 @@ var HT = (function() {
   border:1px dashed #D8CEC4!important;
   border-radius:18px!important;
   background:#fff!important;
+  min-height:360px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
 }
+.agenda-empty-ico{
+  font-size:44px!important;
+  width:64px!important;height:64px!important;
+  border-radius:50%!important;
+  background:#EFF6EA!important;
+  color:var(--grn)!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  margin:0 auto 16px!important;
+}
+.agenda-empty-ttl{font-size:16.5px!important;}
+.agenda-empty-sub{max-width:340px!important;line-height:1.55!important;}
 @media(max-width:1250px){
   .agenda-page{padding:28px 26px 68px!important;}
   .agenda-workspace{grid-template-columns:1fr!important;}
