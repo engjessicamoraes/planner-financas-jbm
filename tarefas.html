@@ -1355,6 +1355,17 @@ body{background:var(--bg)!important;color:var(--t)!important}
       <div class="proj-page">
         <div class="proj-header"><div class="proj-title" id="vttl-sng">SENGE-RS</div><div class="proj-sub" id="vsub-sng"></div></div>
         <div class="proj-toolbar"><div class="srow" id="srow-sng"></div><button class="proj-add-btn" id="btn-add-sng"><svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Nova tarefa</button></div>
+        <div class="postit-box" id="postit-sng">
+          <div class="postit-hdr">
+            <div class="postit-ttl">📌 Pendências AQP</div>
+            <div class="postit-sub">Anote aqui e depois decida o que vira tarefa formal.</div>
+          </div>
+          <div class="postit-add-row">
+            <input type="text" id="postit-input-sng" placeholder="Nova pendência...">
+            <button id="postit-add-sng">Adicionar</button>
+          </div>
+          <div id="postit-list-sng"></div>
+        </div>
         <div class="proj-body" id="proj-body-sng"></div>
       </div>
     </div>
@@ -2061,9 +2072,9 @@ function cloudTentarLogin(){
    Bloco de rascunho separado do sistema formal de tarefas — anota rápido,
    marca como feito, e depois decide o que vira tarefa de verdade. */
 var POSTIT_SK='pjm-postit-v1';
-var POSTIT={emp:[]};
+var POSTIT={emp:[],sng:[]};
 (function(){
-  try{ var s=localStorage.getItem(POSTIT_SK); if(s){ var p=JSON.parse(s); POSTIT=Object.assign({emp:[]},p); } }catch(e){}
+  try{ var s=localStorage.getItem(POSTIT_SK); if(s){ var p=JSON.parse(s); POSTIT=Object.assign({emp:[],sng:[]},p); } }catch(e){}
 })();
 function postitEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function postitSave(){
