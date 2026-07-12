@@ -338,7 +338,9 @@ body{font-family:var(--fs);background:var(--bg);color:var(--t);font-size:13.5px;
 
 /* Painéis SENGE/MTG */
 .mtg-panel{background:var(--c0);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh1)}
-.mtg-panel.pendencias{border-top:2px solid #D4A017}.mtg-panel.meus{border-top:2px solid var(--m)}
+.mtg-panel.pendencias{border-top:2px solid #D4A017}.mtg-panel.meus{border-top:2px solid var(--m)}.mtg-panel.aqp{border-top:2px solid var(--pur)}
+.mtg-panel.aqp .mtg-ttl svg{stroke:var(--pur)}
+.mtg-panel.aqp .mtg-cnt{background:var(--pur-bg);color:var(--pur)}
 .mtg-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;transition:background var(--tr)}
 .mtg-hdr:hover{background:var(--c2)}
 .mtg-ttl{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--t)}
@@ -1355,17 +1357,6 @@ body{background:var(--bg)!important;color:var(--t)!important}
       <div class="proj-page">
         <div class="proj-header"><div class="proj-title" id="vttl-sng">SENGE-RS</div><div class="proj-sub" id="vsub-sng"></div></div>
         <div class="proj-toolbar"><div class="srow" id="srow-sng"></div><button class="proj-add-btn" id="btn-add-sng"><svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Nova tarefa</button></div>
-        <div class="postit-box" id="postit-sng">
-          <div class="postit-hdr">
-            <div class="postit-ttl">📌 Pendências AQP</div>
-            <div class="postit-sub">Anote aqui e depois decida o que vira tarefa formal.</div>
-          </div>
-          <div class="postit-add-row">
-            <input type="text" id="postit-input-sng" placeholder="Nova pendência...">
-            <button id="postit-add-sng">Adicionar</button>
-          </div>
-          <div id="postit-list-sng"></div>
-        </div>
         <div class="proj-body" id="proj-body-sng"></div>
       </div>
     </div>
@@ -2072,9 +2063,9 @@ function cloudTentarLogin(){
    Bloco de rascunho separado do sistema formal de tarefas — anota rápido,
    marca como feito, e depois decide o que vira tarefa de verdade. */
 var POSTIT_SK='pjm-postit-v1';
-var POSTIT={emp:[],sng:[]};
+var POSTIT={emp:[]};
 (function(){
-  try{ var s=localStorage.getItem(POSTIT_SK); if(s){ var p=JSON.parse(s); POSTIT=Object.assign({emp:[],sng:[]},p); } }catch(e){}
+  try{ var s=localStorage.getItem(POSTIT_SK); if(s){ var p=JSON.parse(s); POSTIT=Object.assign({emp:[]},p); } }catch(e){}
 })();
 function postitEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function postitSave(){
@@ -2146,12 +2137,13 @@ initData();
 render();
 
 var MTG_SK = 'pjm-mtg-v1';
-var MTG = {pendencias:[], meus:[]};
+var MTG = {pendencias:[], meus:[], aqp:[]};
 
 function mtgLoad(){
   try{var s=localStorage.getItem(MTG_SK);if(s)MTG=JSON.parse(s);}catch(e){}
   if(!Array.isArray(MTG.pendencias))MTG.pendencias=[];
   if(!Array.isArray(MTG.meus))MTG.meus=[];
+  if(!Array.isArray(MTG.aqp))MTG.aqp=[];
 }
 function mtgSave(){try{localStorage.setItem(MTG_SK,JSON.stringify(MTG));}catch(e){} fsScheduleWrite();cloudScheduleWrite();}
 mtgLoad();
@@ -2162,8 +2154,8 @@ function mtgRenderPanel(tipo){
   mtgSort(tipo);
   var items=MTG[tipo]||[];
   var pendentes=items.filter(function(i){return !i.done;}).length;
-  var label = tipo==='pendencias' ? 'Adicionar pendência' : 'Adicionar assunto';
-  var ph = tipo==='pendencias' ? 'Ex.: cobrar retorno sobre orçamento, ata, pauta ou encaminhamento...' : 'Ex.: levar para pauta: evento, deliberação, informe ou proposta...';
+  var label = tipo==='pendencias' ? 'Adicionar pendência' : (tipo==='aqp' ? 'Adicionar' : 'Adicionar assunto');
+  var ph = tipo==='pendencias' ? 'Ex.: cobrar retorno sobre orçamento, ata, pauta ou encaminhamento...' : (tipo==='aqp' ? 'Nova pendência da área AQP...' : 'Ex.: levar para pauta: evento, deliberação, informe ou proposta...');
   var h='<div class="mtg-entry"><input id="mtgin-'+tipo+'" placeholder="'+ph+'" onkeydown="mtgKey(event,\''+tipo+'\')"><button onclick="mtgAddItem(\''+tipo+'\')">'+label+'</button></div>';
   if(!items.length){
     h+='<div class="mtg-empty-note">Nenhum item registrado ainda.</div>';
@@ -2246,10 +2238,16 @@ function mtgInjectPanels(){
   wrap.insertBefore(panels, wrap.firstChild);
   mtgRenderPanel('pendencias');
   mtgRenderPanel('meus');
+  mtgRenderPanel('aqp');
 }
 
 function mtgBuildHTML(){
-  return '<div class="senge-guide"><div><strong>Reunião de diretoria.</strong> Use este bloco para anotar rapidamente pendências, encaminhamentos e assuntos que precisam ser lembrados na reunião. Quando algum item virar uma tarefa maior, cadastre abaixo em Eventos, Cursos ou Tarefas Gerais.</div></div>'
+  return '<div class="mtg-panel aqp open" id="mtgpanel-aqp">'
+    +'<div class="mtg-hdr" onclick="mtgTogPanel(\'aqp\')">'
+    +'<div><div class="mtg-ttl"><svg viewBox="0 0 16 16"><path d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4z"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="9" y2="9"/></svg>Pendências AQP<span class="mtg-cnt" id="mtgcnt-aqp">0</span></div><div class="mtg-help">Anote aqui e depois decida o que vira tarefa formal.</div></div>'
+    +'<svg class="mtg-chev" viewBox="0 0 16 16"><polyline points="4,6 8,10 12,6"/></svg></div>'
+    +'<div class="mtg-body" id="mtgbody-aqp"></div>'
+    +'</div>'
     +'<div class="mtg-panel pendencias open" id="mtgpanel-pendencias">'
     +'<div class="mtg-hdr" onclick="mtgTogPanel(\'pendencias\')">'
     +'<div><div class="mtg-ttl"><svg viewBox="0 0 16 16"><path d="M13 2H3a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="11" y2="9"/><line x1="5" y1="12" x2="8" y2="12"/></svg>Pendências da reunião<span class="mtg-cnt" id="mtgcnt-pendencias">0</span></div><div class="mtg-help">Encaminhamentos, retornos a cobrar, decisões pendentes e providências assumidas na reunião.</div></div>'
@@ -4155,15 +4153,22 @@ var HT = (function() {
   .agenda-page{padding:24px 18px 64px!important;}
 }
 
-/* Empresa, SENGE, Pessoal, Hábitos: mesmo tratamento de largura já aplicado na Agenda,
-   pra não esticar os cards de tarefa até a borda da tela em monitores grandes. */
-.proj-header,.proj-toolbar,.proj-body{
+/* Empresa, SENGE, Pessoal, Hábitos: limita a largura de cada peça de conteúdo
+   (não do contêiner que rola), pra não esticar os cards até a borda da tela
+   sem deslocar a barra de rolagem pro meio da página. */
+.pc,.postit-box,.mtg-panel,.senge-guide,.sgrp,.add-row,.ctrl-row,.divdr{
   max-width:1480px!important;
   width:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
   box-sizing:border-box!important;
 }
-@media(max-width:1560px){
-  .proj-header,.proj-toolbar,.proj-body{max-width:100%!important;}
+.proj-header,.proj-toolbar{
+  max-width:1480px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  width:100%!important;
+  box-sizing:border-box!important;
 }
 </style>
 
