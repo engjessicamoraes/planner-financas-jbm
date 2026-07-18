@@ -543,6 +543,60 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
 <script>
+/* ============================================================
+   SALVAGUARDA — FIREBASE INDISPONÍVEL
+   Se os scripts do Firebase não carregarem (rede fora do ar,
+   bloqueador de anúncios, visualização local ou CSP restritiva),
+   o Finanças passa a funcionar em modo local, gravando apenas no
+   navegador, em vez de travar na tela de login.
+   ============================================================ */
+(function(){
+  if(window.firebase && window.firebase.initializeApp){window.__modoLocal=false;return;}
+  window.__modoLocal=true;
+
+  function P(v){
+    var o={};
+    o.then=function(f){try{if(f)f(v);}catch(e){console.error(e);}return o;};
+    o.catch=function(){return o;};
+    o.finally=function(f){try{if(f)f();}catch(e){}return o;};
+    return o;
+  }
+  var refStub={
+    get:function(){return P({exists:function(){return false;},val:function(){return null;}});},
+    set:function(){return P(null);},
+    update:function(){return P(null);},
+    on:function(){},off:function(){},remove:function(){return P(null);}
+  };
+  window.firebase={
+    initializeApp:function(){},
+    auth:function(){return {
+      currentUser:null,
+      onAuthStateChanged:function(){/* não dispara: o portão é liberado abaixo */},
+      signInWithEmailAndPassword:function(){return P(null);},
+      signOut:function(){return P(null);}
+    };},
+    database:function(){return {ref:function(){return refStub;}};}
+  };
+
+  function liberar(){
+    var gate=document.getElementById('cloud-gate');
+    if(gate)gate.style.display='none';
+    if(document.getElementById('aviso-modo-local'))return;
+    var b=document.createElement('div');
+    b.id='aviso-modo-local';
+    b.style.cssText='position:fixed;left:14px;bottom:14px;z-index:99998;max-width:330px;background:#FEF7EA;color:#8A5800;border:1px solid rgba(138,88,0,.28);border-radius:10px;padding:11px 13px;font-family:Inter,Arial,sans-serif;font-size:11.5px;line-height:1.55;box-shadow:0 3px 14px rgba(0,0,0,.14);cursor:pointer';
+    b.innerHTML='<strong>Modo local.</strong> Não foi possível carregar o Firebase, de modo que a sincronização em nuvem está desativada nesta sessão. Suas alterações continuam sendo gravadas neste navegador, mas não serão enviadas para os outros dispositivos até que a conexão seja restabelecida. Recarregue a página quando estiver on-line. Clique para ocultar.';
+    b.onclick=function(){b.remove();};
+    document.body.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',liberar);
+  else liberar();
+  window.addEventListener('load',liberar);
+  console.warn('Firebase indisponível — Finanças em modo local.');
+})();
+</script>
+
+<script>
 var firebaseConfig = {
   apiKey: "AIzaSyBH9IsCymVKaQXmp_LYY3t-71pHdRaUTuY",
   authDomain: "jessica-planner-financas.firebaseapp.com",

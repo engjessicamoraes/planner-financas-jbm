@@ -1451,6 +1451,60 @@ body{background:var(--bg)!important;color:var(--t)!important}
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
 <script>
+/* ============================================================
+   SALVAGUARDA — FIREBASE INDISPONÍVEL
+   Se os scripts do Firebase não carregarem (rede fora do ar,
+   bloqueador de anúncios, visualização local ou CSP restritiva),
+   o planner passa a funcionar em modo local, gravando apenas no
+   navegador, em vez de travar na tela de login.
+   ============================================================ */
+(function(){
+  if(window.firebase && window.firebase.initializeApp){window.__modoLocal=false;return;}
+  window.__modoLocal=true;
+
+  function P(v){
+    var o={};
+    o.then=function(f){try{if(f)f(v);}catch(e){console.error(e);}return o;};
+    o.catch=function(){return o;};
+    o.finally=function(f){try{if(f)f();}catch(e){}return o;};
+    return o;
+  }
+  var refStub={
+    get:function(){return P({exists:function(){return false;},val:function(){return null;}});},
+    set:function(){return P(null);},
+    update:function(){return P(null);},
+    on:function(){},off:function(){},remove:function(){return P(null);}
+  };
+  window.firebase={
+    initializeApp:function(){},
+    auth:function(){return {
+      currentUser:null,
+      onAuthStateChanged:function(){/* não dispara: o portão é liberado abaixo */},
+      signInWithEmailAndPassword:function(){return P(null);},
+      signOut:function(){return P(null);}
+    };},
+    database:function(){return {ref:function(){return refStub;}};}
+  };
+
+  function liberar(){
+    var gate=document.getElementById('cloud-gate');
+    if(gate)gate.style.display='none';
+    if(document.getElementById('aviso-modo-local'))return;
+    var b=document.createElement('div');
+    b.id='aviso-modo-local';
+    b.style.cssText='position:fixed;left:14px;bottom:14px;z-index:99998;max-width:330px;background:#FEF7EA;color:#8A5800;border:1px solid rgba(138,88,0,.28);border-radius:10px;padding:11px 13px;font-family:Inter,Arial,sans-serif;font-size:11.5px;line-height:1.55;box-shadow:0 3px 14px rgba(0,0,0,.14);cursor:pointer';
+    b.innerHTML='<strong>Modo local.</strong> Não foi possível carregar o Firebase, de modo que a sincronização em nuvem está desativada nesta sessão. Suas alterações continuam sendo gravadas neste navegador, mas não serão enviadas para os outros dispositivos até que a conexão seja restabelecida. Recarregue a página quando estiver on-line. Clique para ocultar.';
+    b.onclick=function(){b.remove();};
+    document.body.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',liberar);
+  else liberar();
+  window.addEventListener('load',liberar);
+  console.warn('Firebase indisponível — planner em modo local.');
+})();
+</script>
+
+<script>
 var firebaseConfig = {
   apiKey: "AIzaSyBH9IsCymVKaQXmp_LYY3t-71pHdRaUTuY",
   authDomain: "jessica-planner-financas.firebaseapp.com",
@@ -4190,5 +4244,403 @@ var HT = (function() {
   box-sizing:border-box!important;
 }
 </style>
+
+
+<script>
+/* ============================================================
+   PLANNER — MÓDULO V2
+   1. Correção do estado "Aguardando" que mascarava atrasos
+   2. Vínculo com cliente / obra / processo
+   3. Prazo improrrogável com contagem regressiva
+   4. Estimativa de esforço e plano do dia
+   5. Registro de delegação (a quem e desde quando)
+   6. Revisão semanal a partir de archivedAt
+   7. Modelos de tarefa com etapas padrão
+   8. Contador de itens críticos no título da aba
+   ============================================================ */
+(function(){
+  if(typeof D==='undefined'||typeof mkCard!=='function'){console.error('planner v2: base indisponível');return;}
+
+  /* ---------- CSS ---------- */
+  var css=''
+   +'.p2-chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1px 8px;font-size:10px;font-weight:700;margin-right:5px;vertical-align:middle}'
+   +'.p2-cli{background:var(--gl);color:var(--g1);border:1px solid var(--gb)}'
+   +'.p2-fatal{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}'
+   +'.p2-est{background:var(--mut-bg);color:var(--t2);border:1px solid var(--mut-bd)}'
+   +'.p2-deleg{background:var(--pur-bg);color:var(--pur);border:1px solid var(--pur-bd)}'
+   +'.p2-plan{background:var(--ml);color:var(--m);border:1px solid var(--mb)}'
+   +'.p2-fields{border-top:1px dashed var(--bd);margin-top:10px;padding-top:10px}'
+   +'.p2-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}'
+   +'.p2-row label{font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;width:78px;flex-shrink:0}'
+   +'.p2-row input[type=text],.p2-row input[type=number]{flex:1;border:1.5px solid var(--bd);border-radius:var(--rx);padding:6px 9px;font-family:inherit;font-size:12.5px;color:var(--t);background:var(--c0);min-width:0}'
+   +'.p2-row input:focus{outline:none;border-color:var(--m2)}'
+   +'.p2-check{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2);cursor:pointer}'
+   +'.p2-check input{width:15px;height:15px;accent-color:var(--red);cursor:pointer}'
+   +'.p2-card{background:var(--c0);border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh1);margin-bottom:14px;overflow:hidden}'
+   +'.p2-hdr{padding:12px 16px;border-bottom:1px solid var(--bds);display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--c1)}'
+   +'.p2-hdr h3{font-family:Outfit,sans-serif;font-size:14px;font-weight:700;color:var(--m)}'
+   +'.p2-hdr small{display:block;font-size:10.5px;color:var(--t3);font-weight:400;margin-top:1px}'
+   +'.p2-body{padding:13px 16px}'
+   +'.p2-note{font-size:11.5px;color:var(--t3);font-style:italic;line-height:1.55;margin-bottom:11px}'
+   +'.p2-li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bds);font-size:13px}'
+   +'.p2-li:last-child{border-bottom:none}'
+   +'.p2-li .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+   +'.p2-li .mt{font-size:10.5px;color:var(--t3);white-space:nowrap}'
+   +'.p2-btn{border:none;border-radius:var(--rs);background:var(--m);color:#fff;font-family:inherit;font-size:12px;font-weight:600;padding:7px 13px;cursor:pointer}'
+   +'.p2-btn.sec{background:var(--c0);color:var(--m);border:1.5px solid var(--bd)}'
+   +'.p2-btn.mini{padding:3px 10px;font-size:11px}'
+   +'.p2-btn.on{background:var(--grn);color:#fff}'
+   +'.p2-cap{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--bds);background:var(--c1)}'
+   +'.p2-cap>div{padding:11px 15px;border-right:1px solid var(--bds)}.p2-cap>div:last-child{border-right:none}'
+   +'.p2-cap .l{font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}'
+   +'.p2-cap .v{font-family:Outfit,sans-serif;font-size:17px;font-weight:700;margin-top:2px}'
+   +'.p2-bar{height:7px;border-radius:4px;background:var(--bds);overflow:hidden;margin-top:9px}'
+   +'.p2-bar i{display:block;height:100%;border-radius:4px}'
+   +'.p2-empty{padding:20px 0;text-align:center;font-size:12.5px;color:var(--t3)}'
+   +'.p2-mod{border:1px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;background:var(--c0)}'
+   +'.p2-mod h4{font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px}'
+   +'.p2-mod .et{font-size:11.5px;color:var(--t3);line-height:1.6;margin:6px 0 10px}'
+   +'.p2-mod-form{display:flex;gap:7px;flex-wrap:wrap;align-items:center}'
+   +'.p2-mod-form input,.p2-mod-form select{border:1.5px solid var(--bd);border-radius:var(--rx);padding:6px 9px;font-family:inherit;font-size:12px;background:var(--c0);color:var(--t)}'
+   +'.p2-filtro{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}'
+   +'.p2-fchip{border:1.5px solid var(--bd);background:var(--c0);color:var(--t2);border-radius:999px;padding:4px 12px;font-size:11.5px;cursor:pointer;font-family:inherit}'
+   +'.p2-fchip.on{background:var(--m);color:#fff;border-color:var(--m)}'
+   +'@media(max-width:720px){.p2-cap{grid-template-columns:1fr}.p2-row label{width:62px;font-size:9.5px}}';
+  var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+
+  /* ---------- Normalização dos campos novos ---------- */
+  var _norm=norm;
+  norm=function(p){
+    _norm(p);
+    if(p.cliente==null)p.cliente='';
+    if(p.fatal==null)p.fatal=false;
+    if(p.est==null)p.est=0;
+    if(p.planDay==null)p.planDay='';
+    if(p.delegTo==null)p.delegTo='';
+    if(p.delegAt==null)p.delegAt='';
+  };
+  window.norm=norm;
+
+  /* ---------- 1. Correção do "Aguardando" ---------- */
+  var _urgCalc=urgCalc;
+  urgCalc=function(dt,f){
+    if(f==='wait'&&dt){
+      var t=new Date();t.setHours(0,0,0,0);
+      var d=new Date(dt+'T00:00:00');
+      if(d<t)return 'atr';   /* prazo vencido volta a aparecer como atrasado */
+    }
+    return _urgCalc(dt,f);
+  };
+  window.urgCalc=urgCalc;
+
+  /* ---------- Utilitários ---------- */
+  function hojeISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function diasAte(dt){
+    if(!dt)return null;
+    var t=new Date();t.setHours(0,0,0,0);
+    return Math.ceil((new Date(dt+'T00:00:00')-t)/86400000);
+  }
+  function todasTarefas(){
+    var r=[];
+    KEYS.forEach(function(k){(D[k]||[]).forEach(function(p){norm(p);r.push(p);});});
+    return r;
+  }
+  function ativas(){return todasTarefas().filter(function(p){return !isA(p);});}
+  function hs(n){n=parseFloat(n)||0;return n?(n%1===0?n+'h':n.toFixed(1).replace('.',',')+'h'):'';}
+
+  /* ---------- Atualizadores de campo ---------- */
+  window.p2Cliente=function(pid,v){var p=getP(pid);if(!p)return;p.cliente=v;save();};
+  window.p2Est=function(pid,v){var p=getP(pid);if(!p)return;p.est=parseFloat(v)||0;save();};
+  window.p2Fatal=function(pid,v){var p=getP(pid);if(!p)return;p.fatal=!!v;save();render();var c=document.getElementById('pc-'+pid);if(c)c.classList.add('open');};
+  window.p2Deleg=function(pid,v){
+    var p=getP(pid);if(!p)return;
+    v=String(v||'').trim();
+    if(v&&!p.delegTo)p.delegAt=hojeISO();
+    if(!v)p.delegAt='';
+    p.delegTo=v;save();
+  };
+  window.p2Plan=function(pid){
+    var p=getP(pid);if(!p)return;
+    p.planDay=(p.planDay===hojeISO())?'':hojeISO();
+    save();
+    if(_curMod==='hoje')renderHoje();else render();
+  };
+
+  /* ---------- 2 a 5. Injeção dos campos no cartão ---------- */
+  var _mkCard=mkCard;
+  mkCard=function(p,showArea){
+    norm(p);
+    var h=_mkCard(p,showArea);
+
+    /* Selos no cabeçalho */
+    var selos='';
+    if(p.cliente)selos+='<span class="p2-chip p2-cli" title="Cliente / obra / processo">'+eh(p.cliente)+'</span>';
+    if(p.fatal&&p.date&&!isA(p)){
+      var dd=diasAte(p.date);
+      var txt=dd<0?('fatal vencido há '+Math.abs(dd)+'d'):(dd===0?'fatal hoje':'fatal em '+dd+'d');
+      selos+='<span class="p2-chip p2-fatal" title="Prazo improrrogável">'+txt+'</span>';
+    }
+    if(p.est>0)selos+='<span class="p2-chip p2-est">'+hs(p.est)+'</span>';
+    if(p.delegTo)selos+='<span class="p2-chip p2-deleg" title="Aguardando retorno desde '+eh(p.delegAt||'')+'">'+eh(p.delegTo)+'</span>';
+    if(p.planDay===hojeISO()&&!isA(p))selos+='<span class="p2-chip p2-plan">hoje</span>';
+    if(selos)h=h.replace('<div class="pc-sub">','<div class="pc-sub">'+selos);
+
+    /* Campos no corpo */
+    var campos='<div class="p2-fields">'
+      +'<div class="p2-row"><label>Cliente</label>'
+      +'<input type="text" value="'+eh(p.cliente)+'" placeholder="Condomínio, obra ou nº do processo" oninput="p2Cliente('+p.id+',this.value)"></div>'
+      +'<div class="p2-row"><label>Esforço</label>'
+      +'<input type="number" step="0.5" min="0" value="'+(p.est>0?p.est:'')+'" placeholder="horas estimadas" oninput="p2Est('+p.id+',this.value)"></div>'
+      +'<div class="p2-row"><label>Delegado a</label>'
+      +'<input type="text" value="'+eh(p.delegTo)+'" placeholder="quem está com a bola" oninput="p2Deleg('+p.id+',this.value)"></div>'
+      +'<div class="p2-row"><label style="width:auto"></label>'
+      +'<label class="p2-check"><input type="checkbox" '+(p.fatal?'checked':'')+' onchange="p2Fatal('+p.id+',this.checked)">Prazo improrrogável (judicial, legal ou contratual)</label></div>'
+      +(isA(p)?'':'<div class="p2-row"><label style="width:auto"></label>'
+        +'<button class="p2-btn mini '+(p.planDay===hojeISO()?'on':'sec')+'" onclick="p2Plan('+p.id+')">'
+        +(p.planDay===hojeISO()?'✓ no plano de hoje':'+ colocar no plano de hoje')+'</button></div>')
+      +'</div>';
+    h=h.replace('<div class="ctrl-mini-label">Próxima ação</div>',campos+'<div class="ctrl-mini-label">Próxima ação</div>');
+    return h;
+  };
+  window.mkCard=mkCard;
+
+  /* ---------- Modelos de tarefa ---------- */
+  var MODELOS=[
+    {id:'ltip',nome:'LTIP — Laudo Técnico de Inspeção Predial',area:'empresa',dias:30,est:12,
+     etapas:['Contrato assinado e ART registrada','Agendar vistoria com o síndico','Vistoria em campo com registro fotográfico','Organizar e legendar as fotos','Redigir o laudo (skill bm-laudo-ltip)','Revisão técnica e ortográfica','Assinatura digital e exportação em PDF','Protocolo na Prefeitura','Enviar cópia ao condomínio']},
+    {id:'laudo-av',nome:'Laudo de avaliação — nexo causal',area:'empresa',dias:25,est:14,
+     etapas:['Levantamento da documentação do imóvel','Vistoria e registro dos danos','Registro do agente causador','Seleção e legendagem das fotos','Redigir o laudo (skill bm-laudo-avaliacao)','Fundamentação técnica e normativa','Revisão final','Assinatura digital e entrega']},
+    {id:'relatorio',nome:'Relatório técnico de acompanhamento',area:'empresa',dias:10,est:5,
+     etapas:['Vistoria de acompanhamento','Registro fotográfico do estágio da obra','Redigir o relatório (skill bm-relatorio-tecnico)','Revisão','Envio ao cliente']},
+    {id:'ppci',nome:'PPCI — projeto de prevenção de incêndios',area:'empresa',dias:45,est:20,
+     etapas:['Levantamento em campo da edificação','Verificar enquadramento e ocupação','Elaborar o projeto','Registrar ART','Protocolar no Corpo de Bombeiros','Acompanhar exigências e responder','Vistoria final e obtenção do APPCI']},
+    {id:'orcamento',nome:'Orçamento / proposta comercial',area:'empresa',dias:5,est:2,
+     etapas:['Entender o escopo com o cliente','Dimensionar prazo e esforço','Elaborar a proposta (skill bm-orcamento)','Enviar ao cliente','Cobrar retorno','Registrar aceite ou recusa']},
+    {id:'pericia',nome:'Perícia judicial',area:'empresa',dias:30,est:18,
+     etapas:['Aceitar nomeação e verificar prazo processual','Estimar honorários e peticionar','Agendar e comunicar as partes','Diligência pericial','Elaborar o laudo','Protocolar no processo','Responder quesitos complementares']},
+    {id:'senge-evento',nome:'SENGE — evento',area:'senge_eventos',dias:30,est:10,
+     etapas:['Definir tema e formato','Confirmar palestrantes','Reservar espaço e estrutura','Divulgação e inscrições','Realização do evento','Certificados e registro','Ata da reunião (skill senge-ata)']},
+    {id:'carrossel',nome:'Conteúdo — carrossel do Instagram',area:'empresa',dias:7,est:2,
+     etapas:['Escolher o tema e o caso técnico','Selecionar as fotos','Gerar o prompt (skill bm-instagram-carrossel)','Gerar e revisar as artes','Escrever a legenda','Publicar e acompanhar comentários']}
+  ];
+
+  window.p2CriarDeModelo=function(mid){
+    var mo=null;MODELOS.forEach(function(x){if(x.id===mid)mo=x;});
+    if(!mo)return;
+    var cli=(document.getElementById('p2-mod-cli-'+mid)||{}).value||'';
+    var nome=cli?(mo.nome.split(' — ')[0]+' — '+cli):mo.nome;
+    var d=new Date();d.setDate(d.getDate()+mo.dias);
+    var dt=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    uid++;
+    var p={id:uid,name:nome,date:dt,cliente:cli.trim(),est:mo.est,fatal:false,archived:false,
+      steps:mo.etapas.map(function(e){return {t:e,done:false};}),
+      obs:'',nextAction:'',forceUrgency:'auto',recurrence:'',createdAt:new Date().toISOString(),
+      planDay:'',delegTo:'',delegAt:''};
+    if(!Array.isArray(D[mo.area]))D[mo.area]=[];
+    D[mo.area].push(p);
+    save();
+    var inp=document.getElementById('p2-mod-cli-'+mid);if(inp)inp.value='';
+    renderModelos();
+    alert('Tarefa criada em '+(mo.area==='empresa'?'Empresa':'SENGE')+' com '+mo.etapas.length+' etapas e prazo em '+mo.dias+' dias. Ajuste a data se necessário.');
+  };
+
+  function renderModelos(){
+    var h='<div class="p2-card"><div class="p2-hdr"><h3>Modelos de tarefa<small>Fluxos recorrentes com as etapas já preenchidas</small></h3></div><div class="p2-body">'
+      +'<div class="p2-note">Cada modelo cria uma tarefa com as etapas padrão do processo, uma estimativa de esforço e um prazo sugerido contado a partir de hoje. Informe o cliente ou a obra para que o nome da tarefa já saia identificado. Tanto o prazo quanto as etapas podem ser ajustados depois, normalmente, no próprio cartão.</div>';
+    MODELOS.forEach(function(mo){
+      h+='<div class="p2-mod"><h4>'+eh(mo.nome)+'</h4>'
+        +'<div class="et">'+mo.etapas.length+' etapas · esforço estimado '+hs(mo.est)+' · prazo sugerido em '+mo.dias+' dias<br>'
+        +eh(mo.etapas.slice(0,3).join(' → '))+(mo.etapas.length>3?' → …':'')+'</div>'
+        +'<div class="p2-mod-form">'
+        +'<input type="text" id="p2-mod-cli-'+mo.id+'" placeholder="Cliente / obra (opcional)" style="flex:1;min-width:180px">'
+        +'<button class="p2-btn" onclick="p2CriarDeModelo(\''+mo.id+'\')">Criar tarefa</button>'
+        +'</div></div>';
+    });
+    h+='</div></div>';
+    var b=document.getElementById('p2-modelos-body');if(b)b.innerHTML=h;
+  }
+
+  /* ---------- Plano do dia ---------- */
+  var _capacidade=6;
+  window.p2Capacidade=function(v){_capacidade=parseFloat(v)||0;renderHoje();};
+  function renderHoje(){
+    var hoje=hojeISO();
+    var todas=ativas();
+    var noPlano=todas.filter(function(p){return p.planDay===hoje;});
+    var sugeridas=todas.filter(function(p){
+      if(p.planDay===hoje)return false;
+      var u=urgCalc(p.date,p.forceUrgency);
+      return u==='atr'||u==='urg'||(p.fatal&&diasAte(p.date)!==null&&diasAte(p.date)<=7);
+    }).sort(function(a,b){
+      var da=diasAte(a.date),db=diasAte(b.date);
+      if(a.fatal!==b.fatal)return a.fatal?-1:1;
+      if(da===null)return 1;if(db===null)return -1;
+      return da-db;
+    });
+    var carga=noPlano.reduce(function(a,p){return a+(parseFloat(p.est)||0);},0);
+    var pct=_capacidade>0?Math.round(carga/_capacidade*100):0;
+    var cor=pct>100?'var(--red)':(pct>85?'var(--amb)':'var(--grn)');
+
+    function linha(p,dentro){
+      var u=urgCalc(p.date,p.forceUrgency);
+      var dd=diasAte(p.date);
+      return '<div class="p2-li">'
+        +'<span class="ub '+ucls(u)+'" style="flex-shrink:0">'+ulbl(u)+'</span>'
+        +'<span class="nm">'+eh(p.name)+(p.fatal?' <span class="p2-chip p2-fatal">fatal</span>':'')+'</span>'
+        +'<span class="mt">'+(p.cliente?eh(p.cliente)+' · ':'')+(dd===null?'sem prazo':(dd<0?Math.abs(dd)+'d atrasado':(dd===0?'vence hoje':'em '+dd+'d')))+(p.est>0?' · '+hs(p.est):'')+'</span>'
+        +'<button class="p2-btn mini '+(dentro?'sec':'')+'" onclick="p2Plan('+p.id+')">'+(dentro?'tirar':'+ hoje')+'</button>'
+        +'</div>';
+    }
+
+    var h='<div class="p2-card"><div class="p2-hdr"><h3>Plano de hoje<small>'+new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'})+'</small></h3>'
+      +'<div style="display:flex;align-items:center;gap:7px"><span style="font-size:11px;color:var(--t3)">Horas disponíveis</span>'
+      +'<input type="number" step="0.5" min="0" value="'+_capacidade+'" onchange="p2Capacidade(this.value)" style="width:64px;border:1.5px solid var(--bd);border-radius:var(--rx);padding:5px 8px;font-family:inherit;font-size:12.5px;text-align:right;background:var(--c0);color:var(--t)"></div>'
+      +'</div><div class="p2-body">'
+      +'<div class="p2-note">Selecione abaixo o que você realmente pretende fazer hoje. A soma das estimativas é comparada com as horas disponíveis, de modo que o excesso fica visível antes do dia começar, e não depois. Tarefas sem estimativa entram no plano, mas não somam carga.</div>';
+    if(!noPlano.length)h+='<div class="p2-empty">Nenhuma tarefa no plano de hoje. Escolha entre as sugestões abaixo.</div>';
+    noPlano.forEach(function(p){h+=linha(p,true);});
+    h+='<div class="p2-bar"><i style="width:'+Math.min(pct,100)+'%;background:'+cor+'"></i></div>';
+    h+='</div><div class="p2-cap">'
+      +'<div><div class="l">Carga planejada</div><div class="v" style="color:'+cor+'">'+(carga?hs(carga):'0h')+'</div></div>'
+      +'<div><div class="l">Disponível</div><div class="v">'+hs(_capacidade)+'</div></div>'
+      +'<div><div class="l">'+(carga>_capacidade?'Excesso':'Folga')+'</div><div class="v" style="color:'+cor+'">'+hs(Math.abs(_capacidade-carga))+'</div></div>'
+      +'</div></div>';
+
+    h+='<div class="p2-card"><div class="p2-hdr"><h3>Sugestões<small>Atrasadas, urgentes e prazos improrrogáveis nos próximos 7 dias</small></h3>'
+      +'<span class="p2-chip p2-est">'+sugeridas.length+'</span></div><div class="p2-body">';
+    if(!sugeridas.length)h+='<div class="p2-empty">Nada crítico fora do plano. Bom sinal.</div>';
+    sugeridas.slice(0,25).forEach(function(p){h+=linha(p,false);});
+    h+='</div></div>';
+    var b=document.getElementById('p2-hoje-body');if(b)b.innerHTML=h;
+  }
+
+  /* ---------- Revisão semanal ---------- */
+  function renderRevisao(){
+    var t=new Date();t.setHours(0,0,0,0);
+    var ini=new Date(t);ini.setDate(ini.getDate()-7);
+    var concluidas=todasTarefas().filter(function(p){
+      return isA(p)&&p.archivedAt&&new Date(p.archivedAt)>=ini;
+    }).sort(function(a,b){return new Date(b.archivedAt)-new Date(a.archivedAt);});
+
+    var abertas=ativas();
+    var atrasadas=abertas.filter(function(p){return urgCalc(p.date,p.forceUrgency)==='atr';});
+    var paradas=abertas.filter(function(p){
+      if(!p.createdAt)return false;
+      var idade=(t-new Date(p.createdAt))/86400000;
+      var feito=p.steps.filter(function(s){return s.done;}).length;
+      return idade>30&&feito===0;
+    }).sort(function(a,b){return new Date(a.createdAt)-new Date(b.createdAt);});
+    var esperando=abertas.filter(function(p){return p.delegTo;})
+      .sort(function(a,b){return String(a.delegAt||'').localeCompare(String(b.delegAt||''));});
+    var semPrazo=abertas.filter(function(p){return !p.date;});
+    var horasFeitas=concluidas.reduce(function(a,p){return a+(parseFloat(p.est)||0);},0);
+
+    function bloco(tit,sub,arr,fn){
+      var s='<div class="p2-card"><div class="p2-hdr"><h3>'+tit+'<small>'+sub+'</small></h3>'
+        +'<span class="p2-chip '+(arr.length?'p2-fatal':'p2-est')+'">'+arr.length+'</span></div><div class="p2-body">';
+      if(!arr.length)s+='<div class="p2-empty">Nada aqui.</div>';
+      arr.slice(0,40).forEach(function(p){
+        s+='<div class="p2-li"><span class="nm">'+eh(p.name)+(p.cliente?' <span class="p2-chip p2-cli">'+eh(p.cliente)+'</span>':'')+'</span>'
+          +'<span class="mt">'+fn(p)+'</span></div>';
+      });
+      if(arr.length>40)s+='<div class="p2-note" style="margin:9px 0 0">Exibindo as 40 primeiras de '+arr.length+'.</div>';
+      return s+'</div></div>';
+    }
+
+    var h='<div class="p2-card"><div class="p2-cap">'
+      +'<div><div class="l">Concluídas em 7 dias</div><div class="v" style="color:var(--grn)">'+concluidas.length+'</div></div>'
+      +'<div><div class="l">Esforço concluído</div><div class="v">'+(horasFeitas?hs(horasFeitas):'—')+'</div></div>'
+      +'<div><div class="l">Em atraso agora</div><div class="v" style="color:'+(atrasadas.length?'var(--red)':'var(--grn)')+'">'+atrasadas.length+'</div></div>'
+      +'</div></div>';
+    h+='<div class="p2-note" style="padding:0 3px 10px">O balanço abaixo compara o que saiu da sua mesa na última semana com o que continua parado, de forma que a revisão de sexta-feira deixe de depender da memória.</div>';
+    h+=bloco('Concluídas nos últimos 7 dias','O que efetivamente saiu',concluidas,function(p){
+      return new Date(p.archivedAt).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+(p.est>0?' · '+hs(p.est):'');});
+    h+=bloco('Em atraso','Prazo já vencido, inclusive itens que estavam como "Aguardando"',atrasadas,function(p){
+      var d=diasAte(p.date);return d!==null?Math.abs(d)+' dias de atraso':'sem prazo';});
+    h+=bloco('Paradas há mais de 30 dias','Criadas há tempo e sem nenhuma etapa concluída — candidatas a repactuar ou descartar',paradas,function(p){
+      return 'criada em '+new Date(p.createdAt).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});});
+    h+=bloco('Aguardando terceiros','Cobranças pendentes, com o tempo de espera',esperando,function(p){
+      var d=p.delegAt?diasAte(p.delegAt):null;
+      return eh(p.delegTo)+(d!==null?' · há '+Math.abs(d)+' dias':'');});
+    h+=bloco('Sem prazo definido','Não entram em nenhum alerta de urgência',semPrazo,function(){return 'definir prazo';});
+    var b=document.getElementById('p2-revisao-body');if(b)b.innerHTML=h;
+  }
+
+  /* ---------- Montagem das abas e módulos ---------- */
+  function novoModulo(id,titulo,sub){
+    var host=document.querySelector('.module');
+    if(!host||!host.parentNode)return;
+    var d=document.createElement('div');
+    d.className='module';d.id='mod-'+id;
+    d.innerHTML='<div style="padding:22px 26px 8px"><div style="font-family:Outfit,sans-serif;font-size:21px;font-weight:700;color:var(--t)">'+titulo+'</div>'
+      +'<div style="font-size:12.5px;color:var(--t3);margin-top:3px">'+sub+'</div></div>'
+      +'<div style="padding:8px 26px 40px" id="p2-'+id+'-body"></div>';
+    host.parentNode.appendChild(d);
+  }
+  novoModulo('hoje','Hoje','O que você pretende fazer hoje, com a carga somada');
+  novoModulo('revisao','Revisão semanal','Balanço dos últimos sete dias e do que ficou parado');
+  novoModulo('modelos','Modelos','Fluxos recorrentes com etapas já preenchidas');
+
+  var tabHost=document.getElementById('ntab-agenda');
+  if(tabHost&&tabHost.parentNode){
+    function tab(id,label,svg){
+      var b=document.createElement('button');
+      b.className='nav-tab';b.id='ntab-'+id;
+      b.innerHTML='<svg viewBox="0 0 16 16">'+svg+'</svg>'+label;
+      b.onclick=function(){switchMod(id);};
+      return b;
+    }
+    var pai=tabHost.parentNode;
+    pai.insertBefore(tab('hoje','Hoje','<circle cx="8" cy="8" r="6.5"/><path d="M8 4.5v3.5l2.5 1.5"/>'),tabHost.nextSibling);
+    pai.appendChild(tab('revisao','Revisão','<path d="M2 8a6 6 0 1 1 2 4.5"/><polyline points="1,9 2,13 6,12"/>'));
+    pai.appendChild(tab('modelos','Modelos','<rect x="2" y="2" width="12" height="12" rx="2"/><line x1="2" y1="6" x2="14" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/>'));
+  }
+
+  var _switchMod=switchMod;
+  switchMod=function(mod){
+    if(mod==='hoje'||mod==='revisao'||mod==='modelos'){
+      document.querySelectorAll('.module').forEach(function(m){m.classList.remove('on');});
+      document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('on');});
+      document.querySelectorAll('.sb-mod').forEach(function(s){s.classList.remove('on');});
+      var mEl=document.getElementById('mod-'+mod);if(mEl)mEl.classList.add('on');
+      var tEl=document.getElementById('ntab-'+mod);if(tEl)tEl.classList.add('on');
+      _curMod=mod;
+      var fab=document.getElementById('fab-add');if(fab)fab.style.display='none';
+      if(mod==='hoje')renderHoje();
+      else if(mod==='revisao')renderRevisao();
+      else renderModelos();
+      return;
+    }
+    return _switchMod.apply(this,arguments);
+  };
+  window.switchMod=switchMod;
+
+  /* ---------- 8. Contador crítico no título da aba ---------- */
+  var TITULO='Planner — Eng. Jéssica Moraes';
+  function atualizarTitulo(){
+    var crit=ativas().filter(function(p){
+      var u=urgCalc(p.date,p.forceUrgency);
+      return u==='atr'||u==='urg'||(p.fatal&&diasAte(p.date)!==null&&diasAte(p.date)<=3);
+    }).length;
+    document.title=(crit>0?'('+crit+') ':'')+TITULO;
+  }
+
+  var _render=render;
+  render=function(){
+    try{_render.apply(this,arguments);}catch(e){console.error(e);}
+    try{atualizarTitulo();}catch(e){console.error(e);}
+    if(_curMod==='hoje'){try{renderHoje();}catch(e){console.error(e);}}
+    else if(_curMod==='revisao'){try{renderRevisao();}catch(e){console.error(e);}}
+  };
+  window.render=render;
+  window.renderHoje=renderHoje;
+  window.renderRevisao=renderRevisao;
+  window.renderModelos=renderModelos;
+
+  try{todasTarefas();atualizarTitulo();}catch(e){console.error(e);}
+  setInterval(function(){try{atualizarTitulo();}catch(e){}},600000);
+  console.log('planner v2: módulo carregado.');
+})();
+</script>
 
 </body>
