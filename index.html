@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Finanças 2026</title>
-<!-- v17: fatura do cartão passa a seguir o mês aberto na tela; data é histórico da compra. -->
+<!-- v18: datas restauradas no cartao e na conta corrente; separadores de dia; sem data vai para o fim; definicoes duplicadas de renderFatCats removidas. -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* Scrollbar */
@@ -4925,27 +4925,7 @@ function renderRecMes(m){
   /* rec-mes-lista removido */
   /* rec-mes-tot removido */
 }
-function renderFatCats(m){
-  var fat=faturaTotal(m);
-  var todos=itensMes(m,'cartao');
-  var dani=itensMes(m,'dani');
-  var h='';
-  if(faturaAtipica(m)){
-    h+='<div style="padding:8px 15px;background:var(--gl);border-bottom:1px solid var(--bds);font-size:11.5px;color:var(--t2)">'+E(FATURA_ATIPICA[m])+'</div>';
-  }
-  if(!todos.length&&!dani.length){
-    h+='<div class="empty" style="padding:14px">Nenhum lançamento no cartão.</div>';
-  } else {
-    todos.forEach(function(i){h+=mkLi(i);});
-    if(dani.length){
-      h+='<div style="border-top:1px dashed var(--bd);padding:6px 15px;font-size:11px;color:var(--t3)">Gastos Dani</div>';
-      dani.forEach(function(i){h+=mkLi(i);});
-    }
-  }
-  sh('fat-cats',h);
-  el('fat-tot-hdr').textContent=RK(fat);
-  el('fat-tot-foot').textContent=R(fat);
-}
+function renderFatCats(m){} /* v18: declaração mantida apenas como base; a implementação ativa está no fim do arquivo */
 function renderContaLista(m){
   var si=getSaldoInicial(m);
   var siEl=el('saldo-inicial-display');
@@ -6695,16 +6675,7 @@ mkLi=function(i){
     +'</div></div>';
 };
 
-renderFatCats=function(m){
-  var fat=faturaTotal(m);var todos=itensMes(m,'cartao');var dani=itensMes(m,'dani');var h=statusFaturaHtml(m);
-  if(faturaAtipica(m))h+='<div style="padding:8px 15px;background:var(--gl);border-bottom:1px solid var(--bds);font-size:11.5px;color:var(--t2)">'+E(FATURA_ATIPICA[m])+'</div>';
-  if(!todos.length&&!dani.length){h+='<div class="empty" style="padding:14px">Nenhum lançamento no cartão.</div>';}else{
-    todos.forEach(function(i){h+=mkLi(i);});
-    if(dani.length){h+='<div style="border-top:1px dashed var(--bd);padding:6px 15px;font-size:11px;color:var(--t3)">Gastos Dani</div>';dani.forEach(function(i){h+=mkLi(i);});}
-  }
-  sh('fat-cats',h);el('fat-tot-hdr').textContent=RK(fat);el('fat-tot-foot').textContent=R(fat);
-  var fs=el('fat-status-select');if(fs)fs.addEventListener('change',function(){setFatStatus(m,this.value);toast('Status da fatura: '+labelFatStatus(this.value));});
-};
+/* v18: definição duplicada de renderFatCats removida */
 
 function renderCompetenciaMes(m){
   var box=el('visao-competencia-mes');
@@ -6871,17 +6842,7 @@ mkLi=function(i){
     +'</div></div>';
 };
 
-renderFatCats=function(m){
-  var fat=faturaTotal(m);var todos=ordenarItensData(itensMes(m,'cartao'));var dani=ordenarItensData(itensMes(m,'dani'));var h=statusFaturaHtml(m);
-  if(faturaAtipica(m))h+='<div style="padding:8px 15px;background:var(--gl);border-bottom:1px solid var(--bds);font-size:11.5px;color:var(--t2)">'+E(FATURA_ATIPICA[m])+'</div>';
-  var combined=todos.concat(dani.map(function(x){x._daniSep=true;return x;}));
-  combined=ordenarItensData(combined);
-  if(!combined.length){h+='<div class="empty" style="padding:14px">Nenhum lançamento no cartão.</div>';}else{
-    var last='';combined.forEach(function(i){var d=i.data||'';if(d!==last){last=d;h+=sepDataHtml(d);}h+=mkLi(i);});
-  }
-  sh('fat-cats',h);el('fat-tot-hdr').textContent=RK(fat);el('fat-tot-foot').textContent=R(fat);
-  var fs=el('fat-status-select');if(fs)fs.addEventListener('change',function(){setFatStatus(m,this.value);toast('Status da fatura: '+labelFatStatus(this.value));renderFechamentoMes(m);});
-};
+/* v18: definição duplicada de renderFatCats removida */
 
 function renderFechamentoMes(m){
   var box=el('fechamento-mes');if(!box){box=document.createElement('div');box.id='fechamento-mes';var diag=el('diagnostico-mes');if(diag)diag.insertAdjacentElement('afterend',box);}
@@ -7614,7 +7575,7 @@ function toggleVerTudoConta(){
 
 /* V30: conta corrente em lista contínua, sem separadores por data. A data fica discreta na linha. */
 (function(){
-  var css='.v30-date-chip{display:inline-flex;align-items:center;border:1px solid var(--bds);border-radius:999px;padding:1px 6px;margin-left:5px;font-size:9.5px;color:var(--t3);background:var(--bg);font-weight:600}.v30-conta-note{padding:6px 18px 2px;font-size:11px;color:var(--t3);font-style:italic}#conta-lista .fat-date-sep{display:none!important}#conta-lista .saldo-after{display:none!important}';
+  var css='.v30-date-chip{display:inline-flex;align-items:center;border:1px solid var(--bds);border-radius:999px;padding:1px 6px;margin-left:5px;font-size:9.5px;color:var(--t3);background:var(--bg);font-weight:600}.v30-conta-note{padding:6px 18px 2px;font-size:11px;color:var(--t3);font-style:italic}#conta-lista .saldo-after{display:none!important}';
   var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 })();
 
@@ -7685,32 +7646,7 @@ function mkLiCartaoCompacto(i){
     +'<button class="li-btn" data-del="'+id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button>'
     +'</div></div>';
 }
-renderFatCats=function(m){
-  var fat=faturaTotal(m);
-  var todos=itensMes(m,'cartao').slice();
-  var dani=itensMes(m,'dani').slice();
-  var h='';
-  if(faturaAtipica(m)){
-    h+='<div style="padding:8px 15px;background:var(--gl);border-bottom:1px solid var(--bds);font-size:11.5px;color:var(--t2)">'+E(FATURA_ATIPICA[m])+'</div>';
-  }
-  if(todos.length||dani.length){
-    h+='<div class="v31-card-note">Lista contínua, ordenada por data. A data aparece menor dentro de cada lançamento.</div>';
-  }
-  function ord(a,b){var da=a.data||'',db=b.data||'';if(da===db)return 0;return da>db?1:-1;}
-  todos.sort(ord);dani.sort(ord);
-  if(!todos.length&&!dani.length){
-    h+='<div class="empty" style="padding:14px">Nenhum lançamento no cartão.</div>';
-  } else {
-    todos.forEach(function(i){h+=mkLiCartaoCompacto(i);});
-    if(dani.length){
-      h+='<div style="border-top:1px dashed var(--bd);padding:6px 15px;font-size:11px;color:var(--t3)">Gastos Dani</div>';
-      dani.forEach(function(i){h+=mkLiCartaoCompacto(i);});
-    }
-  }
-  sh('fat-cats',h);
-  el('fat-tot-hdr').textContent=RK(fat);
-  el('fat-tot-foot').textContent=R(fat);
-};
+/* v18: definições duplicadas de mkLiCartaoCompacto e renderFatCats removidas */
 try{render();}catch(e){console.error(e);}
 
 </script>
@@ -7777,50 +7713,7 @@ function v32ChipRow(i,opts){
   if(i._conc)chips+='<span class="v32-chip v32-chip-date">Conferido</span>';
   return '<div class="v32-chip-row">'+chips+'</div>';
 }
-function mkLiCartaoCompacto(i){
-  var isReembolso=parseFloat(i.valor||0)<0;
-  var cor=v32CatColor(i.cat||i.tipo||'Revisar categoria');
-  var valCls=isReembolso?'ok':(i.tipo==='dani'?'dani':'cartao');
-  var obs=(i.obs||'').trim();
-  var showObs=obs && !/^(última parcela|ultima parcela)$/i.test(obs);
-  var obsHtml=showObs?'<div class="li-obs">'+E(obs)+'</div>':'';
-  var id=i.id;
-  return '<div class="li" data-cat="'+E(i.cat||'')+'" data-tipo="'+E(i.tipo||'')+'" data-valor="'+(parseFloat(i.valor||0)||0)+'" data-parcela="'+E(i.parcela||'')+'">'
-    +'<div class="li-dot" style="background:'+cor+'"></div>'
-    +'<div class="li-info"><div class="li-nome">'+E(i.nome||'Lançamento')+'</div>'+v32ChipRow(i)+obsHtml+'</div>'
-    +'<div class="li-val '+valCls+'">'+R(i.valor)+'</div>'
-    +'<div class="li-acts">'
-    +'<button class="li-btn" data-copy="'+id+'" title="Duplicar"><svg viewBox="0 0 16 16"><rect x="5" y="5" width="8" height="9" rx="1"/><rect x="3" y="3" width="8" height="9" rx="1" style="fill:none;stroke:currentColor"/></svg></button>'
-    +'<button class="li-btn e" data-edit="'+id+'"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button>'
-    +'<button class="li-btn" data-del="'+id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button>'
-    +'</div></div>';
-}
-renderFatCats=function(m){
-  var fat=faturaTotal(m);
-  var todos=itensMes(m,'cartao').slice();
-  var dani=itensMes(m,'dani').slice();
-  var h='';
-  if(faturaAtipica(m)){
-    h+='<div style="padding:8px 15px;background:var(--gl);border-bottom:1px solid var(--bds);font-size:11.5px;color:var(--t2)">'+E(FATURA_ATIPICA[m])+'</div>';
-  }
-  if(todos.length||dani.length){
-    h+='<div class="v32-card-note">Lista contínua, ordenada por data. Categoria, parcela e data aparecem em marcadores compactos.</div>';
-  }
-  function ord(a,b){var da=a.data||'',db=b.data||'';if(da===db)return 0;return da>db?1:-1;}
-  todos.sort(ord);dani.sort(ord);
-  if(!todos.length&&!dani.length){
-    h+='<div class="empty" style="padding:14px">Nenhum lançamento no cartão.</div>';
-  } else {
-    todos.forEach(function(i){h+=mkLiCartaoCompacto(i);});
-    if(dani.length){
-      h+='<div style="border-top:1px dashed var(--bd);padding:6px 15px;font-size:11px;color:var(--t3)">Gastos Dani</div>';
-      dani.forEach(function(i){h+=mkLiCartaoCompacto(i);});
-    }
-  }
-  sh('fat-cats',h);
-  el('fat-tot-hdr').textContent=RK(fat);
-  el('fat-tot-foot').textContent=R(fat);
-};
+/* v18: definições duplicadas de mkLiCartaoCompacto e renderFatCats removidas */
 renderContaLista=function(m){
   var si=getSaldoInicial(m);
   var siEl=el('saldo-inicial-display');
@@ -7834,9 +7727,15 @@ renderContaLista=function(m){
   itensMes(m,'entrada').concat(itensMes(m,'reembolso')).concat(itensMes(m,'outros')).concat(itensMes(m,'saida')).concat(itensMes(m,'cofre')).forEach(function(i){arr.push(i);});
   arr.sort(function(a,b){var da=a.data||dataBase,db=b.data||dataBase;if(da===db)return 0;return da>db?1:-1;});
   function sinal(i){var v=parseFloat(i.valor||0)||0;return (i.tipo==='entrada'||i.tipo==='reembolso'||i.tipo==='outros'||i.base)?v:-Math.abs(v);}
-  var saldo=si||0,h='';
+  var saldo=si||0,h='',lastD='__';
   arr.forEach(function(i){
     saldo+=sinal(i);
+    var dAtual=i.data||dataBase;
+    if(dAtual!==lastD){
+      lastD=dAtual;
+      var totalDia=arr.filter(function(x){return (x.data||dataBase)===dAtual;}).reduce(function(a,x){return a+sinal(x);},0);
+      h+='<div data-sep class="fat-date-sep"><span>'+fmtDataCurta(dAtual)+'</span><div></div><em class="conta-day-total">'+(totalDia>=0?'+':'-')+RK(Math.abs(totalDia))+'</em></div>';
+    }
     var entrada=sinal(i)>=0;
     var valorAbs=Math.abs(parseFloat(i.valor||0)||0);
     var cor=v32CatColor(i.cat||i.tipo||(entrada?'Entrada':'Revisar categoria'));
@@ -7987,7 +7886,7 @@ try{render();}catch(e){console.error(e);}
   #saldo-inicial-display>div:first-child{padding:7px 15px!important;font-size:11px!important;border-bottom:1px solid var(--bds)!important;background:var(--bg)!important}
 
   /* Compatibilidade com classes antigas que ainda possam aparecer */
-  .fat-date-sep{display:none!important}
+  /* v18: regra removida — separadores de dia reativados */
   .saldo-after{display:none!important}
   `;
   var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
@@ -8023,7 +7922,7 @@ try{render();}catch(e){console.error(e);}
 /* V35: cartão sem data; observações do cartão como chip ao lado da categoria. Conta corrente mantém data. */
 (function(){
   var css=`
-  #fat-cats .v32-chip-date{display:none!important}
+  /* v18: regra removida — a data do cartão volta a ser exibida */
   .v35-chip-obs{color:var(--t2)!important;background:var(--neubg)!important;border-color:var(--bds)!important;font-weight:600!important;max-width:220px;overflow:hidden;text-overflow:ellipsis}
   #fat-cats .li-obs{display:none!important}
   #fat-cats .v35-card-note{display:none!important}
@@ -8067,15 +7966,36 @@ renderFatCats=function(m){
   if(faturaAtipica(m)){
     h+='<div style="padding:8px 15px;background:var(--gl);border-bottom:1px solid var(--bds);font-size:11.5px;color:var(--t2)">'+E(FATURA_ATIPICA[m])+'</div>';
   }
-  function ord(a,b){var da=a.data||'',db=b.data||'';if(da===db)return 0;return da>db?1:-1;}
+  /* v18: lançamentos sem data vão para o fim; empate no mesmo dia mantém a ordem de inserção */
+  function ord(a,b){
+    var da=a.data||'', db=b.data||'';
+    if(!da&&!db)return 0;
+    if(!da)return 1;
+    if(!db)return -1;
+    if(da===db)return 0;
+    return da>db?1:-1;
+  }
   todos.sort(ord);dani.sort(ord);
+  function blocoComDatas(lista){
+    var s='', last='__';
+    lista.forEach(function(i){
+      var d=i.data||'';
+      if(d!==last){
+        last=d;
+        var totalDia=lista.filter(function(x){return (x.data||'')===d;}).reduce(function(a,x){return a+(parseFloat(x.valor||0)||0);},0);
+        s+='<div data-sep class="fat-date-sep"><span>'+(d?fmtDataCurta(d):'Sem data')+'</span><div></div><em class="conta-day-total">'+RK(totalDia)+'</em></div>';
+      }
+      s+=mkLiCartaoCompacto(i);
+    });
+    return s;
+  }
   if(!todos.length&&!dani.length){
     h+='<div class="empty" style="padding:14px">Nenhum lançamento no cartão.</div>';
   } else {
-    todos.forEach(function(i){h+=mkLiCartaoCompacto(i);});
+    h+=blocoComDatas(todos);
     if(dani.length){
       h+='<div style="border-top:1px dashed var(--bd);padding:6px 15px;font-size:11px;color:var(--t3)">Gastos Dani</div>';
-      dani.forEach(function(i){h+=mkLiCartaoCompacto(i);});
+      h+=blocoComDatas(dani);
     }
   }
   sh('fat-cats',h);
@@ -8125,6 +8045,7 @@ function v35ObsChip(obs){
 function v35ChipRowCartao(i){
   var chips='';
   chips+=v32CatChip(i.cat||i.tipo||'Revisar categoria');
+  chips+=v32DateChip(i.data||'');   /* v18: data de volta no cartão */
   chips+=v35ObsChip(i.obs||'');
   chips+=v32ParcelaChip(i.parcela||'',i.obs||'');
   if(i._conc)chips+='<span class="v32-chip v32-chip-date" style="display:inline-flex!important">Conferido</span>';
