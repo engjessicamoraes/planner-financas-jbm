@@ -8550,5 +8550,107 @@ try{
 })();
 </script>
 
+
+<script>
+/* ============================================================
+   CAMADA DE DESIGN — FINANÇAS
+   Medida única de leitura, respiro simétrico, anatomia de linha
+   em grade e escala tipográfica reduzida.
+   Injetada por último para prevalecer sobre os estilos herdados.
+   ============================================================ */
+(function(){
+  var css=''
+  /* ---------- Tokens ---------- */
+  +':root{--medida:1160px;--goteira:48px;--t-micro:11px;--t-sec:12.5px;--t-corpo:13.5px;'
+  +'--t-titulo:15px;--t-pagina:22px;--t-numero:27px;--esp-1:8px;--esp-2:16px;--esp-3:24px;--esp-4:40px}'
+
+  /* ---------- Medida e respiro ---------- */
+  +'.page{max-width:var(--medida)!important;padding:38px var(--goteira) 80px!important;margin:0 auto!important}'
+  +'.pg-title{font-size:var(--t-pagina)!important;letter-spacing:-.02em!important;line-height:1.15}'
+  +'.pg-sub{font-size:var(--t-sec)!important;color:var(--t3)!important;margin:5px 0 var(--esp-4)!important}'
+
+  /* ---------- Superfícies: uma borda, uma sombra, um raio ---------- */
+  +'.sec,.pl-card{border:1px solid var(--bd)!important;border-radius:12px!important;'
+  +'box-shadow:0 1px 3px rgba(60,40,50,.05)!important;margin-bottom:var(--esp-3)!important}'
+  +'.g2{gap:var(--esp-3)!important;margin-bottom:var(--esp-3)!important}'
+  +'.scards{gap:var(--esp-2)!important;margin-bottom:var(--esp-4)!important}'
+
+  /* ---------- Cabeçalho de seção: filete + micro-rótulo ---------- */
+  +'.sec-h,.pl-hdr{padding:15px 18px 13px!important;border-bottom:1px solid var(--bds)!important;position:relative}'
+  +'.sec-h::before,.pl-hdr::before{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;background:var(--m);opacity:.85}'
+  +'.sec-t,.pl-hdr h3{font-family:Outfit,sans-serif!important;font-size:var(--t-titulo)!important;'
+  +'font-weight:700!important;letter-spacing:-.01em!important;color:var(--t)!important}'
+  +'.pl-hdr small{font-size:var(--t-micro)!important;color:var(--t3)!important;text-transform:none!important;letter-spacing:0!important;margin-top:3px!important}'
+  +'.sec-r{font-size:var(--t-corpo)!important;font-weight:700!important;font-variant-numeric:tabular-nums!important}'
+
+  /* ---------- Anatomia da linha: grade com colunas ancoradas ---------- */
+  +'.li{display:grid!important;grid-template-columns:auto minmax(0,1fr) 132px auto!important;'
+  +'align-items:center!important;gap:14px!important;padding:11px 18px!important}'
+  +'.li-acts{justify-self:end}'
+  +'.li-nome{font-size:var(--t-corpo)!important;font-weight:500!important;line-height:1.35}'
+  +'.li-sub{font-size:var(--t-micro)!important;margin-top:3px!important;line-height:1.4}'
+  +'.li-val{font-size:var(--t-corpo)!important;font-weight:700!important;text-align:right!important;'
+  +'font-variant-numeric:tabular-nums!important;min-width:0!important;justify-self:end}'
+  +'#fat-cats .li-val,#conta-lista .li-val{min-width:0!important}'
+
+  /* ---------- Separadores de dia ---------- */
+  +'.fat-date-sep{padding:9px 18px 7px!important;background:var(--bg)!important;'
+  +'border-top:1px solid var(--bds)!important;border-bottom:1px solid var(--bds)!important}'
+  +'.fat-date-sep span{font-size:var(--t-micro)!important;font-weight:700!important;'
+  +'text-transform:uppercase!important;letter-spacing:.09em!important;color:var(--t3)!important}'
+  +'.fat-date-sep .conta-day-total{font-size:var(--t-micro)!important;font-variant-numeric:tabular-nums!important}'
+
+  /* ---------- Telas de planejamento ---------- */
+  +'.pl-body{padding:16px 18px!important}'
+  +'.pl-note{font-size:var(--t-sec)!important;line-height:1.65!important;color:var(--t3)!important;'
+  +'padding-bottom:var(--esp-2)!important;max-width:64ch}'
+  +'.pl-tot{border-top:1px solid var(--bds)!important}'
+  +'.pl-tot div{padding:14px 18px!important}'
+  +'.pl-tot .l{font-size:9.5px!important;letter-spacing:.09em!important}'
+  +'.pl-tot .v{font-size:var(--t-numero)!important;margin-top:4px!important;letter-spacing:-.02em}'
+  +'.orc-row{grid-template-columns:minmax(0,1fr) 118px 118px 68px!important;gap:14px!important;padding:11px 0!important}'
+  +'.orc-nome{font-size:var(--t-corpo)!important}'
+  +'.orc-val{font-size:var(--t-corpo)!important}'
+  +'.proj-row{grid-template-columns:132px minmax(0,1fr) 128px!important;gap:16px!important;padding:12px 0!important}'
+  +'.proj-mes{font-size:var(--t-corpo)!important}'
+  +'.proj-mes small{font-size:var(--t-micro)!important;margin-top:2px}'
+  +'.proj-v{font-size:var(--t-corpo)!important}'
+
+  /* Pendências: linha em grade, com contexto em coluna própria */
+  +'.pend-item{display:grid!important;grid-template-columns:minmax(0,1fr) 240px 108px 74px!important;'
+  +'gap:14px!important;align-items:center!important;padding:11px 0!important;font-size:var(--t-corpo)!important}'
+  +'.pend-item .m{font-size:var(--t-micro)!important;text-align:right!important;overflow:hidden;text-overflow:ellipsis}'
+  +'.pend-item .v{text-align:right!important;font-variant-numeric:tabular-nums!important}'
+  +'.pend-item .pl-btn{justify-self:end}'
+  /* Dois blocos lado a lado quando há largura, em vez de empilhar */
+  +'@media(min-width:1000px){#pl-pendencias-body{display:grid;grid-template-columns:1fr 1fr;'
+  +'gap:0 var(--esp-3);align-items:start}#pl-pendencias-body>.pl-card:first-child{grid-column:1/-1}}'
+
+  /* Despesas fixas */
+  +'.fix-grid{grid-template-columns:minmax(0,1.7fr) 108px minmax(0,1.2fr) 128px 72px 44px!important;'
+  +'gap:12px!important;padding:10px 0!important}'
+  +'.fix-lbl{font-size:9.5px!important;letter-spacing:.09em!important}'
+
+  /* ---------- Formulários e botões: um só raio, um só peso ---------- */
+  +'.pl-btn,.btn-s,.btn-c,.mn-add,.fb{border-radius:9px!important;font-size:var(--t-sec)!important;font-weight:600!important}'
+  +'.orc-inp,.fix-grid input,.fix-grid select{border-radius:9px!important;font-size:var(--t-sec)!important;padding:7px 10px!important}'
+  +'.pl-empty{padding:26px 0!important;font-size:var(--t-sec)!important}'
+  +'.pl-alert{padding:13px 16px!important;font-size:var(--t-sec)!important;line-height:1.6!important;margin-bottom:var(--esp-3)!important}'
+
+  /* ---------- Reduções em telas menores ---------- */
+  +'@media(max-width:1080px){.page{padding:30px 28px 64px!important}'
+  +'.pend-item{grid-template-columns:minmax(0,1fr) 100px 68px!important}.pend-item .m{display:none}}'
+  +'@media(max-width:760px){.page{padding:22px 16px 56px!important}'
+  +'.li{grid-template-columns:auto minmax(0,1fr) 96px auto!important;gap:10px!important}'
+  +'.orc-row{grid-template-columns:minmax(0,1fr) 84px 84px 52px!important;gap:8px!important}'
+  +'.proj-row{grid-template-columns:96px minmax(0,1fr) 92px!important;gap:10px!important}}';
+
+  var st=document.createElement('style');
+  st.id='camada-design-financas';
+  st.textContent=css;
+  document.head.appendChild(st);
+})();
+</script>
+
 </body>
 </html>
