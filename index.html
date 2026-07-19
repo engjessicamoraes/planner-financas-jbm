@@ -9095,5 +9095,326 @@ try{
 })();
 </script>
 
+
+<script>
+/* ============================================================
+   V22 — AJUSTES DE USO (FINANÇAS)
+   Avisos enxutos, cartões do mês ocupando a largura,
+   financiamentos em coluna única, meses de parcelamentos
+   recolhíveis, orçamento completo e telas renomeadas.
+   ============================================================ */
+(function(){
+  if(typeof DB==='undefined'){console.error('v22: DB indisponível');return;}
+  var DESP=['cartao','dani','saida','cofre'];
+
+  /* ---------- CSS ---------- */
+  var css=''
+  /* A. Cartões do topo do mês ocupam a largura inteira */
+  +'.scards{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))!important;'
+  +'gap:14px!important;margin-bottom:22px!important}'
+  +'.sc{border:1px solid var(--bd)!important;border-top-width:1px!important;border-radius:12px!important;'
+  +'box-shadow:none!important;padding:15px 17px!important;position:relative;overflow:hidden}'
+  +'.sc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--bd)}'
+  +'.sc.ok::before{background:var(--ok)}.sc.m::before{background:var(--m)}'
+  +'.sc.gold::before{background:var(--g)}.sc.neu::before{background:var(--bd)}'
+  +'.sc-v{font-variant-numeric:tabular-nums!important;letter-spacing:-.022em!important}'
+  +'.sc-l{font-size:12px!important;color:var(--t2)!important;margin-top:2px!important}'
+  +'.sc-s{font-size:10.5px!important;color:var(--t3)!important;margin-top:2px!important}'
+
+  /* B. Financiamentos em coluna única */
+  +'#financ-lista{display:block!important}'
+  +'#financ-lista>*{margin-bottom:20px}'
+
+  /* C. Avisos enxutos */
+  +'.backup-reminder{display:none!important}'
+  +'.v13-rule-note{background:none!important;border:none!important;border-left:2px solid var(--bd)!important;'
+  +'border-radius:0!important;padding:2px 0 2px 12px!important;margin:0 0 18px!important;'
+  +'font-size:11.5px!important;color:var(--t3)!important;line-height:1.55!important}'
+  +'.v13-rule-note strong{font-weight:600!important;color:var(--t2)!important}'
+  +'.fin-summary-note,.v8-note{font-size:11.5px!important;color:var(--t3)!important;line-height:1.6!important}'
+
+  /* D. Meses de parcelamentos recolhíveis */
+  +'.v8-parc-month-h{cursor:pointer!important;position:relative!important;padding-right:44px!important;user-select:none}'
+  +'.v8-parc-month-h::after{content:"";position:absolute;right:18px;top:50%;width:8px;height:8px;'
+  +'border-right:2px solid var(--t3);border-bottom:2px solid var(--t3);'
+  +'transform:translateY(-70%) rotate(45deg);transition:transform .2s}'
+  +'.v8-parc-month.fechado .v8-parc-month-h::after{transform:translateY(-30%) rotate(-135deg)}'
+  +'.v8-parc-month.fechado .v8-parc-month-h{border-bottom:none!important}'
+  +'.v8-parc-month.fechado>*:not(.v8-parc-month-h){display:none!important}'
+  +'.v8-parc-month{margin-bottom:12px!important}'
+
+  /* F. Notas ocupam a largura disponível */
+  +'.pl-note{max-width:none!important;font-style:normal!important}'
+
+  /* E. Orçamento */
+  +'.orc-inp{border:1px solid var(--bd)!important;background:var(--card)!important;'
+  +'text-align:right!important;font-variant-numeric:tabular-nums!important}'
+  +'.orc-inp:focus{border-color:var(--m)!important;outline:none}'
+  +'.orc-inp::placeholder{color:var(--t4,#b9adb3);font-style:normal}'
+  +'.orc-vazia{opacity:.55}'
+  +'.orc-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}'
+  +'.orc-check{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--t3);cursor:pointer}'
+  +'.orc-check input{width:14px;height:14px;accent-color:var(--m);cursor:pointer}';
+  var st=document.createElement('style');st.id='camada-v22';st.textContent=css;
+  document.head.appendChild(st);
+
+  /* ---------- C. Encurtar o aviso de anti-duplicidade ---------- */
+  function enxugarAvisos(){
+    document.querySelectorAll('.v13-rule-note').forEach(function(n){
+      if(n.dataset.enxuto)return;
+      n.dataset.enxuto='1';
+      n.innerHTML='<strong>Atenção:</strong> marcar um parcelamento como recebido não entra no caixa. '
+        +'Para entrar, lance a entrada na conta corrente.';
+    });
+  }
+
+  /* ---------- D. Recolher meses de parcelamentos ---------- */
+  var mesesFechados={};
+  function aplicarRecolhimento(){
+    var mAtual=(typeof mesAtual!=='undefined')?mesAtual:new Date().getMonth()+1;
+    document.querySelectorAll('.v8-parc-month').forEach(function(bloco,ix){
+      var h=bloco.querySelector('.v8-parc-month-h');
+      if(!h)return;
+      var nome=(h.querySelector('.m')||{}).textContent||String(ix);
+      if(!bloco.dataset.prep){
+        bloco.dataset.prep='1';
+        bloco.dataset.mes=nome;
+        /* Por padrão, só o mês corrente nasce aberto */
+        var ehAtual=(typeof MESES!=='undefined')&&MESES[mAtual-1]&&
+                    nome.toLowerCase().indexOf(MESES[mAtual-1].toLowerCase())>=0;
+        if(mesesFechados[nome]===undefined)mesesFechados[nome]=!ehAtual;
+      }
+      if(mesesFechados[bloco.dataset.mes])bloco.classList.add('fechado');
+      else bloco.classList.remove('fechado');
+    });
+  }
+  document.addEventListener('click',function(ev){
+    var h=ev.target.closest&&ev.target.closest('.v8-parc-month-h');
+    if(!h)return;
+    if(ev.target.closest('button')||ev.target.closest('input')||ev.target.closest('a'))return;
+    var bloco=h.closest('.v8-parc-month');
+    if(!bloco)return;
+    var nome=bloco.dataset.mes||'';
+    mesesFechados[nome]=!bloco.classList.contains('fechado');
+    bloco.classList.toggle('fechado');
+  });
+
+  /* ---------- E. Orçamento completo ---------- */
+  var METAS=(typeof METAS_SK!=='undefined')?METAS_SK:'pjm-metas-v1';
+  var mostrarTodas=false;
+  function metasLer(){try{return JSON.parse(localStorage.getItem(METAS)||'{}');}catch(e){return {};}}
+  function metasGravar(o){
+    try{localStorage.setItem(METAS,JSON.stringify(o));}catch(e){}
+    if(typeof fsScheduleWrite==='function')fsScheduleWrite();
+    if(typeof cloudScheduleWrite==='function')cloudScheduleWrite();
+  }
+  function gastoCat(m,cat){
+    return DB.items.filter(function(i){return i.mes===m&&(i.cat||'')===cat&&DESP.indexOf(i.tipo)>=0;})
+      .reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0);
+  }
+  function mediaCat(cat,mRef,n){
+    var s=0,c=0;
+    for(var k=1;k<=n;k++){var m=mRef-k;if(m<1)break;s+=gastoCat(m,cat);c++;}
+    return c?s/c:0;
+  }
+  window.orcMostrarTodas=function(v){mostrarTodas=!!v;renderOrcamentoV22();};
+  window.orcSalvarV22=function(){
+    var o=metasLer(),n=0;
+    document.querySelectorAll('[data-orc-cat]').forEach(function(inp){
+      var cat=inp.getAttribute('data-orc-cat');
+      var v=parseFloat(inp.value)||0;
+      if(v>0){o[cat]=v;n++;}else delete o[cat];
+    });
+    metasGravar(o);
+    toast(n?('Orçamento salvo: '+n+' categorias com teto definido.'):'Orçamento limpo.');
+    renderOrcamentoV22();
+  };
+  window.orcSugerirV22=function(){
+    var red=parseFloat((el('orc-reducao')||{}).value)||10;
+    var m=(typeof mesAtual!=='undefined')?mesAtual:7,n=0;
+    document.querySelectorAll('[data-orc-cat]').forEach(function(inp){
+      var md=mediaCat(inp.getAttribute('data-orc-cat'),m,3);
+      if(md<=0)return;
+      inp.value=Math.round(md*(1-red/100));n++;
+    });
+    toast(n?('Sugestão preenchida em '+n+' categorias. Confira e clique em Salvar orçamento.')
+           :'Ainda não há histórico nos meses anteriores para sugerir.');
+  };
+
+  function renderOrcamentoV22(){
+    var m=(typeof mesAtual!=='undefined')?mesAtual:7;
+    var metas=metasLer();
+    var cats=(typeof CATS_TODOS!=='undefined'?CATS_TODOS:[])
+      .filter(function(c){return c!=='Movimentação financeira';});
+    var linhas=cats.map(function(c){
+      return {cat:c,gasto:gastoCat(m,c),orc:parseFloat(metas[c])||0,media:mediaCat(c,m,3)};
+    });
+    var visiveis=mostrarTodas?linhas:linhas.filter(function(x){return x.gasto>0||x.orc>0;});
+    visiveis.sort(function(a,b){return (b.orc||b.gasto)-(a.orc||a.gasto);});
+    var ocultas=linhas.length-visiveis.length;
+    var totOrc=linhas.reduce(function(a,x){return a+x.orc;},0);
+    var totGasto=linhas.reduce(function(a,x){return a+x.gasto;},0);
+    var estouro=linhas.filter(function(x){return x.orc>0&&x.gasto>x.orc;});
+
+    var h='';
+    if(estouro.length){
+      h+='<div class="pl-alert"><strong>'+estouro.length+' categoria'+(estouro.length>1?'s passaram':' passou')
+        +' do teto em '+MESES[m-1]+':</strong> '
+        +estouro.map(function(x){return E(x.cat)+' ('+RK(x.gasto-x.orc)+' acima)';}).join(', ')+'.</div>';
+    }
+    h+='<div class="pl-card"><div class="pl-hdr">'
+      +'<h3>Orçamento por categoria<small>'+MESES[m-1]+' de 2026 — digite o teto mensal em cada linha</small></h3>'
+      +'<div class="orc-tools">'
+      +'<label class="orc-check"><input type="checkbox" '+(mostrarTodas?'checked':'')
+      +' onchange="orcMostrarTodas(this.checked)">mostrar todas as categorias</label>'
+      +'<span style="font-size:11px;color:var(--t3)">reduzir</span>'
+      +'<input id="orc-reducao" type="number" min="0" max="90" step="5" value="10" '
+      +'style="width:54px;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;'
+      +'font-family:inherit;font-size:12.5px;text-align:right;background:var(--card);color:var(--t)">'
+      +'<span style="font-size:11px;color:var(--t3)">%</span>'
+      +'<button class="pl-btn sec" onclick="orcSugerirV22()">Sugerir metas</button>'
+      +'<button class="pl-btn" onclick="orcSalvarV22()">Salvar orçamento</button>'
+      +'</div></div><div class="pl-body">'
+      +'<div class="pl-note">Digite quanto pretende gastar no máximo em cada categoria e clique em Salvar orçamento. '
+      +'A barra e o percentual só aparecem depois de salvar. Se não quiser limitar alguma categoria, deixe o campo vazio. '
+      +'O botão Sugerir metas preenche tudo de uma vez, partindo da média real dos três meses anteriores menos o percentual indicado.</div>'
+      +'<div class="orc-row" style="border-bottom:1px solid var(--bd)">'
+      +'<div class="fix-lbl">Categoria</div>'
+      +'<div class="fix-lbl" style="text-align:right">Gasto no mês</div>'
+      +'<div class="fix-lbl" style="text-align:right">Teto mensal (R$)</div>'
+      +'<div class="fix-lbl" style="text-align:right">Uso</div></div>';
+
+    if(!visiveis.length){
+      h+='<div class="pl-empty">Nenhum gasto lançado neste mês. Marque "mostrar todas as categorias" para definir tetos desde já.</div>';
+    }
+    visiveis.forEach(function(x){
+      var pct=x.orc>0?Math.round(x.gasto/x.orc*100):0;
+      var cor=pct>=100?'var(--bad)':(pct>=80?'var(--g)':'var(--ok)');
+      var cls=pct>=100?'pct-bad':(pct>=80?'pct-warn':'pct-ok');
+      var varTxt='';
+      if(x.media>0){
+        var dv=Math.round((x.gasto-x.media)/x.media*100);
+        varTxt='<span class="v21-var '+(dv>=10?'v21-up':(dv<=-10?'v21-dn':'v21-eq'))
+          +'" title="Média dos três meses anteriores: '+RK(x.media)+'">'+(dv>0?'+':'')+dv+'% vs média</span>';
+      }
+      h+='<div class="orc-row'+(x.gasto===0&&x.orc===0?' orc-vazia':'')+'">'
+        +'<div class="orc-nome"><span class="orc-dot" style="background:'
+        +((typeof v32CatColor==='function')?v32CatColor(x.cat):'var(--m)')+'"></span>'+E(x.cat)+varTxt+'</div>'
+        +'<div class="orc-val">'+RK(x.gasto)+'</div>'
+        +'<div><input class="orc-inp" type="number" step="10" min="0" data-orc-cat="'+E(x.cat)+'" '
+        +'value="'+(x.orc>0?x.orc:'')+'" placeholder="sem limite"></div>'
+        +'<div class="orc-pct '+(x.orc>0?cls:'')+'">'+(x.orc>0?pct+'%':'—')+'</div>';
+      if(x.orc>0)h+='<div class="orc-bar"><i style="width:'+Math.min(pct,100)+'%;background:'+cor+'"></i></div>';
+      h+='</div>';
+    });
+    if(!mostrarTodas&&ocultas>0){
+      h+='<div class="pl-note" style="padding-top:14px;padding-bottom:0">'+ocultas
+        +' categorias sem gasto e sem teto estão ocultas. Marque "mostrar todas" acima para defini-las.</div>';
+    }
+    h+='</div><div class="pl-tot">'
+      +'<div><div class="l">Orçamento total</div><div class="v">'+RK(totOrc)+'</div></div>'
+      +'<div><div class="l">Gasto no mês</div><div class="v" style="color:'
+      +(totOrc>0&&totGasto>totOrc?'var(--bad)':'var(--t)')+'">'+RK(totGasto)+'</div></div>'
+      +'<div><div class="l">'+(totOrc>0?(totGasto>totOrc?'Acima em':'Disponível'):'Sem teto definido')
+      +'</div><div class="v" style="color:'+(totOrc>0?(totGasto>totOrc?'var(--bad)':'var(--ok)'):'var(--t3)')+'">'
+      +(totOrc>0?RK(Math.abs(totOrc-totGasto)):'—')+'</div></div>'
+      +'</div></div>';
+    sh('pl-orcamento-body',h);
+  }
+
+  /* ---------- G. Renomear telas que colidiam ---------- */
+  function renomear(){
+    var mapa=[
+      ['fixas','Contas recorrentes','Contas que se repetem todo mês, cadastradas uma vez'],
+      ['fixos','Comprometimento','Quanto da sua renda já está decidida antes de qualquer escolha']
+    ];
+    mapa.forEach(function(x){
+      var ni=document.querySelector('.ni[data-v="'+x[0]+'"]');
+      if(ni){
+        var svg=ni.querySelector('svg');
+        var tag=ni.querySelector('.ni-tag');
+        ni.innerHTML='';
+        if(svg)ni.appendChild(svg);
+        ni.appendChild(document.createTextNode(x[1]));
+        if(tag)ni.appendChild(tag);
+      }
+      var pg=el('v-'+x[0]);
+      if(pg){
+        var t=pg.querySelector('.pg-title'),s=pg.querySelector('.pg-sub');
+        if(t)t.textContent=x[1];
+        if(s)s.textContent=x[2];
+      }
+    });
+    /* H. Reclassificação deixa de ser aba própria */
+    var niRecat=document.querySelector('.ni[data-v="recat"]');
+    if(niRecat)niRecat.style.display='none';
+  }
+
+  /* ---------- H. Reclassificação dentro de Pendências ---------- */
+  function juntarRecat(){
+    var alvo=el('pl-pendencias-body');
+    if(!alvo||el('recat-embutido'))return;
+    var origem=el('pl-recat-body');
+    if(!origem)return;
+    var caixa=document.createElement('div');
+    caixa.id='recat-embutido';
+    caixa.innerHTML=origem.innerHTML;
+    alvo.appendChild(caixa);
+    /* religa o botão de aplicar, que veio clonado */
+    var b=caixa.querySelector('#v21-aplicar');
+    if(b){
+      b.id='v21-aplicar-emb';
+      b.onclick=function(){
+        var n=0;
+        caixa.querySelectorAll('[data-v21-rc]').forEach(function(cb){
+          if(!cb.checked)return;
+          var id=cb.getAttribute('data-v21-rc');
+          var sel=caixa.querySelector('[data-v21-rcat="'+id+'"]');
+          if(sel&&typeof v21Recat==='function'){v21Recat(id,sel.value);n++;}
+        });
+        dbSave();render();
+        toast(n?(n+' lançamento'+(n>1?'s reclassificados':' reclassificado')+'.'):'Nada selecionado.');
+        goTo('pendencias');
+      };
+    }
+  }
+
+  /* ---------- Gancho de navegação ---------- */
+  var _goTo=window.goTo;
+  window.goTo=function(v,mes){
+    /* Pendências passa a incluir a reclassificação: renderiza a origem antes */
+    if(v==='pendencias'){
+      try{_goTo('recat',mes);}catch(e){}
+      var emb=el('recat-embutido');
+      if(emb&&emb.parentNode)emb.parentNode.removeChild(emb);
+    }
+    var r=_goTo.apply(this,arguments);
+    setTimeout(function(){
+      try{
+        renomear();
+        enxugarAvisos();
+        if(v==='parcelamentos')aplicarRecolhimento();
+        if(v==='orcamento')renderOrcamentoV22();
+        if(v==='pendencias')juntarRecat();
+      }catch(e){console.error(e);}
+    },20);
+    return r;
+  };
+  goTo=window.goTo;
+
+  var _render=window.render;
+  window.render=function(){
+    var r=_render.apply(this,arguments);
+    try{renomear();enxugarAvisos();
+      if(typeof vAtual!=='undefined'&&vAtual==='parcelamentos')aplicarRecolhimento();}catch(e){}
+    return r;
+  };
+  render=window.render;
+
+  try{renomear();enxugarAvisos();}catch(e){}
+  console.log('v22: ajustes de uso carregados.');
+})();
+</script>
+
 </body>
 </html>
