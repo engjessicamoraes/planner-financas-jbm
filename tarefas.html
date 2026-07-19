@@ -4644,104 +4644,340 @@ var HT = (function() {
 </script>
 
 
+
+
+
+
 <script>
 /* ============================================================
-   CAMADA DE DESIGN — PLANNER
-   Mesma medida de leitura do Finanças, respiro simétrico,
-   anatomia de linha em grade e escala tipográfica reduzida.
-   Injetada por último para prevalecer sobre os estilos herdados.
+   PLANNER — MÓDULO V3
+   Visão por cliente: reúne numa só tela tudo o que está
+   pendente de cada condomínio, obra ou processo.
+   ============================================================ */
+(function(){
+  if(typeof D==='undefined'||typeof KEYS==='undefined'){console.error('v3: base indisponível');return;}
+
+  var css=''
+   +'.cl-topo{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;'
+   +'border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:var(--c0);'
+   +'margin-bottom:24px;box-shadow:0 1px 3px rgba(60,40,50,.05)}'
+   +'.cl-topo>div{padding:15px 18px;border-right:1px solid var(--bds)}'
+   +'.cl-topo>div:last-child{border-right:none}'
+   +'.cl-topo .l{font-size:9.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.09em}'
+   +'.cl-topo .v{font-family:Outfit,sans-serif;font-size:26px;font-weight:700;margin-top:3px;letter-spacing:-.02em}'
+   +'.cl-busca{width:100%;max-width:420px;border:1.5px solid var(--bd);border-radius:10px;'
+   +'padding:9px 13px;font-family:inherit;font-size:13px;background:var(--c0);color:var(--t);margin-bottom:20px}'
+   +'.cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:16px;align-items:start}'
+   +'.cl-card{background:var(--c0);border:1px solid var(--bd);border-radius:12px;overflow:hidden;'
+   +'box-shadow:0 1px 3px rgba(60,40,50,.05)}'
+   +'.cl-hdr{padding:15px 18px 13px;border-bottom:1px solid var(--bds);position:relative;cursor:pointer}'
+   +'.cl-hdr::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--m);opacity:.9}'
+   +'.cl-nome{font-family:Outfit,sans-serif;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--t)}'
+   +'.cl-meta{font-size:11px;color:var(--t3);margin-top:4px}'
+   +'.cl-body{padding:6px 18px 14px}'
+   +'.cl-card.fechado .cl-body{display:none}'
+   +'.cl-li{display:grid;grid-template-columns:auto minmax(0,1fr) 84px;gap:12px;align-items:center;'
+   +'padding:10px 0;border-bottom:1px solid var(--bds);font-size:13px}'
+   +'.cl-li:last-child{border-bottom:none}'
+   +'.cl-li .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+   +'.cl-li .pz{font-size:11px;color:var(--t3);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}'
+   +'.cl-etapas{font-size:10.5px;color:var(--t4);margin-top:3px}'
+   +'.cl-vazio{padding:26px 0;text-align:center;font-size:12.5px;color:var(--t3)}'
+   +'@media(max-width:760px){.cl-grid{grid-template-columns:1fr}}';
+  var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+
+  function hojeISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function diasAte(dt){
+    if(!dt)return null;
+    var t=new Date();t.setHours(0,0,0,0);
+    return Math.ceil((new Date(dt+'T00:00:00')-t)/86400000);
+  }
+  function todas(){
+    var r=[];
+    KEYS.forEach(function(k){(D[k]||[]).forEach(function(p){norm(p);if(!isA(p))r.push(p);});});
+    return r;
+  }
+
+  var filtroCliente='';
+  window.clFiltrar=function(v){filtroCliente=String(v||'').toLowerCase();renderClientes();};
+  window.clToggle=function(ev,idx){
+    var c=document.getElementById('cl-card-'+idx);
+    if(c)c.classList.toggle('fechado');
+  };
+
+  function renderClientes(){
+    var lista=todas();
+    var grupos={};
+    lista.forEach(function(p){
+      var k=(p.cliente||'').trim();
+      if(!k)k='— sem cliente definido';
+      if(!grupos[k])grupos[k]=[];
+      grupos[k].push(p);
+    });
+    var chaves=Object.keys(grupos).sort(function(a,b){
+      if(a.charAt(0)==='—')return 1;
+      if(b.charAt(0)==='—')return -1;
+      return a.localeCompare(b,'pt-BR');
+    });
+    var visiveis=chaves.filter(function(k){
+      return !filtroCliente||k.toLowerCase().indexOf(filtroCliente)>=0;
+    });
+
+    var comCliente=chaves.filter(function(k){return k.charAt(0)!=='—';}).length;
+    var semCliente=(grupos['— sem cliente definido']||[]).length;
+    var criticas=lista.filter(function(p){
+      var u=urgCalc(p.date,p.forceUrgency);
+      return u==='atr'||u==='urg';
+    }).length;
+
+    var h='<div class="cl-topo">'
+      +'<div><div class="l">Clientes ativos</div><div class="v">'+comCliente+'</div></div>'
+      +'<div><div class="l">Tarefas abertas</div><div class="v">'+lista.length+'</div></div>'
+      +'<div><div class="l">Urgentes ou atrasadas</div><div class="v" style="color:'
+      +(criticas?'var(--red)':'var(--grn)')+'">'+criticas+'</div></div>'
+      +'<div><div class="l">Sem cliente definido</div><div class="v" style="color:'
+      +(semCliente?'var(--amb,#B8860B)':'var(--grn)')+'">'+semCliente+'</div></div>'
+      +'</div>'
+      +'<input class="cl-busca" type="text" placeholder="Filtrar por condomínio, obra ou processo..." '
+      +'value="'+eh(filtroCliente)+'" oninput="clFiltrar(this.value)">';
+
+    if(!visiveis.length){
+      h+='<div class="cl-vazio">Nenhum cliente corresponde ao filtro. Preencha o campo Cliente no cartão de cada tarefa para que ela apareça aqui.</div>';
+      var b0=document.getElementById('p2-clientes-body');if(b0)b0.innerHTML=h;
+      return;
+    }
+
+    h+='<div class="cl-grid">';
+    visiveis.forEach(function(k,idx){
+      var g=grupos[k].slice().sort(function(a,b){
+        if(a.fatal!==b.fatal)return a.fatal?-1:1;
+        var da=diasAte(a.date),db=diasAte(b.date);
+        if(da===null)return 1;if(db===null)return -1;
+        return da-db;
+      });
+      var prox=g.filter(function(p){return p.date;})[0];
+      var nCrit=g.filter(function(p){
+        var u=urgCalc(p.date,p.forceUrgency);return u==='atr'||u==='urg';
+      }).length;
+      var etapasTot=g.reduce(function(a,p){return a+p.steps.length;},0);
+      var etapasFeitas=g.reduce(function(a,p){return a+p.steps.filter(function(s){return s.done;}).length;},0);
+
+      h+='<div class="cl-card" id="cl-card-'+idx+'">'
+        +'<div class="cl-hdr" onclick="clToggle(event,'+idx+')">'
+        +'<div class="cl-nome">'+eh(k)+'</div>'
+        +'<div class="cl-meta">'+g.length+' tarefa'+(g.length>1?'s':'')
+        +(nCrit?' · <strong style="color:var(--red)">'+nCrit+' crítica'+(nCrit>1?'s':'')+'</strong>':'')
+        +(etapasTot?' · '+etapasFeitas+'/'+etapasTot+' etapas':'')
+        +(prox&&prox.date?' · próximo prazo '+new Date(prox.date+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}):'')
+        +'</div></div><div class="cl-body">';
+      g.forEach(function(p){
+        var u=urgCalc(p.date,p.forceUrgency);
+        var dd=diasAte(p.date);
+        var dc=p.steps.filter(function(s){return s.done;}).length;
+        h+='<div class="cl-li">'
+          +'<span class="ub '+ucls(u)+'">'+ulbl(u)+'</span>'
+          +'<span><span class="nm">'+eh(p.name)+(p.fatal?' <span class="p2-chip p2-fatal">fatal</span>':'')+'</span>'
+          +(p.steps.length?'<div class="cl-etapas">'+dc+'/'+p.steps.length+' etapas'
+            +(p.nextAction?' · '+eh(p.nextAction):'')+'</div>':
+            (p.nextAction?'<div class="cl-etapas">'+eh(p.nextAction)+'</div>':''))
+          +'</span>'
+          +'<span class="pz">'+(dd===null?'sem prazo':(dd<0?Math.abs(dd)+'d atraso':(dd===0?'hoje':'em '+dd+'d')))+'</span>'
+          +'</div>';
+      });
+      h+='</div></div>';
+    });
+    h+='</div>';
+    var b=document.getElementById('p2-clientes-body');if(b)b.innerHTML=h;
+  }
+
+  /* ---------- Página e aba ---------- */
+  var host=document.querySelector('.module');
+  if(host&&host.parentNode&&!document.getElementById('mod-clientes')){
+    var d=document.createElement('div');
+    d.className='module';d.id='mod-clientes';
+    d.innerHTML='<div style="padding:32px 40px 8px">'
+      +'<div style="font-family:Outfit,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.02em;color:var(--t)">Clientes</div>'
+      +'<div style="font-size:12.5px;color:var(--t3);margin-top:3px">Tudo o que está pendente de cada condomínio, obra ou processo</div></div>'
+      +'<div style="padding:14px 40px 60px" id="p2-clientes-body"></div>';
+    host.parentNode.appendChild(d);
+  }
+  var ref=document.getElementById('ntab-empresa');
+  if(ref&&ref.parentNode&&!document.getElementById('ntab-clientes')){
+    var b=document.createElement('button');
+    b.className='nav-tab';b.id='ntab-clientes';
+    b.innerHTML='<svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="2.6"/>'
+      +'<path d="M2.5 14c0-3 2.4-5.4 5.5-5.4S13.5 11 13.5 14"/></svg>Clientes';
+    b.onclick=function(){switchMod('clientes');};
+    ref.parentNode.insertBefore(b,ref.nextSibling);
+  }
+
+  var _switch=window.switchMod;
+  window.switchMod=function(mod){
+    if(mod==='clientes'){
+      document.querySelectorAll('.module').forEach(function(m){m.classList.remove('on');});
+      document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('on');});
+      document.querySelectorAll('.sb-mod').forEach(function(s){s.classList.remove('on');});
+      var mEl=document.getElementById('mod-clientes');if(mEl)mEl.classList.add('on');
+      var tEl=document.getElementById('ntab-clientes');if(tEl)tEl.classList.add('on');
+      _curMod='clientes';
+      var fab=document.getElementById('fab-add');if(fab)fab.style.display='none';
+      try{renderClientes();}catch(e){console.error(e);}
+      return;
+    }
+    return _switch.apply(this,arguments);
+  };
+  switchMod=window.switchMod;
+  window.renderClientes=renderClientes;
+  console.log('v3: visão por cliente carregada.');
+})();
+</script>
+
+
+<script>
+/* ============================================================
+   CAMADA DE DESIGN 3 — PLANNER
+   Disciplina de cor, hierarquia de ação, menos caixas,
+   pontos de quebra corrigidos e linha de cota como assinatura.
    ============================================================ */
 (function(){
   var css=''
-  +':root{--medida:1160px;--goteira:48px;--t-micro:11px;--t-sec:12.5px;--t-corpo:13.5px;'
-  +'--t-titulo:15px;--t-pagina:22px;--t-numero:27px;--esp-2:16px;--esp-3:24px;--esp-4:40px}'
+  +':root{--goteira:40px;--t-micro:11px;--t-sec:12.5px;--t-corpo:13.5px;--t-titulo:15px;'
+  +'--t-pagina:22px;--t-numero:26px;--esp-2:16px;--esp-3:24px;--fio:1px solid var(--bds)}'
 
-  /* ---------- Medida única: a Agenda deixa de destoar ---------- */
-  +'.agenda-page{max-width:var(--medida)!important;margin:0 auto!important;padding:38px var(--goteira) 80px!important}'
-  +'.proj-header{max-width:var(--medida)!important;margin:0 auto!important;padding:34px var(--goteira) 0!important}'
-  +'.proj-toolbar{padding:16px var(--goteira) 14px!important}'
-  +'.proj-toolbar>*{max-width:var(--medida);margin-left:auto;margin-right:auto}'
-  +'.proj-body{max-width:var(--medida)!important;margin:0 auto!important;padding:22px var(--goteira) 90px!important}'
-  +'#mod-hoje>div,#mod-revisao>div,#mod-modelos>div{max-width:var(--medida)!important;margin:0 auto!important;'
-  +'padding-left:var(--goteira)!important;padding-right:var(--goteira)!important}'
+  /* ---------- Largura única e fluida ---------- */
+  +'.agenda-page,.proj-header,.proj-body,.postit-box{max-width:1560px!important;width:auto!important;'
+  +'margin-left:auto!important;margin-right:auto!important}'
+  +'.agenda-page{padding:30px var(--goteira) 72px!important}'
+  +'.proj-header{padding:28px var(--goteira) 0!important}'
+  +'.proj-toolbar{padding:14px var(--goteira) 12px!important}'
+  +'.proj-body{padding:18px var(--goteira) 80px!important}'
+  +'.agenda-header,.agenda-dash,.agenda-group,.agenda-prog,.pz-card,.agenda-workspace{max-width:none!important}'
+  +'#mod-hoje>div,#mod-revisao>div,#mod-modelos>div,#mod-clientes>div{max-width:1560px!important;'
+  +'margin:0 auto!important;padding-left:var(--goteira)!important;padding-right:var(--goteira)!important}'
 
-  /* ---------- Títulos ---------- */
-  +'.proj-title{font-size:var(--t-pagina)!important;letter-spacing:-.02em!important}'
+  /* ---------- Cartões em grade ---------- */
+  +'@media(min-width:1180px){.sgbody{display:grid!important;'
+  +'grid-template-columns:repeat(auto-fill,minmax(420px,1fr))!important;gap:12px!important;'
+  +'padding:12px 14px 14px!important;align-items:start!important}'
+  +'.sgbody>.pc{margin-bottom:0!important}.sgbody>.pc.open{grid-column:1/-1}}'
+
+  /* ---------- Superfícies: um fio, sem listra, sem sombra ---------- */
+  +'.pc,.sgrp,.p2-card,.mtg-panel,.dash-card,.postit-box,.cl-card{border-radius:12px!important;'
+  +'box-shadow:none!important;border:1px solid var(--bd)!important}'
+  +'.sghdr::before,.p2-hdr::before,.mtg-hdr::before,.cl-hdr::before{display:none!important}'
+  +'.sghdr,.p2-hdr,.mtg-hdr,.cl-hdr{padding:0 18px!important;min-height:58px!important;'
+  +'display:flex!important;align-items:center!important;justify-content:space-between!important;'
+  +'gap:14px!important;border-bottom:var(--fio)!important}'
+  +'.cl-hdr{flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:3px!important}'
+  +'.sgttl,.p2-hdr h3,.mtg-ttl,.cl-nome{font-family:Outfit,sans-serif!important;'
+  +'font-size:var(--t-titulo)!important;font-weight:700!important;letter-spacing:-.012em!important;'
+  +'text-transform:none!important}'
+  +'.p2-hdr small,.cl-meta{font-size:var(--t-micro)!important;color:var(--t3)!important;'
+  +'font-weight:400!important;text-transform:none!important;letter-spacing:0!important}'
+  +'.sgrp,.p2-card,.mtg-panel{margin-bottom:var(--esp-3)!important}'
+  +'.proj-title{font-size:var(--t-pagina)!important;letter-spacing:-.022em!important}'
   +'.proj-sub{font-size:var(--t-sec)!important;color:var(--t3)!important}'
-  +'.agenda-greet{letter-spacing:-.025em!important}'
-  +'.agenda-date,.agenda-frase{font-size:var(--t-sec)!important}'
 
-  /* ---------- Superfícies: uma borda, uma sombra, um raio ---------- */
-  +'.pc,.sgrp,.p2-card,.mtg-panel,.dash-card{border-radius:12px!important;'
-  +'box-shadow:0 1px 3px rgba(60,40,50,.05)!important}'
-  +'.pc{margin-bottom:10px!important}'
-  +'.p2-card{margin-bottom:var(--esp-3)!important;border:1px solid var(--bd)!important}'
-  +'.sgrp{margin-bottom:var(--esp-2)!important}'
-  +'.agenda-dash{gap:var(--esp-2)!important;margin:22px 0 var(--esp-4)!important}'
+  /* ---------- Post-it: painel discreto no lugar do bloco amarelo ---------- */
+  +'.postit-box{background:var(--c0)!important;border:1px solid var(--bd)!important;'
+  +'box-shadow:none!important;padding:15px 18px 14px!important}'
+  +'.postit-box .use-title,.postit-title{font-size:var(--t-titulo)!important;'
+  +'font-family:Outfit,sans-serif!important;font-weight:700!important;color:var(--t)!important}'
 
-  /* ---------- Cabeçalho de seção: filete + micro-rótulo ---------- */
-  +'.sghdr,.p2-hdr,.mtg-hdr{padding:15px 18px 13px!important;position:relative}'
-  +'.sghdr::before,.p2-hdr::before,.mtg-hdr::before{content:"";position:absolute;left:18px;right:18px;top:0;'
-  +'height:2px;background:var(--m);opacity:.85}'
-  +'.sgttl,.p2-hdr h3,.mtg-ttl{font-family:Outfit,sans-serif!important;font-size:var(--t-titulo)!important;'
-  +'font-weight:700!important;letter-spacing:-.01em!important}'
-  +'.p2-hdr small{font-size:var(--t-micro)!important;color:var(--t3)!important;margin-top:3px!important}'
-  +'.divdr{margin:var(--esp-4) 0 12px!important;font-size:9.5px!important;letter-spacing:.11em!important}'
+  /* ---------- Assinatura: linha de cota nos divisores ---------- */
+  +'.divdr{display:flex!important;align-items:center!important;gap:14px!important;'
+  +'margin:var(--esp-3) 0 12px!important;font-size:10px!important;font-weight:700!important;'
+  +'text-transform:uppercase!important;letter-spacing:.12em!important;color:var(--t3)!important;'
+  +'border:none!important;background:none!important;padding:0!important}'
+  +'.divdr::after{content:"";flex:1;height:1px;background:var(--bd);position:relative}'
+  +'.cl-etapas{font-size:10.5px!important;color:var(--t3)!important}'
 
-  /* ---------- Cartão de tarefa: nome e estado em colunas ancoradas ---------- */
+  /* ---------- Hierarquia de ação ---------- */
+  +'.nav-btn-backup{background:none!important;border:1px solid rgba(255,255,255,.13)!important;'
+  +'color:rgba(255,255,255,.55)!important;font-weight:500!important}'
+  +'.nav-btn-backup:hover{color:rgba(255,255,255,.85)!important}'
+  +'.p2-btn.sec{background:none!important;border:1px solid var(--bd)!important;color:var(--t2)!important}'
+  +'.p2-chip{font-size:9.5px!important;padding:2px 9px!important;font-weight:700!important}'
+
+  /* ---------- Cartão de tarefa ---------- */
   +'.pc-hdr{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;'
-  +'align-items:center!important;gap:18px!important;padding:15px 18px!important}'
-  +'.pc-nm{font-size:14px!important;font-weight:650!important;letter-spacing:-.012em!important;line-height:1.3}'
+  +'align-items:center!important;gap:16px!important;padding:15px 17px!important}'
+  +'.pc-nm{font-size:14px!important;line-height:1.3}'
   +'.pc-sub{font-size:var(--t-micro)!important;margin-top:5px!important;line-height:1.5}'
-  +'.pc-next{font-size:var(--t-sec)!important;margin-top:8px!important;padding:7px 10px!important;max-width:70ch!important}'
-  +'.pc-rt{display:grid!important;grid-template-columns:auto 62px 16px!important;align-items:center!important;gap:10px!important}'
-  +'.pc-date{font-size:var(--t-micro)!important;text-align:right!important;font-variant-numeric:tabular-nums!important}'
-  +'.ub{font-size:10px!important;font-weight:750!important;letter-spacing:.04em!important;justify-self:end}'
-  +'.pc-body{padding:10px 18px 18px!important}'
+  +'.pc-next{font-size:var(--t-sec)!important;margin-top:8px!important;max-width:70ch!important}'
+  +'.pc-rt{display:grid!important;grid-template-columns:auto 64px 16px!important;'
+  +'align-items:center!important;gap:10px!important}'
+  +'.pc-date{font-size:var(--t-micro)!important;text-align:right!important;'
+  +'font-variant-numeric:tabular-nums!important}'
+  +'.ub{font-size:10px!important;justify-self:end}'
 
-  /* ---------- Linhas das telas novas ---------- */
+  /* ---------- Telas novas ---------- */
   +'.p2-body{padding:16px 18px!important}'
-  +'.p2-note{font-size:var(--t-sec)!important;line-height:1.65!important;max-width:64ch!important;margin-bottom:var(--esp-2)!important}'
-  +'.p2-li{display:grid!important;grid-template-columns:auto minmax(0,1fr) 260px 92px!important;'
-  +'align-items:center!important;gap:14px!important;padding:12px 0!important;font-size:var(--t-corpo)!important}'
+  +'.p2-note{font-size:var(--t-sec)!important;line-height:1.65!important;max-width:70ch!important;color:var(--t3)!important}'
+  +'.p2-li,.cl-li{border-bottom:var(--fio)!important}'
+  +'.p2-li{display:grid!important;grid-template-columns:auto minmax(0,1fr) 270px 96px!important;'
+  +'align-items:center!important;gap:16px!important;padding:12px 0!important;font-size:var(--t-corpo)!important}'
   +'.p2-li .mt{font-size:var(--t-micro)!important;text-align:right!important;overflow:hidden;text-overflow:ellipsis}'
   +'.p2-li .p2-btn{justify-self:end}'
-  +'.p2-cap>div{padding:15px 18px!important}'
-  +'.p2-cap .l{font-size:9.5px!important;letter-spacing:.09em!important}'
-  +'.p2-cap .v{font-size:var(--t-numero)!important;margin-top:4px!important;letter-spacing:-.02em}'
-  +'.p2-mod{border-radius:12px!important;padding:15px 17px!important;margin-bottom:12px!important}'
-  +'.p2-mod h4{font-size:var(--t-corpo)!important;font-weight:700!important}'
-  +'.p2-mod .et{font-size:var(--t-micro)!important;line-height:1.7!important;margin:7px 0 12px!important;max-width:78ch}'
-  +'.p2-empty{padding:26px 0!important;font-size:var(--t-sec)!important}'
-  +'.p2-chip{font-size:9.5px!important;letter-spacing:.02em!important;padding:2px 9px!important}'
-  +'.p2-row label{font-size:9.5px!important;letter-spacing:.09em!important}'
-  +'.p2-btn{border-radius:9px!important;font-size:var(--t-sec)!important}'
-  /* Modelos em duas colunas: aproveita a largura sem adensar a leitura */
-  +'@media(min-width:1000px){#p2-modelos-body>.p2-card>.p2-body{display:grid;grid-template-columns:1fr 1fr;'
-  +'gap:0 var(--esp-3);align-items:start}#p2-modelos-body>.p2-card>.p2-body>.p2-note{grid-column:1/-1}}'
-  +'@media(min-width:1000px){#p2-revisao-body{display:grid;grid-template-columns:1fr 1fr;'
-  +'gap:0 var(--esp-3);align-items:start}#p2-revisao-body>.p2-card:first-child,'
-  +'#p2-revisao-body>.p2-note{grid-column:1/-1}}'
+  +'.p2-cap,.cl-topo{border-top:var(--fio)!important}'
+  +'.p2-cap>div,.cl-topo>div{padding:14px 18px!important}'
+  +'.p2-cap .l,.cl-topo .l{font-size:9.5px!important;letter-spacing:.1em!important}'
+  +'.p2-cap .v,.cl-topo .v{font-size:var(--t-numero)!important;letter-spacing:-.022em!important;'
+  +'font-variant-numeric:tabular-nums!important}'
+  +'.p2-mod{border-radius:12px!important;padding:15px 17px!important}'
+  +'.cl-topo,.cl-card{box-shadow:none!important}'
 
-  /* ---------- Controles ---------- */
-  +'.ctrl-lbl{font-size:9.5px!important;letter-spacing:.09em!important}'
-  +'.ctrl-mini-label{font-size:9.5px!important;letter-spacing:.09em!important}'
-  +'.act-btn{border-radius:9px!important;font-size:var(--t-sec)!important}'
-
-  /* ---------- Telas menores ---------- */
-  +'@media(max-width:1080px){.agenda-page,.proj-header,.proj-body{padding-left:28px!important;padding-right:28px!important}'
-  +'.proj-toolbar{padding-left:28px!important;padding-right:28px!important}'
-  +'#mod-hoje>div,#mod-revisao>div,#mod-modelos>div{padding-left:28px!important;padding-right:28px!important}'
-  +'.p2-li{grid-template-columns:auto minmax(0,1fr) 150px 82px!important}}'
-  +'@media(max-width:760px){.agenda-page,.proj-header,.proj-body,.proj-toolbar{padding-left:18px!important;padding-right:18px!important}'
-  +'#mod-hoje>div,#mod-revisao>div,#mod-modelos>div{padding-left:18px!important;padding-right:18px!important}'
-  +'.p2-li{grid-template-columns:auto minmax(0,1fr) 76px!important}.p2-li .mt{display:none}'
+  /* ---------- Pontos de quebra descontando a barra lateral de ~215px ---------- */
+  +'@media(min-width:1400px){#p2-modelos-body>.p2-card>.p2-body{display:grid;'
+  +'grid-template-columns:1fr 1fr;gap:0 var(--esp-3);align-items:start}'
+  +'#p2-modelos-body>.p2-card>.p2-body>.p2-note{grid-column:1/-1}'
+  +'#p2-revisao-body{display:grid;grid-template-columns:1fr 1fr;gap:0 var(--esp-3);align-items:start}'
+  +'#p2-revisao-body>.p2-card:first-child,#p2-revisao-body>.p2-note{grid-column:1/-1}}'
+  +'@media(max-width:1320px){.agenda-page,.proj-header,.proj-body,.proj-toolbar,'
+  +'#mod-hoje>div,#mod-revisao>div,#mod-modelos>div,#mod-clientes>div{'
+  +'padding-left:24px!important;padding-right:24px!important}'
+  +'.sghdr,.p2-hdr,.mtg-hdr{min-height:52px!important;flex-wrap:wrap!important}'
+  +'.p2-li{grid-template-columns:auto minmax(0,1fr) 160px 84px!important}'
+  +'.cl-grid{grid-template-columns:1fr!important}}'
+  +'@media(max-width:1000px){.agenda-page,.proj-header,.proj-body,.proj-toolbar,'
+  +'#mod-hoje>div,#mod-revisao>div,#mod-modelos>div,#mod-clientes>div{'
+  +'padding-left:16px!important;padding-right:16px!important}'
+  +'.p2-li{grid-template-columns:auto minmax(0,1fr) 80px!important}.p2-li .mt{display:none}'
   +'.pc-hdr{grid-template-columns:1fr!important;gap:10px!important}}';
 
-  var st=document.createElement('style');
-  st.id='camada-design-planner';
-  st.textContent=css;
+  var st=document.createElement('style');st.id='camada-design-planner';st.textContent=css;
   document.head.appendChild(st);
+
+  /* ---------- Capacidade do dia: persistente e com rótulo claro ---------- */
+  var CAP_SK='pjm-capacidade-dia';
+  var _p2Cap=window.p2Capacidade;
+  if(typeof _p2Cap==='function'){
+    window.p2Capacidade=function(v){
+      try{localStorage.setItem(CAP_SK,String(parseFloat(v)||0));}catch(e){}
+      return _p2Cap.apply(this,arguments);
+    };
+    p2Capacidade=window.p2Capacidade;
+    try{
+      var salvo=parseFloat(localStorage.getItem(CAP_SK));
+      if(!isNaN(salvo)&&salvo>0)_p2Cap(salvo);
+    }catch(e){}
+  }
+  function ajustarRotulo(){
+    var inp=document.querySelector('#p2-hoje-body input[type=number]');
+    if(!inp)return;
+    var lbl=inp.previousElementSibling;
+    if(lbl&&/Horas dispon/i.test(lbl.textContent))lbl.textContent='Horas que você tem hoje';
+    inp.title='Quantas horas você pretende dedicar a tarefas hoje. Fica salvo para os próximos dias.';
+  }
+  var _sw=window.switchMod;
+  if(typeof _sw==='function'){
+    window.switchMod=function(mod){
+      var r=_sw.apply(this,arguments);
+      if(mod==='hoje')setTimeout(ajustarRotulo,0);
+      return r;
+    };
+    switchMod=window.switchMod;
+  }
 })();
 </script>
 

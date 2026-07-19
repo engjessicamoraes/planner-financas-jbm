@@ -8551,104 +8551,547 @@ try{
 </script>
 
 
+
+
+
+
 <script>
 /* ============================================================
-   CAMADA DE DESIGN — FINANÇAS
-   Medida única de leitura, respiro simétrico, anatomia de linha
-   em grade e escala tipográfica reduzida.
-   Injetada por último para prevalecer sobre os estilos herdados.
+   FINANÇAS — MÓDULO V21
+   1. Marcador fixo/variável e painel de comprometimento
+   2. Detector de cobranças recorrentes (assinaturas esquecidas)
+   3. Aviso de parcelamentos que terminam
+   4. Variação de cada categoria contra a própria média
+   5. Reclassificação assistida por palavra-chave
    ============================================================ */
 (function(){
+  if(typeof DB==='undefined'){console.error('v21: DB indisponível');return;}
+  var DESP=['cartao','dani','saida','cofre'];
+  var RECEITA=['entrada','reembolso'];
+
+  /* ---------- 5a. Categorias novas ---------- */
+  ['Combustível','B&M — despesas'].forEach(function(c){
+    if(typeof CATS_TODOS!=='undefined'&&CATS_TODOS.indexOf(c)<0){
+      CATS_TODOS.splice(CATS_TODOS.length-1,0,c);
+    }
+  });
+
+  var PALAVRAS={
+    'Combustível':['posto','ipiranga','shell','petrobras','texaco','ale combust','combustivel','combustível','gasolina','etanol','br mania','alcool'],
+    'B&M — despesas':['crea','art ',' art','anotacao de responsabilidade','autocad','autodesk','cartorio','cartório','prefeitura','bombeiros','abnt','sindupla','revit']
+  };
+
+  /* ---------- CSS ---------- */
   var css=''
-  /* ---------- Tokens ---------- */
-  +':root{--medida:1160px;--goteira:48px;--t-micro:11px;--t-sec:12.5px;--t-corpo:13.5px;'
-  +'--t-titulo:15px;--t-pagina:22px;--t-numero:27px;--esp-1:8px;--esp-2:16px;--esp-3:24px;--esp-4:40px}'
+   +'.v21-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0;'
+   +'border-top:1px solid var(--bds);background:var(--bg)}'
+   +'.v21-grid>div{padding:15px 18px;border-right:1px solid var(--bds)}'
+   +'.v21-grid>div:last-child{border-right:none}'
+   +'.v21-grid .l{font-size:9.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.09em}'
+   +'.v21-grid .v{font-family:Outfit,sans-serif;font-size:26px;font-weight:700;margin-top:3px;letter-spacing:-.02em}'
+   +'.v21-grid .s{font-size:11px;color:var(--t3);margin-top:3px}'
+   +'.v21-barra{height:10px;border-radius:5px;overflow:hidden;display:flex;margin:14px 0 6px;background:var(--bds)}'
+   +'.v21-barra i{display:block;height:100%}'
+   +'.v21-leg{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--t3)}'
+   +'.v21-leg span{display:inline-flex;align-items:center;gap:6px}'
+   +'.v21-leg b{width:9px;height:9px;border-radius:2px;display:inline-block}'
+   +'.v21-row{display:grid;grid-template-columns:26px minmax(0,1fr) 150px 120px 108px;gap:14px;'
+   +'align-items:center;padding:10px 0;border-bottom:1px solid var(--bds);font-size:13.5px}'
+   +'.v21-row:last-child{border-bottom:none}'
+   +'.v21-row .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+   +'.v21-row .mt{font-size:11px;color:var(--t3);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+   +'.v21-row .vl{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}'
+   +'.v21-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--m);cursor:pointer}'
+   +'.v21-row select{width:100%;border:1.5px solid var(--bd);border-radius:8px;padding:5px 7px;'
+   +'font-family:inherit;font-size:11.5px;background:var(--bg);color:var(--t)}'
+   +'.v21-var{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:999px;margin-left:8px;white-space:nowrap}'
+   +'.v21-up{background:var(--badbg);color:var(--bad)}'
+   +'.v21-dn{background:var(--okbg);color:var(--ok)}'
+   +'.v21-eq{background:var(--neubg);color:var(--t3)}'
+   +'@media(max-width:1000px){.v21-row{grid-template-columns:26px minmax(0,1fr) 96px}'
+   +'.v21-row .mt,.v21-row select{display:none}}';
+  var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 
-  /* ---------- Medida e respiro ---------- */
-  +'.page{max-width:var(--medida)!important;padding:38px var(--goteira) 80px!important;margin:0 auto!important}'
-  +'.pg-title{font-size:var(--t-pagina)!important;letter-spacing:-.02em!important;line-height:1.15}'
-  +'.pg-sub{font-size:var(--t-sec)!important;color:var(--t3)!important;margin:5px 0 var(--esp-4)!important}'
+  /* ---------- Utilitários ---------- */
+  function val(i){return parseFloat(i.valor||0)||0;}
+  function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+  function ehFixo(i){return i.fixo===true||!!i._fixa;}
+  function despesasDoMes(m){return DB.items.filter(function(i){return i.mes===m&&DESP.indexOf(i.tipo)>=0;});}
+  function receitaDoMes(m){
+    return DB.items.filter(function(i){return i.mes===m&&RECEITA.indexOf(i.tipo)>=0;})
+      .reduce(function(a,i){return a+val(i);},0);
+  }
+  function mediaCategoria(cat,mRef,nMeses){
+    var soma=0,n=0;
+    for(var k=1;k<=nMeses;k++){
+      var m=mRef-k;if(m<1)break;
+      soma+=despesasDoMes(m).filter(function(i){return (i.cat||'')===cat;}).reduce(function(a,i){return a+val(i);},0);
+      n++;
+    }
+    return n?soma/n:0;
+  }
 
-  /* ---------- Superfícies: uma borda, uma sombra, um raio ---------- */
-  +'.sec,.pl-card{border:1px solid var(--bd)!important;border-radius:12px!important;'
-  +'box-shadow:0 1px 3px rgba(60,40,50,.05)!important;margin-bottom:var(--esp-3)!important}'
-  +'.g2{gap:var(--esp-3)!important;margin-bottom:var(--esp-3)!important}'
-  +'.scards{gap:var(--esp-2)!important;margin-bottom:var(--esp-4)!important}'
+  window.v21Fixo=function(id,marcado){
+    var it=DB.items.filter(function(x){return x.id===id;})[0];
+    if(!it)return;
+    it.fixo=!!marcado;
+    dbSave();
+    if(vAtual==='fixos')renderFixos();
+  };
+  window.v21Recat=function(id,cat){
+    var it=DB.items.filter(function(x){return x.id===id;})[0];
+    if(!it)return;
+    it.cat=cat;dbSave();
+  };
 
-  /* ---------- Cabeçalho de seção: filete + micro-rótulo ---------- */
-  +'.sec-h,.pl-hdr{padding:15px 18px 13px!important;border-bottom:1px solid var(--bds)!important;position:relative}'
-  +'.sec-h::before,.pl-hdr::before{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;background:var(--m);opacity:.85}'
+  /* ============================================================
+     1 e 2. Custo fixo, comprometimento e recorrentes
+     ============================================================ */
+  function recorrentes(){
+    var mapa={};
+    DB.items.forEach(function(i){
+      if(DESP.indexOf(i.tipo)<0)return;
+      var v=val(i);if(v<=0)return;
+      var k=norm(i.nome)+'|'+v.toFixed(2);
+      if(!mapa[k])mapa[k]={nome:i.nome,valor:v,meses:{},itens:[]};
+      mapa[k].meses[i.mes]=true;
+      mapa[k].itens.push(i);
+    });
+    return Object.keys(mapa).map(function(k){
+      var r=mapa[k];r.nMeses=Object.keys(r.meses).length;return r;
+    }).filter(function(r){return r.nMeses>=3;})
+      .sort(function(a,b){return (b.valor*b.nMeses)-(a.valor*a.nMeses);});
+  }
+
+  function renderFixos(){
+    var m=(typeof mesAtual!=='undefined')?mesAtual:7;
+    var desp=despesasDoMes(m);
+    var fixo=desp.filter(ehFixo).reduce(function(a,i){return a+val(i);},0);
+    var variavel=desp.reduce(function(a,i){return a+val(i);},0)-fixo;
+    var receita=receitaDoMes(m);
+    var pctFixo=receita>0?Math.round(fixo/receita*100):0;
+    var total=fixo+variavel;
+    var pFixo=total>0?(fixo/total*100):0;
+
+    var h='<div class="pl-card"><div class="pl-hdr"><h3>Comprometimento do mês'
+      +'<small>'+MESES[m-1]+' — quanto já está decidido antes de qualquer escolha sua</small></h3></div>'
+      +'<div class="pl-body">'
+      +'<div class="pl-note">Custo fixo é o que se repete todo mês independentemente do seu comportamento: contratos, assinaturas, financiamentos e contas de consumo. Ele não descreve a natureza do gasto — para isso servem as categorias —, mas sim o quanto da sua renda já está comprometido antes de você decidir qualquer coisa. Quanto maior esse percentual, menor a sua margem de manobra quando o mês aperta.</div>'
+      +'<div class="v21-barra"><i style="width:'+pFixo+'%;background:var(--m)"></i>'
+      +'<i style="width:'+(100-pFixo)+'%;background:var(--g)"></i></div>'
+      +'<div class="v21-leg"><span><b style="background:var(--m)"></b>Fixo '+RK(fixo)+'</span>'
+      +'<span><b style="background:var(--g)"></b>Variável '+RK(variavel)+'</span></div>'
+      +'</div><div class="v21-grid">'
+      +'<div><div class="l">Custo fixo</div><div class="v" style="color:var(--m)">'+RK(fixo)+'</div>'
+      +'<div class="s">'+desp.filter(ehFixo).length+' lançamentos marcados</div></div>'
+      +'<div><div class="l">Gasto variável</div><div class="v">'+RK(variavel)+'</div>'
+      +'<div class="s">onde há margem de corte</div></div>'
+      +'<div><div class="l">Receita do mês</div><div class="v">'+RK(receita)+'</div>'
+      +'<div class="s">entradas e reembolsos</div></div>'
+      +'<div><div class="l">Renda comprometida</div><div class="v" style="color:'
+      +(pctFixo>=50?'var(--bad)':(pctFixo>=35?'var(--g1)':'var(--ok)'))+'">'
+      +(receita>0?pctFixo+'%':'—')+'</div><div class="s">'
+      +(receita>0?'do que entra já está decidido':'lance as entradas do mês')+'</div></div>'
+      +'</div></div>';
+
+    var rec=recorrentes();
+    h+='<div class="pl-card"><div class="pl-hdr"><h3>Cobranças recorrentes'
+      +'<small>Mesmo valor, mesma descrição, em três meses ou mais</small></h3>'
+      +'<span class="pl-badge bg-neu">'+rec.length+'</span></div><div class="pl-body">'
+      +'<div class="pl-note">Assinaturas esquecidas costumam ser a maior gordura de uma fatura, justamente por serem pequenas e constantes. Abaixo, tudo o que se repete com valor idêntico. Marque como fixo o que for contrato permanente; o que você não reconhecer, vale cancelar.</div>';
+    if(!rec.length)h+='<div class="pl-empty">Nenhuma cobrança repetida identificada ainda.</div>';
+    rec.slice(0,40).forEach(function(r){
+      var marcado=r.itens.every(ehFixo);
+      var totalAno=r.valor*r.nMeses;
+      h+='<div class="v21-row">'
+        +'<div><input type="checkbox" '+(marcado?'checked':'')+' data-v21-grupo="'+E(norm(r.nome)+'|'+r.valor.toFixed(2))+'" title="Marcar como custo fixo"></div>'
+        +'<div class="nm">'+E(r.nome)+'</div>'
+        +'<div class="mt">'+r.nMeses+' meses · '+RK(totalAno)+' no total</div>'
+        +'<div class="mt">'+E(r.itens[0].cat||'sem categoria')+'</div>'
+        +'<div class="vl">'+RK(r.valor)+'</div>'
+        +'</div>';
+    });
+    h+='</div></div>';
+
+    var marcados=desp.filter(ehFixo);
+    h+='<div class="pl-card"><div class="pl-hdr"><h3>Marcados como fixo em '+MESES[m-1]
+      +'<small>Desmarque o que não for contrato permanente</small></h3>'
+      +'<span class="pl-badge bg-neu">'+marcados.length+'</span></div><div class="pl-body">';
+    if(!marcados.length)h+='<div class="pl-empty">Nada marcado ainda. Use a lista acima para começar.</div>';
+    marcados.forEach(function(i){
+      h+='<div class="v21-row">'
+        +'<div><input type="checkbox" checked data-v21-item="'+E(i.id)+'"></div>'
+        +'<div class="nm">'+E(i.nome||'Lançamento')+'</div>'
+        +'<div class="mt">'+(i.data?fmtDataCurta(i.data):'sem data')+'</div>'
+        +'<div class="mt">'+E(i.cat||'sem categoria')+'</div>'
+        +'<div class="vl">'+RK(val(i))+'</div></div>';
+    });
+    h+='</div></div>';
+    sh('pl-fixos-body',h);
+
+    document.querySelectorAll('[data-v21-grupo]').forEach(function(cb){
+      cb.onchange=function(){
+        var k=this.getAttribute('data-v21-grupo'),marcar=this.checked,n=0;
+        DB.items.forEach(function(i){
+          if(DESP.indexOf(i.tipo)<0)return;
+          if(norm(i.nome)+'|'+val(i).toFixed(2)===k){i.fixo=marcar;n++;}
+        });
+        dbSave();renderFixos();
+        toast(n+' lançamento'+(n>1?'s':'')+(marcar?' marcados como fixo.':' desmarcados.'));
+      };
+    });
+    document.querySelectorAll('[data-v21-item]').forEach(function(cb){
+      cb.onchange=function(){v21Fixo(this.getAttribute('data-v21-item'),this.checked);};
+    });
+  }
+
+  /* ============================================================
+     5b. Reclassificação assistida
+     ============================================================ */
+  function candidatosRecat(){
+    var out=[];
+    DB.items.forEach(function(i){
+      if(DESP.indexOf(i.tipo)<0)return;
+      var n=norm(i.nome);
+      Object.keys(PALAVRAS).forEach(function(cat){
+        if((i.cat||'')===cat)return;
+        var bate=PALAVRAS[cat].some(function(p){return n.indexOf(p)>=0;});
+        if(bate)out.push({item:i,sugestao:cat});
+      });
+    });
+    return out;
+  }
+
+  function renderRecat(){
+    var c=candidatosRecat();
+    var h='<div class="pl-card"><div class="pl-hdr"><h3>Reclassificação sugerida'
+      +'<small>Lançamentos cuja descrição indica outra categoria</small></h3>'
+      +'<button class="pl-btn" id="v21-aplicar">Aplicar selecionados</button></div><div class="pl-body">'
+      +'<div class="pl-note">Foram acrescentadas duas categorias: Combustível, hoje diluído em Carro / Transporte junto com manutenção e seguro, e B&amp;M — despesas, para separar os custos da empresa dos gastos pessoais de trabalho. A sugestão abaixo é apenas uma leitura da descrição de cada lançamento; nada é alterado sem a sua confirmação. Desmarque o que estiver errado e ajuste a categoria pelo seletor.</div>';
+    if(!c.length)h+='<div class="pl-empty">Nenhum lançamento com indício de classificação diferente.</div>';
+    c.slice(0,80).forEach(function(x){
+      var i=x.item;
+      var opts=CATS_TODOS.map(function(k){
+        return '<option value="'+E(k)+'"'+(k===x.sugestao?' selected':'')+'>'+E(k)+'</option>';}).join('');
+      h+='<div class="v21-row">'
+        +'<div><input type="checkbox" checked data-v21-rc="'+E(i.id)+'"></div>'
+        +'<div class="nm">'+E(i.nome||'Lançamento')+'</div>'
+        +'<div class="mt">'+MESES[(i.mes||1)-1]+' · hoje em '+E(i.cat||'sem categoria')+'</div>'
+        +'<div><select data-v21-rcat="'+E(i.id)+'">'+opts+'</select></div>'
+        +'<div class="vl">'+RK(val(i))+'</div></div>';
+    });
+    if(c.length>80)h+='<div class="pl-note" style="padding-top:10px">Exibindo os 80 primeiros de '+c.length+'.</div>';
+    h+='</div></div>';
+    sh('pl-recat-body',h);
+    var b=el('v21-aplicar');
+    if(b)b.onclick=function(){
+      var n=0;
+      document.querySelectorAll('[data-v21-rc]').forEach(function(cb){
+        if(!cb.checked)return;
+        var id=cb.getAttribute('data-v21-rc');
+        var sel=document.querySelector('[data-v21-rcat="'+id+'"]');
+        if(sel){v21Recat(id,sel.value);n++;}
+      });
+      dbSave();render();renderRecat();
+      toast(n?(n+' lançamento'+(n>1?'s reclassificados':' reclassificado')+'.'):'Nada selecionado.');
+    };
+  }
+
+  /* ============================================================
+     Páginas e navegação
+     ============================================================ */
+  var main=document.querySelector('main');
+  function novaPagina(id,titulo,sub){
+    if(el('v-'+id))return;
+    var d=document.createElement('div');
+    d.className='page';d.id='v-'+id;
+    d.innerHTML='<div class="pg-title">'+titulo+'</div><div class="pg-sub">'+sub+'</div><div id="pl-'+id+'-body"></div>';
+    main.appendChild(d);
+  }
+  novaPagina('fixos','Custo fixo','Quanto do mês já está comprometido e o que se repete todo mês');
+  novaPagina('recat','Reclassificação','Ajuste assistido das categorias dos lançamentos');
+
+  var nav=document.querySelector('.sb-nav');
+  var refPend=nav&&nav.querySelector('.ni[data-v="pendencias"]');
+  if(nav&&refPend){
+    var bloco=document.createElement('div');
+    bloco.innerHTML=''
+      +'<div class="ni" data-v="fixos"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2"/><line x1="2" y1="9" x2="14" y2="9"/></svg>Custo fixo</div>'
+      +'<div class="ni" data-v="recat"><svg viewBox="0 0 16 16"><polyline points="2,5 6,5 6,11 14,11"/><polyline points="11,8 14,11 11,14"/></svg>Reclassificação</div>';
+    while(bloco.firstChild)nav.insertBefore(bloco.firstChild,refPend.nextSibling);
+    nav.querySelectorAll('.ni[data-v="fixos"],.ni[data-v="recat"]').forEach(function(n){
+      n.addEventListener('click',function(){goTo(n.getAttribute('data-v'));});
+    });
+  }
+
+  /* ============================================================
+     3 e 4. Enxertos nas telas existentes
+     ============================================================ */
+  function parcelasQueTerminam(){
+    var mBase=(typeof mesAtual!=='undefined')?mesAtual:7;
+    var porMes={};
+    for(var m=mBase;m<=12;m++){
+      porMes[m]=DB.items.filter(function(i){
+        return i.mes===m&&i.parcela&&DESP.indexOf(i.tipo)>=0;
+      }).reduce(function(a,i){return a+val(i);},0);
+    }
+    var quedas=[];
+    for(var m2=mBase+1;m2<=12;m2++){
+      var d=porMes[m2-1]-porMes[m2];
+      if(d>0.5)quedas.push({mes:m2,queda:d,depois:porMes[m2]});
+    }
+    return quedas;
+  }
+
+  function injetarProjecao(){
+    var body=el('pl-projecao-body');
+    if(!body||el('v21-quedas'))return;
+    var q=parcelasQueTerminam();
+    var h='<div class="pl-card" id="v21-quedas"><div class="pl-hdr"><h3>Alívios previstos'
+      +'<small>Meses em que a sua fatura cai porque parcelamentos terminam</small></h3></div><div class="pl-body">'
+      +'<div class="pl-note">Como as parcelas já estão lançadas nos meses futuros, é possível saber de antemão quando o compromisso mensal diminui. Esse é o momento natural para programar uma compra maior ou uma quitação, em vez de descobrir a folga depois que ela passou.</div>';
+    if(!q.length)h+='<div class="pl-empty">Nenhuma queda relevante prevista até dezembro.</div>';
+    q.forEach(function(x){
+      h+='<div class="v21-row" style="grid-template-columns:150px minmax(0,1fr) 130px">'
+        +'<div style="font-weight:600">'+MESES[x.mes-1]+'</div>'
+        +'<div class="nm" style="color:var(--t3);font-size:12.5px">o compromisso mensal cai para '+RK(x.depois)+'</div>'
+        +'<div class="vl" style="color:var(--ok)">−'+RK(x.queda)+'</div></div>';
+    });
+    h+='</div></div>';
+    body.insertAdjacentHTML('beforeend',h);
+  }
+
+  function injetarVariacao(){
+    var m=(typeof mesAtual!=='undefined')?mesAtual:7;
+    document.querySelectorAll('#pl-orcamento-body [data-orc-cat]').forEach(function(inp){
+      var linha=inp.closest('.orc-row');
+      if(!linha||linha.querySelector('.v21-var'))return;
+      var cat=inp.getAttribute('data-orc-cat');
+      var media=mediaCategoria(cat,m,3);
+      if(media<=0)return;
+      var atual=despesasDoMes(m).filter(function(i){return (i.cat||'')===cat;}).reduce(function(a,i){return a+val(i);},0);
+      var pct=Math.round((atual-media)/media*100);
+      var cls=pct>=10?'v21-up':(pct<=-10?'v21-dn':'v21-eq');
+      var txt=(pct>0?'+':'')+pct+'% vs média';
+      var nome=linha.querySelector('.orc-nome');
+      if(nome)nome.insertAdjacentHTML('beforeend','<span class="v21-var '+cls+'" title="Média dos três meses anteriores: '+RK(media)+'">'+txt+'</span>');
+    });
+  }
+
+  var VIEWS21={fixos:renderFixos,recat:renderRecat};
+  var _goTo21=window.goTo;
+  window.goTo=function(v,mes){
+    if(VIEWS21[v]){
+      vAtual=v;
+      if(mes)mesAtual=mes;
+      document.querySelectorAll('.ni[data-v]').forEach(function(n){n.classList.remove('on');});
+      var ni=document.querySelector('.ni[data-v="'+v+'"]');if(ni)ni.classList.add('on');
+      document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+      var pg=el('v-'+v);if(pg)pg.classList.add('on');
+      try{VIEWS21[v]();}catch(e){console.error(e);}
+      return;
+    }
+    var r=_goTo21.apply(this,arguments);
+    if(v==='projecao')setTimeout(injetarProjecao,0);
+    if(v==='orcamento')setTimeout(injetarVariacao,10);
+    return r;
+  };
+  goTo=window.goTo;
+
+  console.log('v21: custo fixo, recorrentes, alívios, variação e reclassificação carregados.');
+})();
+</script>
+
+
+<script>
+/* ============================================================
+   CAMADA DE DESIGN 3 — FINANÇAS
+   Disciplina de cor, hierarquia de ação, menos caixas,
+   pontos de quebra corrigidos e linha de cota como assinatura.
+   ============================================================ */
+(function(){
+
+  /* ---------- 1. Categoria: ponto de cor em vez de selo preenchido ---------- */
+  if(typeof v32CatChip==='function'){
+    window.v32CatChip=function(cat){
+      cat=cat||'Revisar categoria';
+      var cor=(typeof v32CatColor==='function')?v32CatColor(cat):'var(--m)';
+      return '<span class="cat-tag"><i style="background:'+cor+'"></i>'+E(cat)+'</span>';
+    };
+    v32CatChip=window.v32CatChip;
+  }
+
+  var css=''
+  +':root{--goteira:40px;--t-micro:11px;--t-sec:12.5px;--t-corpo:13.5px;--t-titulo:15px;'
+  +'--t-pagina:22px;--t-numero:26px;--esp-2:16px;--esp-3:24px;--fio:1px solid var(--bds)}'
+
+  /* ---------- Largura ---------- */
+  +'.page{max-width:1560px!important;width:100%!important;margin:0 auto!important;'
+  +'padding:30px var(--goteira) 72px!important}'
+  +'.pg-title{font-size:var(--t-pagina)!important;letter-spacing:-.022em!important;font-weight:700!important}'
+  +'.pg-sub{font-size:var(--t-sec)!important;color:var(--t3)!important;margin:5px 0 var(--esp-3)!important}'
+
+  /* ---------- 2. Selo de categoria: ponto + texto neutro ---------- */
+  +'.cat-tag{display:inline-flex!important;align-items:center;gap:6px;font-size:10.5px!important;'
+  +'font-weight:600!important;color:var(--t3)!important;background:none!important;border:none!important;'
+  +'padding:0!important;margin-right:12px;letter-spacing:.01em;white-space:nowrap}'
+  +'.cat-tag i{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:block}'
+  +'.v32-chip-date{background:none!important;border:none!important;color:var(--t4,var(--t3))!important;'
+  +'padding:0!important;font-size:10.5px!important;font-weight:500!important;opacity:.75}'
+  +'.v32-chip-row{gap:0!important;margin-top:4px!important}'
+
+  /* ---------- 3. Superfícies: um fio, sem listra ---------- */
+  +'.sec,.pl-card,.parc-client-card{border:1px solid var(--bd)!important;border-radius:12px!important;'
+  +'box-shadow:none!important;margin-bottom:var(--esp-3)!important;background:var(--card)!important}'
+  +'.sec-h::before,.pl-hdr::before{display:none!important}'   /* remove o filete de 2px */
+  +'.sec-h,.pl-hdr{padding:0 18px!important;min-height:58px!important;display:flex!important;'
+  +'align-items:center!important;justify-content:space-between!important;gap:14px!important;'
+  +'border-bottom:var(--fio)!important;flex-wrap:nowrap!important}'
   +'.sec-t,.pl-hdr h3{font-family:Outfit,sans-serif!important;font-size:var(--t-titulo)!important;'
-  +'font-weight:700!important;letter-spacing:-.01em!important;color:var(--t)!important}'
-  +'.pl-hdr small{font-size:var(--t-micro)!important;color:var(--t3)!important;text-transform:none!important;letter-spacing:0!important;margin-top:3px!important}'
+  +'font-weight:700!important;letter-spacing:-.012em!important;text-transform:none!important;'
+  +'color:var(--t)!important;white-space:nowrap}'
+  +'.pl-hdr small{font-size:var(--t-micro)!important;color:var(--t3)!important;font-weight:400!important;'
+  +'text-transform:none!important;letter-spacing:0!important;margin-top:2px!important;white-space:normal}'
   +'.sec-r{font-size:var(--t-corpo)!important;font-weight:700!important;font-variant-numeric:tabular-nums!important}'
+  +'.g2{gap:var(--esp-3)!important;align-items:start!important}'
 
-  /* ---------- Anatomia da linha: grade com colunas ancoradas ---------- */
-  +'.li{display:grid!important;grid-template-columns:auto minmax(0,1fr) 132px auto!important;'
-  +'align-items:center!important;gap:14px!important;padding:11px 18px!important}'
-  +'.li-acts{justify-self:end}'
-  +'.li-nome{font-size:var(--t-corpo)!important;font-weight:500!important;line-height:1.35}'
-  +'.li-sub{font-size:var(--t-micro)!important;margin-top:3px!important;line-height:1.4}'
+  /* ---------- 4. Hierarquia de ação: um primário por painel ---------- */
+  +'.fb{background:none!important;border:none!important;color:var(--m)!important;'
+  +'font-weight:600!important;padding:4px 2px!important;text-decoration:underline;'
+  +'text-underline-offset:3px;text-decoration-thickness:1px}'
+  +'.fb:hover{opacity:.72}'
+  +'#btn-salvar-html,#btn-importar,#btn-fs-link{background:none!important;color:var(--t2)!important;'
+  +'border:1px solid var(--bd)!important;font-weight:500!important}'
+  +'#btn-exportar{font-weight:600!important}'
+  +'.pl-btn.sec{background:none!important;border:1px solid var(--bd)!important;color:var(--t2)!important}'
+  +'.mn-add{font-weight:600!important}'
+
+  /* ---------- 5. Assinatura: linha de cota no separador de data ---------- */
+  +'.fat-date-sep{display:flex!important;align-items:center!important;gap:14px!important;'
+  +'padding:18px 18px 9px!important;background:none!important;border:none!important}'
+  +'.fat-date-sep span{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;'
+  +'letter-spacing:.12em!important;color:var(--t3)!important;flex-shrink:0}'
+  +'.fat-date-sep>div{flex:1!important;height:1px!important;background:var(--bd)!important;'
+  +'position:relative!important;min-width:24px}'
+  +'.fat-date-sep>div::before,.fat-date-sep>div::after{content:"";position:absolute;top:-3.5px;'
+  +'width:1px;height:8px;background:var(--bd)}'
+  +'.fat-date-sep>div::before{left:0}.fat-date-sep>div::after{right:0}'
+  +'.fat-date-sep .conta-day-total{font-size:10.5px!important;color:var(--t3)!important;'
+  +'font-variant-numeric:tabular-nums!important;font-style:normal!important;flex-shrink:0}'
+
+  /* ---------- 6. Linhas ---------- */
+  +'.li{display:grid!important;grid-template-columns:auto minmax(0,1fr) 140px auto!important;'
+  +'align-items:center!important;gap:16px!important;padding:11px 18px!important;'
+  +'border-bottom:var(--fio)!important}'
+  +'.li-acts{justify-self:end;opacity:.45;transition:opacity .15s}'
+  +'.li:hover .li-acts{opacity:1}'
+  +'.li-nome{font-size:var(--t-corpo)!important;font-weight:500!important}'
   +'.li-val{font-size:var(--t-corpo)!important;font-weight:700!important;text-align:right!important;'
-  +'font-variant-numeric:tabular-nums!important;min-width:0!important;justify-self:end}'
-  +'#fat-cats .li-val,#conta-lista .li-val{min-width:0!important}'
+  +'font-variant-numeric:tabular-nums!important;justify-self:end;min-width:0!important}'
 
-  /* ---------- Separadores de dia ---------- */
-  +'.fat-date-sep{padding:9px 18px 7px!important;background:var(--bg)!important;'
-  +'border-top:1px solid var(--bds)!important;border-bottom:1px solid var(--bds)!important}'
-  +'.fat-date-sep span{font-size:var(--t-micro)!important;font-weight:700!important;'
-  +'text-transform:uppercase!important;letter-spacing:.09em!important;color:var(--t3)!important}'
-  +'.fat-date-sep .conta-day-total{font-size:var(--t-micro)!important;font-variant-numeric:tabular-nums!important}'
-
-  /* ---------- Telas de planejamento ---------- */
+  /* ---------- 7. Planejamento ---------- */
   +'.pl-body{padding:16px 18px!important}'
-  +'.pl-note{font-size:var(--t-sec)!important;line-height:1.65!important;color:var(--t3)!important;'
-  +'padding-bottom:var(--esp-2)!important;max-width:64ch}'
-  +'.pl-tot{border-top:1px solid var(--bds)!important}'
-  +'.pl-tot div{padding:14px 18px!important}'
-  +'.pl-tot .l{font-size:9.5px!important;letter-spacing:.09em!important}'
-  +'.pl-tot .v{font-size:var(--t-numero)!important;margin-top:4px!important;letter-spacing:-.02em}'
-  +'.orc-row{grid-template-columns:minmax(0,1fr) 118px 118px 68px!important;gap:14px!important;padding:11px 0!important}'
-  +'.orc-nome{font-size:var(--t-corpo)!important}'
-  +'.orc-val{font-size:var(--t-corpo)!important}'
-  +'.proj-row{grid-template-columns:132px minmax(0,1fr) 128px!important;gap:16px!important;padding:12px 0!important}'
-  +'.proj-mes{font-size:var(--t-corpo)!important}'
-  +'.proj-mes small{font-size:var(--t-micro)!important;margin-top:2px}'
-  +'.proj-v{font-size:var(--t-corpo)!important}'
-
-  /* Pendências: linha em grade, com contexto em coluna própria */
-  +'.pend-item{display:grid!important;grid-template-columns:minmax(0,1fr) 240px 108px 74px!important;'
-  +'gap:14px!important;align-items:center!important;padding:11px 0!important;font-size:var(--t-corpo)!important}'
+  +'.pl-note{font-size:var(--t-sec)!important;line-height:1.65!important;max-width:70ch;color:var(--t3)!important}'
+  +'.pl-tot,.v21-grid,.cf-strip{border-top:var(--fio)!important;background:var(--bg)!important}'
+  +'.pl-tot div,.v21-grid>div{padding:14px 18px!important}'
+  +'.pl-tot .l,.v21-grid .l{font-size:9.5px!important;letter-spacing:.1em!important}'
+  +'.pl-tot .v,.v21-grid .v{font-size:var(--t-numero)!important;letter-spacing:-.022em!important;'
+  +'font-variant-numeric:tabular-nums!important}'
+  +'.orc-row{grid-template-columns:minmax(0,1fr) 120px 130px 70px!important;gap:16px!important;padding:11px 0!important}'
+  +'.proj-row{grid-template-columns:140px minmax(0,1fr) 130px!important;gap:18px!important;padding:12px 0!important}'
+  +'.pend-item{display:grid!important;grid-template-columns:minmax(0,1fr) 250px 110px 76px!important;'
+  +'gap:16px!important;align-items:center!important;padding:11px 0!important;font-size:var(--t-corpo)!important}'
   +'.pend-item .m{font-size:var(--t-micro)!important;text-align:right!important;overflow:hidden;text-overflow:ellipsis}'
   +'.pend-item .v{text-align:right!important;font-variant-numeric:tabular-nums!important}'
   +'.pend-item .pl-btn{justify-self:end}'
-  /* Dois blocos lado a lado quando há largura, em vez de empilhar */
-  +'@media(min-width:1000px){#pl-pendencias-body{display:grid;grid-template-columns:1fr 1fr;'
+  +'.fix-grid{grid-template-columns:minmax(0,1.8fr) 120px minmax(0,1.3fr) 140px 80px 48px!important;gap:14px!important}'
+  +'.v21-row{border-bottom:var(--fio)!important}'
+
+  /* ---------- 8. Financiamentos ---------- */
+  +'.paid-list{background:var(--bg)!important;border:none!important;border-top:var(--fio)!important;'
+  +'border-radius:0!important;padding:12px 16px 14px!important;margin:14px -16px -14px!important}'
+  +'.paid-list-title{font-size:9.5px!important;color:var(--t3)!important;letter-spacing:.1em!important;'
+  +'font-weight:700!important;margin-bottom:8px!important}'
+  +'#financ-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:var(--esp-3);align-items:start}'
+  +'#financ-lista>.fin-summary-note{grid-column:1/-1}'
+
+  /* ---------- 9. Parcelamentos minimizáveis ---------- */
+  +'.parc-client-h{cursor:pointer;position:relative;padding-right:38px!important}'
+  +'.parc-client-h::after{content:"";position:absolute;right:16px;top:50%;width:8px;height:8px;'
+  +'border-right:2px solid var(--t3);border-bottom:2px solid var(--t3);'
+  +'transform:translateY(-70%) rotate(45deg);transition:transform .2s}'
+  +'.parc-client-card.fechado .parc-client-h::after{transform:translateY(-30%) rotate(-135deg)}'
+  +'.parc-client-card.fechado .parc-row{display:none!important}'
+
+  /* ---------- 10. Pontos de quebra descontando a barra lateral de 240px ---------- */
+  +'@media(min-width:1420px){#pl-pendencias-body{display:grid;grid-template-columns:1fr 1fr;'
   +'gap:0 var(--esp-3);align-items:start}#pl-pendencias-body>.pl-card:first-child{grid-column:1/-1}}'
+  +'@media(max-width:1340px){.page{padding:24px 24px 60px!important}'
+  +'.sec-h,.pl-hdr{min-height:52px!important;flex-wrap:wrap!important}'
+  +'.pend-item{grid-template-columns:minmax(0,1fr) 110px 74px!important}.pend-item .m{display:none}'
+  +'#financ-lista{grid-template-columns:1fr}}'
+  +'@media(max-width:1000px){.page{padding:20px 16px 52px!important}'
+  +'.li{grid-template-columns:auto minmax(0,1fr) 100px auto!important;gap:11px!important}'
+  +'.orc-row{grid-template-columns:minmax(0,1fr) 88px 92px 54px!important;gap:9px!important}'
+  +'.proj-row{grid-template-columns:100px minmax(0,1fr) 96px!important;gap:11px!important}}';
 
-  /* Despesas fixas */
-  +'.fix-grid{grid-template-columns:minmax(0,1.7fr) 108px minmax(0,1.2fr) 128px 72px 44px!important;'
-  +'gap:12px!important;padding:10px 0!important}'
-  +'.fix-lbl{font-size:9.5px!important;letter-spacing:.09em!important}'
-
-  /* ---------- Formulários e botões: um só raio, um só peso ---------- */
-  +'.pl-btn,.btn-s,.btn-c,.mn-add,.fb{border-radius:9px!important;font-size:var(--t-sec)!important;font-weight:600!important}'
-  +'.orc-inp,.fix-grid input,.fix-grid select{border-radius:9px!important;font-size:var(--t-sec)!important;padding:7px 10px!important}'
-  +'.pl-empty{padding:26px 0!important;font-size:var(--t-sec)!important}'
-  +'.pl-alert{padding:13px 16px!important;font-size:var(--t-sec)!important;line-height:1.6!important;margin-bottom:var(--esp-3)!important}'
-
-  /* ---------- Reduções em telas menores ---------- */
-  +'@media(max-width:1080px){.page{padding:30px 28px 64px!important}'
-  +'.pend-item{grid-template-columns:minmax(0,1fr) 100px 68px!important}.pend-item .m{display:none}}'
-  +'@media(max-width:760px){.page{padding:22px 16px 56px!important}'
-  +'.li{grid-template-columns:auto minmax(0,1fr) 96px auto!important;gap:10px!important}'
-  +'.orc-row{grid-template-columns:minmax(0,1fr) 84px 84px 52px!important;gap:8px!important}'
-  +'.proj-row{grid-template-columns:96px minmax(0,1fr) 92px!important;gap:10px!important}}';
-
-  var st=document.createElement('style');
-  st.id='camada-design-financas';
-  st.textContent=css;
+  var st=document.createElement('style');st.id='camada-design-financas';st.textContent=css;
   document.head.appendChild(st);
+
+  /* Parcelamentos: recolher ao clicar no cabeçalho */
+  document.addEventListener('click',function(ev){
+    var h=ev.target.closest&&ev.target.closest('.parc-client-h');
+    if(!h||ev.target.closest('button')||ev.target.closest('input'))return;
+    var card=h.closest('.parc-client-card');
+    if(card)card.classList.toggle('fechado');
+  });
+
+  /* Orçamento: botão de sugestão de metas */
+  function mediaUltimos(cat,n){
+    var mRef=(typeof mesAtual!=='undefined')?mesAtual:7,soma=0,c=0;
+    for(var k=1;k<=n;k++){
+      var m=mRef-k;if(m<1)break;
+      soma+=DB.items.filter(function(i){
+        return i.mes===m&&(i.cat||'')===cat&&['cartao','dani','saida','cofre'].indexOf(i.tipo)>=0;
+      }).reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0);
+      c++;
+    }
+    return c?soma/c:0;
+  }
+  window.orcSugerir=function(){
+    var red=parseFloat((el('orc-reducao')||{}).value)||10,n=0;
+    document.querySelectorAll('[data-orc-cat]').forEach(function(inp){
+      var md=mediaUltimos(inp.getAttribute('data-orc-cat'),3);
+      if(md<=0)return;
+      inp.value=Math.round(md*(1-red/100));n++;
+    });
+    toast(n?('Metas sugeridas para '+n+' categorias. Revise e salve.')
+           :'Ainda não há histórico nos meses anteriores.');
+  };
+  function injetarSugestao(){
+    var hdr=document.querySelector('#pl-orcamento-body .pl-hdr');
+    if(!hdr||el('orc-sugerir'))return;
+    var box=document.createElement('div');
+    box.style.cssText='display:flex;align-items:center;gap:8px;flex-wrap:wrap';
+    box.innerHTML='<span style="font-size:11px;color:var(--t3)">reduzir</span>'
+      +'<input id="orc-reducao" type="number" min="0" max="90" step="5" value="10" '
+      +'style="width:56px;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;'
+      +'font-family:inherit;font-size:12.5px;text-align:right;background:var(--bg);color:var(--t)">'
+      +'<span style="font-size:11px;color:var(--t3)">%</span>'
+      +'<button class="pl-btn sec" id="orc-sugerir">Sugerir metas</button>';
+    var salvar=el('orc-salvar');
+    if(salvar&&salvar.parentNode===hdr){hdr.insertBefore(box,salvar);box.appendChild(salvar);}
+    else hdr.appendChild(box);
+    el('orc-sugerir').onclick=orcSugerir;
+  }
+  var _goToD=window.goTo;
+  window.goTo=function(v,mes){
+    var r=_goToD.apply(this,arguments);
+    if(v==='orcamento')setTimeout(injetarSugestao,0);
+    return r;
+  };
+  goTo=window.goTo;
+  if(typeof render==='function')try{render();}catch(e){}
 })();
 </script>
 
