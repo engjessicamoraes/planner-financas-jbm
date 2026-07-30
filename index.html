@@ -285,6 +285,224 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
 #conta-tot-hdr{font-weight:800;font-variant-numeric:tabular-nums}
 #saldo-inicial-display span{font-weight:800}
 </style>
+
+<style id="revisao-visual-clara-v1">
+/* Revisão visual clara: preserva a lógica e substitui apenas a apresentação. */
+:root{
+  --m:#8D5F78!important;
+  --m2:#A4778F!important;
+  --ml:#F7EEF3!important;
+  --g:#7D8977!important;
+  --g2:#64705F!important;
+  --gl:#F3F6F1!important;
+  --bg:#F6F7F9!important;
+  --card:#FFFFFF!important;
+  --bd:#DDE1E6!important;
+  --bds:#ECEFF2!important;
+  --t:#27303B!important;
+  --t2:#5A6470!important;
+  --t3:#8A949F!important;
+  --ok:#2F7D59!important;
+  --okbg:#EAF6F0!important;
+  --bad:#B24747!important;
+  --badbg:#FBEDED!important;
+  --neu:#68727E!important;
+  --neubg:#F0F2F4!important;
+  --ds-ink:#27303B!important;
+  --ds-ink2:#5A6470!important;
+  --ds-ink3:#8A949F!important;
+  --ds-line:#ECEFF2!important;
+  --ds-line2:#DDE1E6!important;
+  --ds-card:#FFFFFF!important;
+  --ds-canvas:#F6F7F9!important;
+  --ds-marsala:#8D5F78!important;
+  --ds-marsala-soft:#F7EEF3!important;
+  --ds-gold:#7D8977!important;
+  --ds-pos:#2F7D59!important;
+  --ds-neg:#B24747!important;
+}
+html,body{background:#F6F7F9!important;color:var(--t)!important}
+body{font-size:14px!important}
+.main{background:linear-gradient(180deg,#FAFBFC 0,#F6F7F9 260px)!important}
+.sb{
+  width:258px!important;
+  background:rgba(255,255,255,.98)!important;
+  border-right:1px solid #E4E7EB!important;
+  box-shadow:8px 0 28px rgba(39,48,59,.045)!important;
+}
+.sb-top{padding:18px 16px!important;background:#FFFFFF!important;border-bottom:1px solid #ECEFF2!important;position:sticky;top:0;z-index:5}
+.sb-ico{background:linear-gradient(135deg,#A87991,#7D8977)!important;box-shadow:0 5px 14px rgba(141,95,120,.18)!important}
+.sb-name{color:#5F4052!important;font-size:14px!important}.sb-name small{color:#929AA3!important;margin-top:2px}
+.sb-nav{padding:10px 9px 18px!important}
+.sb-sec{font-size:9px!important;color:#A0A8B0!important;margin:15px 0 5px!important;padding:0 11px!important;letter-spacing:.13em!important}
+.ni{
+  min-height:37px!important;padding:8px 11px!important;border-radius:9px!important;
+  color:#626D78!important;border-left:0!important;margin-bottom:3px!important;font-size:12.5px!important;
+  transition:background .14s,color .14s,transform .14s!important;
+}
+.ni:hover{background:#F7F3F5!important;color:#70495D!important;transform:translateX(1px)}
+.ni.on{background:#F3EAF0!important;color:#694559!important;font-weight:700!important;box-shadow:none!important;border-left:0!important}
+.ni.on::before{content:"";width:4px;height:20px;border-radius:4px;background:#A36F8A;margin-left:-5px;margin-right:1px;flex-shrink:0}
+.ni-tag{background:#F0F2F4!important;color:#737D87!important}.ni.on .ni-tag{background:#A36F8A!important;color:#fff!important}
+.sb>div[style*="padding:12px 16px"]{padding:14px 14px 18px!important;border-top:1px solid #ECEFF2!important;background:#FCFCFD!important}
+#btn-exportar,#btn-salvar-html,#btn-importar,#btn-fs-link{min-height:34px!important;border-radius:9px!important;font-weight:600!important}
+#btn-exportar{background:#8D5F78!important}#btn-salvar-html{background:#7D8977!important}
+.page{padding-top:34px!important}
+.pg-title{font-size:26px!important;color:#27303B!important}.pg-sub{color:#7B8590!important;margin-bottom:25px!important}
+.sec,.pl-card,.parc-client-card,.sc,.painel-kpi,.metric-tile,.anot-bloco,.anot-total-geral,.mes-color-card,.ym{
+  background:#FFFFFF!important;border-color:#E1E5E9!important;
+  box-shadow:0 5px 18px rgba(39,48,59,.045)!important;
+}
+.sec,.pl-card,.parc-client-card{border-radius:15px!important}
+.sec-h,.pl-hdr{background:#FCFCFD!important;border-bottom-color:#ECEFF2!important}
+.sc{border-top-width:1px!important;border-radius:13px!important;padding:15px 16px!important}
+.sc.gold,.sc.ok,.sc.bad,.sc.neu,.sc.m{border-top-color:#E1E5E9!important}
+.sc-v{color:#313A45!important}.sc-l,.sc-s{color:#8A949F!important}
+.mes-nav{background:#FFFFFF!important;border-color:#E1E5E9!important;box-shadow:0 5px 16px rgba(39,48,59,.045)!important;border-radius:12px!important}
+.mn-lbl{color:#604456!important}
+.mn-btn{background:#F8F9FA!important;border-color:#DDE1E6!important}
+.mn-btn:hover{background:#F3EAF0!important;border-color:#B88AA2!important;color:#7A4F66!important}
+.mn-add,.btn-s,.pl-btn{background:#8D5F78!important;box-shadow:none!important}
+.mn-add:hover,.btn-s:hover,.pl-btn:hover{background:#7A4F66!important;filter:none!important}
+.fb{color:#795167!important}.fb.on{background:#8D5F78!important;color:#fff!important;border-color:#8D5F78!important;text-decoration:none!important;padding-left:11px!important;padding-right:11px!important}
+.fl input,.fl select,.rf-field input,.rf-field select{background:#FFFFFF!important;border-color:#D8DDE2!important;color:#27303B!important}
+.fl input:focus,.fl select:focus,.rf-field input:focus,.rf-field select:focus{border-color:#A87991!important;box-shadow:0 0 0 3px rgba(168,121,145,.12)!important}
+.modal{background:rgba(55,62,70,.28)!important;backdrop-filter:blur(5px)!important}
+.modal-box{background:#FFFFFF!important;box-shadow:0 24px 70px rgba(39,48,59,.22)!important}
+.modal-ttl{color:#694559!important}
+.li:hover,.cr:hover,.pr:hover,.anot-linha:hover{background:#FAF7F9!important}
+.tot-row,.anot-subtotal,.pl-tot,.v21-grid,.cf-strip{background:#F8F9FA!important}
+.empty{color:#8A949F!important}
+
+/* Retira os grandes blocos escuros do painel. */
+.painel-hero,.painel-salario-hero,.v8-salary-hero{
+  background:linear-gradient(135deg,#FFFFFF 0%,#FBF7F9 62%,#F4F7F2 100%)!important;
+  color:#27303B!important;border:1px solid #E2D9DE!important;
+  box-shadow:0 8px 24px rgba(39,48,59,.055)!important;
+}
+.painel-hero::after,.painel-salario-hero::after{background:rgba(168,121,145,.08)!important}
+.painel-hero-title,.painel-salario-hero-k{color:#795167!important;opacity:1!important}
+.painel-hero-val,.painel-salario-hero-v{color:#27303B!important}
+.painel-hero-sub,.painel-salario-hero-s{color:#68727E!important;opacity:1!important}
+.painel-hero-sub strong{color:#4C5966!important}
+
+/* Tela de acesso clara e sem aspecto pesado. */
+#cloud-gate{background:linear-gradient(145deg,#F7F8FA,#EEF1F3)!important}
+#cloud-loading{color:#694559!important}
+#cloud-loading>div:first-child{border-color:rgba(141,95,120,.18)!important;border-top-color:#8D5F78!important}
+#cloud-login-form{background:#FFFFFF!important;border:1px solid #E1E5E9!important;box-shadow:0 24px 70px rgba(39,48,59,.16)!important}
+#cloud-login-btn{background:#8D5F78!important}
+
+/* Melhor adaptação em telas menores. */
+@media(max-width:900px){
+  .sb{width:220px!important}.page{padding-left:22px!important;padding-right:22px!important}
+}
+@media(max-width:700px){
+  body{display:block!important;overflow:auto!important;height:auto!important}
+  .sb{width:100%!important;height:auto!important;max-height:none!important;position:relative!important;border-right:0!important;border-bottom:1px solid #E1E5E9!important}
+  .sb-nav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important}
+  .sb-sec{grid-column:1/-1!important}.main{height:auto!important;overflow:visible!important}.page{padding:22px 16px 50px!important}
+  .sb>div[style*="padding:12px 16px"]{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}
+}
+</style>
+
+
+<style id="consolidacao-ui-v2">
+/* Camada consolidada de interface e usabilidade. */
+:root{
+  --ui-accent:#82566d;
+  --ui-accent-strong:#6e455b;
+  --ui-accent-soft:#f4eaf0;
+  --ui-green:#38775a;
+  --ui-amber:#8b6f3e;
+  --ui-shadow:0 8px 26px rgba(38,46,56,.07);
+}
+body{letter-spacing:0}
+.main{position:relative}
+.page{max-width:1380px!important}
+.pg-title{letter-spacing:-.55px!important}
+.pg-title::after{content:"";display:block;width:42px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--ui-accent),#a58c78);margin-top:9px}
+.pg-sub{max-width:760px;line-height:1.55}
+.sec,.pl-card,.parc-client-card,.anot-bloco{box-shadow:var(--ui-shadow)!important}
+.sec-h,.pl-hdr{min-height:48px}
+.sec-t{color:#4e5965!important;font-weight:700!important;letter-spacing:.07em!important}
+.scards{gap:14px!important}
+.sc{position:relative;overflow:hidden}
+.sc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#d8dde2}
+.sc.ok::before{background:var(--ok)}.sc.bad::before{background:var(--bad)}.sc.gold::before{background:#97815b}.sc.m::before{background:var(--ui-accent)}
+.fb,.mn-add,.btn-s,.pl-btn,button{touch-action:manipulation}
+
+/* Correção efetiva do recolhimento da fatura. */
+#fat-collapse{transition:max-height .24s ease,opacity .18s ease!important;max-height:5000px!important;opacity:1}
+#fat-collapse.fat-min{max-height:0!important;opacity:0!important;overflow:hidden!important}
+#fat-collapse.fat-min #fat-cats,#fat-collapse.fat-min .tot-row{display:block!important}
+
+/* Menu consolidado e recolhível. */
+.sb{overflow:hidden!important}
+.sb-nav{overflow-y:auto;overscroll-behavior:contain}
+.nav-group{border-bottom:1px solid #eef0f2;padding:4px 0}
+.nav-group:last-child{border-bottom:0}
+.nav-group-toggle{width:100%;border:0;background:transparent;color:#7d8791;display:flex;align-items:center;justify-content:space-between;padding:10px 11px 7px;font:700 9.5px/1.2 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:left}
+.nav-group-toggle:hover{color:var(--ui-accent-strong)}
+.nav-group-toggle::after{content:"⌄";font-size:14px;line-height:1;transition:transform .16s ease}
+.nav-group.closed .nav-group-toggle::after{transform:rotate(-90deg)}
+.nav-group-body{display:block;padding-bottom:4px}
+.nav-group.closed .nav-group-body{display:none}
+.nav-group .sb-sec{display:none!important}
+.nav-group-body>#sb-meses{display:block}
+.ni{position:relative}
+.ni[data-duplicate="true"]{display:none!important}
+
+/* Status de salvamento e ferramentas menos invasivas. */
+.sync-card{margin:8px 13px 10px;padding:10px 11px;border:1px solid #e1e5e9;background:#fafbfc;border-radius:11px;display:grid;grid-template-columns:9px 1fr;column-gap:8px;align-items:center}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#87919b;box-shadow:0 0 0 3px rgba(135,145,155,.12)}
+.sync-card.ok .sync-dot{background:var(--ok);box-shadow:0 0 0 3px rgba(47,125,89,.12)}
+.sync-card.pending .sync-dot{background:#b88432;box-shadow:0 0 0 3px rgba(184,132,50,.13)}
+.sync-card.bad .sync-dot{background:var(--bad);box-shadow:0 0 0 3px rgba(178,71,71,.12)}
+.sync-main{font-size:11px;font-weight:700;color:#4f5964;line-height:1.2}
+.sync-sub{grid-column:2;font-size:9.8px;color:#8a949f;margin-top:3px;line-height:1.35}
+.sb-tools{padding:8px 13px 14px!important;border-top:1px solid #eceff2;background:#fcfcfd}
+.sb-tools-toggle{width:100%;border:1px solid #dfe3e7;background:#fff;color:#5e6872;border-radius:9px;padding:9px 10px;font:600 11px Inter,sans-serif;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.sb-tools-toggle::after{content:"⌄";font-size:14px;transition:transform .16s}
+.sb-tools.closed .sb-tools-toggle::after{transform:rotate(-90deg)}
+.sb-tools-body{padding-top:7px}
+.sb-tools.closed .sb-tools-body{display:none}
+.sb-tools-body button{margin-bottom:6px!important}
+
+/* Barra móvel e menu lateral retrátil. */
+.mobile-appbar{display:none}
+.mobile-overlay{display:none}
+@media(max-width:760px){
+  body{display:block!important;height:auto!important;min-height:100vh!important;overflow:auto!important;padding-top:58px!important}
+  .mobile-appbar{display:flex;position:fixed;left:0;right:0;top:0;height:58px;z-index:1200;align-items:center;gap:11px;padding:0 14px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid #e3e7ea;box-shadow:0 4px 16px rgba(39,48,59,.06)}
+  .mobile-menu-btn{width:38px;height:38px;border:1px solid #dce1e5;border-radius:10px;background:#fff;color:#5f4052;font-size:21px;line-height:1;cursor:pointer}
+  .mobile-app-title{font:700 14px Outfit,sans-serif;color:#323b45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mobile-app-sub{font-size:9.8px;color:#8a949f;margin-top:1px}
+  .sb{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:min(88vw,310px)!important;height:100vh!important;max-height:none!important;z-index:1400!important;transform:translateX(-104%);transition:transform .22s ease!important;border-right:1px solid #dfe3e7!important;border-bottom:0!important;box-shadow:18px 0 45px rgba(25,32,40,.18)!important}
+  .sb.mobile-open{transform:translateX(0)}
+  .sb-top{position:sticky!important;top:0!important}
+  .sb-nav{display:block!important;padding:8px 9px 14px!important}
+  .sb>div[style*="padding:12px 16px"],.sb-tools{display:block!important}
+  .mobile-overlay{position:fixed;inset:0;background:rgba(31,37,44,.32);backdrop-filter:blur(2px);z-index:1300}
+  .mobile-overlay.on{display:block}
+  .main{height:auto!important;overflow:visible!important;background:#f7f8fa!important}
+  .page{padding:23px 14px 48px!important}
+  .pg-title{font-size:23px!important}
+  .g2,.painel-kpi-grid,.metric-strip{grid-template-columns:1fr!important}
+  .mes-nav{position:sticky;top:66px;z-index:20}
+  .sec-h{align-items:flex-start!important;gap:8px!important}
+  .sec-h>div:last-child{flex-wrap:wrap;justify-content:flex-end}
+  .mn-add,.fb{min-height:32px}
+}
+
+/* Desfazer ampliado. */
+.action-undo{position:fixed;right:22px;bottom:22px;z-index:1800;display:none;align-items:center;gap:12px;max-width:min(390px,calc(100vw - 30px));padding:11px 12px;background:#26303a;color:#fff;border-radius:11px;box-shadow:0 10px 34px rgba(0,0,0,.24)}
+.action-undo.on{display:flex}
+.action-undo span{font-size:12px;line-height:1.35;flex:1}
+.action-undo button{border:1px solid rgba(255,255,255,.28);background:#fff;color:#5e4051;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer}
+@media(max-width:760px){.action-undo{left:15px;right:15px;bottom:15px}}
+</style>
+
 </head>
 <body>
 <div id="cloud-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#5C2444,#3E1730);display:flex;align-items:center;justify-content:center;font-family:Calibri,Arial,sans-serif;">
@@ -584,9 +802,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-siz
     if(document.getElementById('aviso-modo-local'))return;
     var b=document.createElement('div');
     b.id='aviso-modo-local';
-    b.style.cssText='position:fixed;left:14px;bottom:14px;z-index:99998;max-width:330px;background:#FEF7EA;color:#8A5800;border:1px solid rgba(138,88,0,.28);border-radius:10px;padding:11px 13px;font-family:Inter,Arial,sans-serif;font-size:11.5px;line-height:1.55;box-shadow:0 3px 14px rgba(0,0,0,.14);cursor:pointer';
-    b.innerHTML='<strong>Modo local.</strong> Não foi possível carregar o Firebase, de modo que a sincronização em nuvem está desativada nesta sessão. Suas alterações continuam sendo gravadas neste navegador, mas não serão enviadas para os outros dispositivos até que a conexão seja restabelecida. Recarregue a página quando estiver on-line. Clique para ocultar.';
-    b.onclick=function(){b.remove();};
+    b.title='O Firebase não carregou nesta sessão. Suas alterações estão sendo salvas neste navegador. Recarregue quando estiver on-line para sincronizar.';
+    b.style.cssText='position:fixed;left:16px;bottom:16px;z-index:99998;display:flex;align-items:center;gap:7px;background:var(--card,#fff);color:var(--t3,#a89080);border:1px solid var(--bd,#e0d8ce);border-radius:999px;padding:6px 13px;font-family:Inter,Arial,sans-serif;font-size:11.5px;font-weight:500;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:default';
+    b.innerHTML='<span style="width:7px;height:7px;border-radius:50%;background:#D9A441;display:inline-block"></span>Modo local — salvando neste navegador';
     document.body.appendChild(b);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',liberar);
@@ -7850,7 +8068,8 @@ try{render();}catch(e){console.error(e);}
     });
     if(removidos>0){DB.items=novo;DB._duplicadosRemovidosV33=(DB._duplicadosRemovidosV33||0)+removidos;dbSave();}
   }
-  dedupe();
+  /* A exclusão automática foi desativada no redesign. Possíveis duplicidades permanecem no painel de Pendências para conferência manual. */
+  if(localStorage.getItem('fin26_allow_auto_dedupe')==='1') dedupe();
   try{render();}catch(e){console.error(e);}
 })();
 </script>
@@ -9413,6 +9632,995 @@ try{
 
   try{renomear();enxugarAvisos();}catch(e){}
   console.log('v22: ajustes de uso carregados.');
+})();
+</script>
+
+
+<script>
+/* ============================================================
+   V23 — IMPORTADOR DE FATURA + PLANNER DIÁRIO + REEQUILÍBRIO
+   ============================================================ */
+(function(){
+  if(typeof DB==="undefined"){console.error("v23: DB indisponível");return;}
+
+  var FATURA_JULHO_2026="[{\"d\":\"2026-07-20\",\"n\":\"Wddrones E Wdagro\",\"v\":737.5,\"c\":\"Trabalho / Empresa\",\"pi\":1,\"pn\":12},{\"d\":\"2026-07-20\",\"n\":\"Otto Car Pecas E Aces\",\"v\":14.9,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-20\",\"n\":\"Zaffari O. Nmeyer\",\"v\":153.37,\"c\":\"Supermercado\"},{\"d\":\"2026-07-20\",\"n\":\"Posto Jockey\",\"v\":100.0,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-20\",\"n\":\"Ifd*mi Restaurante Rep\",\"v\":41.99,\"c\":\"Restaurante\"},{\"d\":\"2026-07-20\",\"n\":\"Raia3031\",\"v\":149.99,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-20\",\"n\":\"Ifd*delivery Alliance\",\"v\":40.96,\"c\":\"Delivery\"},{\"d\":\"2026-07-20\",\"n\":\"Raia3031\",\"v\":221.57,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-19\",\"n\":\"Drive Aeroporto\",\"v\":15.9,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-19\",\"n\":\"Bourbon Canoas\",\"v\":191.83,\"c\":\"Restaurante\"},{\"d\":\"2026-07-19\",\"n\":\"Dagostini Alimentos\",\"v\":51.21,\"c\":\"Supermercado\"},{\"d\":\"2026-07-19\",\"n\":\"30022  Barra Sul Camic\",\"v\":104.99,\"c\":\"Restaurante\"},{\"d\":\"2026-07-19\",\"n\":\"Sams Club Poa Cristal\",\"v\":230.36,\"c\":\"Supermercado\"},{\"d\":\"2026-07-18\",\"n\":\"Zaffari O. Nmeyer\",\"v\":96.33,\"c\":\"Supermercado\"},{\"d\":\"2026-07-18\",\"n\":\"Iof Compra Internaciona\",\"v\":3.69,\"c\":\"Taxas / Impostos\"},{\"d\":\"2026-07-18\",\"n\":\"Hortifrutigranjeiro Ka\",\"v\":16.67,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-18\",\"n\":\"Aut*ticpaybikeinca\",\"v\":88.57,\"c\":\"Revisar categoria\",\"pi\":1,\"pn\":4},{\"d\":\"2026-07-18\",\"n\":\"Sushi De Carli Ltda\",\"v\":134.0,\"c\":\"Restaurante\"},{\"d\":\"2026-07-18\",\"n\":\"Ifd*fomeria Comercio D\",\"v\":30.9,\"c\":\"Delivery\"},{\"d\":\"2026-07-18\",\"n\":\"Cappta *Top Chik Prese\",\"v\":56.0,\"c\":\"Delivery\"},{\"d\":\"2026-07-18\",\"n\":\"Ifd         *Kero Ltda\",\"v\":96.61,\"c\":\"Delivery\"},{\"d\":\"2026-07-18\",\"n\":\"B12 Armazem De Produto\",\"v\":12.93,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-17\",\"n\":\"Sim Poa Av Assis Brasi\",\"v\":59.9,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-17\",\"n\":\"Comercio Vef\",\"v\":11.49,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-17\",\"n\":\"Mcdonalds\",\"v\":119.7,\"c\":\"Restaurante\"},{\"d\":\"2026-07-17\",\"n\":\"Openai *Chatgpt Subscr\",\"v\":105.91,\"c\":\"Assinaturas / Apps\"},{\"d\":\"2026-07-17\",\"n\":\"Pandorga Livros E Brin\",\"v\":44.8,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-16\",\"n\":\"Casa Do Mato\",\"v\":95.0,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-16\",\"n\":\"Fomeria\",\"v\":191.83,\"c\":\"Delivery\"},{\"d\":\"2026-07-16\",\"n\":\"Rd Saude Online\",\"v\":36.3,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-16\",\"n\":\"Comercio Vef\",\"v\":15.49,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-16\",\"n\":\"Via Napole Restaurante\",\"v\":41.9,\"c\":\"Restaurante\"},{\"d\":\"2026-07-16\",\"n\":\"Raia1530\",\"v\":13.99,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-16\",\"n\":\"Elaize Silva Pezzi Cia\",\"v\":45.12,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-16\",\"n\":\"O Mercadinho\",\"v\":7.0,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-15\",\"n\":\"Unisuper Barcelos Ii\",\"v\":17.07,\"c\":\"Supermercado\"},{\"d\":\"2026-07-15\",\"n\":\"Lhamastche\",\"v\":14.0,\"c\":\"Restaurante\"},{\"d\":\"2026-07-15\",\"n\":\"Ec          *Shellbox\",\"v\":251.93,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-14\",\"n\":\"Elaize Silva Pezzi Cia\",\"v\":51.31,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-14\",\"n\":\"Mmc Alimentacao Ltda\",\"v\":44.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-14\",\"n\":\"O Mercadinho\",\"v\":16.94,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-14\",\"n\":\"Raia Drogasil Sa\",\"v\":86.42,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-14\",\"n\":\"Posto Universitario\",\"v\":112.93,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-14\",\"n\":\"Raia1909\",\"v\":134.91,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-14\",\"n\":\"Posto Universitario\",\"v\":100.0,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-14\",\"n\":\"Dl*uberrides\",\"v\":33.98,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-14\",\"n\":\"Fomeria\",\"v\":28.92,\"c\":\"Delivery\"},{\"d\":\"2026-07-14\",\"n\":\"Dl*uberrides\",\"v\":31.97,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-13\",\"n\":\"Lhamastche\",\"v\":185.0,\"c\":\"Restaurante\"},{\"d\":\"2026-07-13\",\"n\":\"Comercio Vef\",\"v\":10.47,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-13\",\"n\":\"Comercio Vef\",\"v\":10.78,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-13\",\"n\":\"Brandes E Brandes Ferr\",\"v\":10.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-12\",\"n\":\"Rd Saude Online\",\"v\":108.87,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-12\",\"n\":\"Bourbon Canoas\",\"v\":154.5,\"c\":\"Restaurante\"},{\"d\":\"2026-07-12\",\"n\":\"Comercio Vef\",\"v\":5.89,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-12\",\"n\":\"Comercio Vef\",\"v\":77.13,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-11\",\"n\":\"Fomeria\",\"v\":60.41,\"c\":\"Delivery\"},{\"d\":\"2026-07-11\",\"n\":\"Ifd*dimed Sa Distribui\",\"v\":49.12,\"c\":\"Delivery\"},{\"d\":\"2026-07-11\",\"n\":\"Posto Jockey\",\"v\":150.0,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-11\",\"n\":\"Ifd*fama004 Pizzaria L\",\"v\":94.04,\"c\":\"Restaurante\"},{\"d\":\"2026-07-11\",\"n\":\"Raia1530\",\"v\":81.27,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-11\",\"n\":\"Hortifrutigranjeiro Ka\",\"v\":42.91,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-11\",\"n\":\"Fomeria\",\"v\":36.77,\"c\":\"Delivery\"},{\"d\":\"2026-07-10\",\"n\":\"Momentus\",\"v\":44.8,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-10\",\"n\":\"Dl*uberrides\",\"v\":12.98,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-10\",\"n\":\"Fomeria\",\"v\":42.64,\"c\":\"Delivery\"},{\"d\":\"2026-07-10\",\"n\":\"Adiqplu*dr Carlos\",\"v\":58.25,\"c\":\"Revisar categoria\",\"pi\":1,\"pn\":4},{\"d\":\"2026-07-10\",\"n\":\"Pecanha Antonio Cia Lt\",\"v\":54.0,\"c\":\"Restaurante\"},{\"d\":\"2026-07-10\",\"n\":\"Bistek Supermercados\",\"v\":274.59,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-10\",\"n\":\"Pdv*panificio Partenon\",\"v\":48.95,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-10\",\"n\":\"Wow Park Barra Sul\",\"v\":160.0,\"c\":\"Restaurante\"},{\"d\":\"2026-07-10\",\"n\":\"Tagitau*jessicamoraes\",\"v\":50.0,\"c\":\"Trabalho / Empresa\"},{\"d\":\"2026-07-09\",\"n\":\"Hmbrasil    *Hmbrasil\",\"v\":58.15,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-09\",\"n\":\"Pecanha Antonio Cia Lt\",\"v\":90.0,\"c\":\"Restaurante\"},{\"d\":\"2026-07-09\",\"n\":\"Mercadolivre*mercadoli\",\"v\":203.62,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-09\",\"n\":\"Sorveteria Troppo Buo\",\"v\":95.5,\"c\":\"Restaurante\"},{\"d\":\"2026-07-08\",\"n\":\"Ifd*carboni E Dier Com\",\"v\":40.42,\"c\":\"Delivery\"},{\"d\":\"2026-07-08\",\"n\":\"Comercio Vef\",\"v\":6.89,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-08\",\"n\":\"99*\",\"v\":16.1,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-08\",\"n\":\"Zaffari O. Nmeyer\",\"v\":99.9,\"c\":\"Supermercado\",\"pi\":1,\"pn\":2},{\"d\":\"2026-07-08\",\"n\":\"Zaffari O. Nmeyer\",\"v\":171.07,\"c\":\"Supermercado\"},{\"d\":\"2026-07-07\",\"n\":\"Fomeria\",\"v\":32.92,\"c\":\"Delivery\"},{\"d\":\"2026-07-07\",\"n\":\"Bistek Supermercados L\",\"v\":31.37,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-07\",\"n\":\"Comercio Vef\",\"v\":15.49,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-07\",\"n\":\"Tagitau*jessicamoraes\",\"v\":50.0,\"c\":\"Trabalho / Empresa\"},{\"d\":\"2026-07-07\",\"n\":\"Posto Universitario\",\"v\":99.41,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-07\",\"n\":\"Mania Games\",\"v\":50.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-07\",\"n\":\"Raia1896\",\"v\":9.98,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-06\",\"n\":\"Okidoki*nook\",\"v\":9.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-06\",\"n\":\"Iof Compra Internaciona\",\"v\":4.07,\"c\":\"Taxas / Impostos\"},{\"d\":\"2026-07-06\",\"n\":\"Pdv*agroc Vida\",\"v\":134.9,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-06\",\"n\":\"Posto Universitario\",\"v\":30.0,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-06\",\"n\":\"Comercial Mattos Ltda\",\"v\":44.98,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-06\",\"n\":\"Abastecedora De Combus\",\"v\":100.0,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-07-05\",\"n\":\"Anthropic* Claude Sub\",\"v\":116.49,\"c\":\"Assinaturas / Apps\"},{\"d\":\"2026-07-05\",\"n\":\"Apple.com/bill\",\"v\":5.5,\"c\":\"Assinaturas / Apps\"},{\"d\":\"2026-07-05\",\"n\":\"Dl          *Uberrides\",\"v\":13.98,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-05\",\"n\":\"Unisuper Barcelos Ii\",\"v\":142.95,\"c\":\"Supermercado\"},{\"d\":\"2026-07-05\",\"n\":\"Allpark Empreendimento\",\"v\":25.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-05\",\"n\":\"D Galeto E Gato\",\"v\":60.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-05\",\"n\":\"D Galeto E Gato\",\"v\":20.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-04\",\"n\":\"Youcom Fl 400079\",\"v\":89.95,\"c\":\"Vestu\u00e1rio\",\"pi\":1,\"pn\":2},{\"d\":\"2026-07-04\",\"n\":\"Iof Compra Internaciona\",\"v\":3.85,\"c\":\"Taxas / Impostos\"},{\"d\":\"2026-07-04\",\"n\":\"Zaffari Park Canoas\",\"v\":185.71,\"c\":\"Supermercado\"},{\"d\":\"2026-07-04\",\"n\":\"Ifd*pontin Restaurante\",\"v\":103.68,\"c\":\"Restaurante\"},{\"d\":\"2026-07-04\",\"n\":\"Lindt  Sprungli Br\",\"v\":100.26,\"c\":\"Restaurante\",\"pi\":1,\"pn\":2},{\"d\":\"2026-07-04\",\"n\":\"Kalunga Shopping Canoa\",\"v\":37.5,\"c\":\"Revisar categoria\"},{\"d\":\"2026-07-03\",\"n\":\"Anthropic\",\"v\":110.0,\"c\":\"Assinaturas / Apps\"},{\"d\":\"2026-07-03\",\"n\":\"Unisuper Barcelos I\",\"v\":29.55,\"c\":\"Supermercado\"},{\"d\":\"2026-07-02\",\"n\":\"Otto Car Pecas E Aces\",\"v\":24.9,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-07-02\",\"n\":\"Bourbon Canoas\",\"v\":167.39,\"c\":\"Restaurante\"},{\"d\":\"2026-07-02\",\"n\":\"Panvel Farmacias\",\"v\":20.97,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-02\",\"n\":\"Comercio Vef\",\"v\":6.89,\"c\":\"Mercadinho\"},{\"d\":\"2026-07-02\",\"n\":\"Panvel*digital\",\"v\":61.99,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-01\",\"n\":\"Fomeria\",\"v\":41.28,\"c\":\"Delivery\"},{\"d\":\"2026-07-01\",\"n\":\"Zaffari O. Nmeyer\",\"v\":73.53,\"c\":\"Supermercado\"},{\"d\":\"2026-07-01\",\"n\":\"Hna*qdb\",\"v\":140.98,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-07-01\",\"n\":\"Carrefour Cns 42\",\"v\":12.95,\"c\":\"Supermercado\"},{\"d\":\"2026-06-30\",\"n\":\"Ifd*carboni E Dier Com\",\"v\":37.32,\"c\":\"Delivery\"},{\"d\":\"2026-06-30\",\"n\":\"Sam S Porto Alegre 494\",\"v\":475.49,\"c\":\"Supermercado\"},{\"d\":\"2026-06-30\",\"n\":\"Apple.com/bill\",\"v\":10.99,\"c\":\"Assinaturas / Apps\"},{\"d\":\"2026-06-29\",\"n\":\"H&m - Praia De Bel\",\"v\":98.91,\"c\":\"Farm\u00e1cia\",\"pi\":1,\"pn\":6},{\"d\":\"2026-06-29\",\"n\":\"Raia Drogasil Sa\",\"v\":132.25,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-06-29\",\"n\":\"Posto Jockey\",\"v\":50.0,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-06-29\",\"n\":\"Burger King\",\"v\":52.8,\"c\":\"Restaurante\"},{\"d\":\"2026-06-29\",\"n\":\"Ec          *Shellbox\",\"v\":272.49,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-06-29\",\"n\":\"Unisuper Barcelos Ii\",\"v\":11.67,\"c\":\"Supermercado\"},{\"d\":\"2026-06-29\",\"n\":\"Tagitau*jessicamoraes\",\"v\":50.0,\"c\":\"Trabalho / Empresa\"},{\"d\":\"2026-06-28\",\"n\":\"Ah Casa Eventos\",\"v\":47.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-28\",\"n\":\"Rd Saude Online\",\"v\":34.22,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-06-28\",\"n\":\"Bourbon Canoas\",\"v\":94.01,\"c\":\"Restaurante\"},{\"d\":\"2026-06-28\",\"n\":\"Apple.com/bill\",\"v\":19.9,\"c\":\"Assinaturas / Apps\"},{\"d\":\"2026-06-28\",\"n\":\"Carrefour Cns 42\",\"v\":55.17,\"c\":\"Supermercado\"},{\"d\":\"2026-06-27\",\"n\":\"Elaize Silva Pezzi Cia\",\"v\":70.81,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-27\",\"n\":\"Bourbon Canoas\",\"v\":183.29,\"c\":\"Restaurante\"},{\"d\":\"2026-06-27\",\"n\":\"Fomeria\",\"v\":59.48,\"c\":\"Delivery\"},{\"d\":\"2026-06-27\",\"n\":\"Comercio Vef\",\"v\":16.99,\"c\":\"Mercadinho\"},{\"d\":\"2026-06-27\",\"n\":\"Comercio Vef\",\"v\":10.88,\"c\":\"Mercadinho\"},{\"d\":\"2026-06-26\",\"n\":\"Fomeria\",\"v\":50.3,\"c\":\"Delivery\"},{\"d\":\"2026-06-26\",\"n\":\"Zaffari O. Nmeyer\",\"v\":155.76,\"c\":\"Supermercado\"},{\"d\":\"2026-06-26\",\"n\":\"Bourbon Canoas\",\"v\":95.48,\"c\":\"Restaurante\"},{\"d\":\"2026-06-25\",\"n\":\"Tagitau*jessicamoraes\",\"v\":50.0,\"c\":\"Trabalho / Empresa\"},{\"d\":\"2026-06-25\",\"n\":\"Unisuper Barcelos Ii\",\"v\":15.78,\"c\":\"Supermercado\"},{\"d\":\"2026-06-25\",\"n\":\"30017  Iguatemi Po\",\"v\":139.98,\"c\":\"Supermercado\",\"pi\":1,\"pn\":2},{\"d\":\"2026-06-25\",\"n\":\"Bistek Supermercados\",\"v\":302.35,\"c\":\"Mercadinho\"},{\"d\":\"2026-06-25\",\"n\":\"Zzrsv Rs Barra Sul\",\"v\":116.67,\"c\":\"Restaurante\",\"pi\":1,\"pn\":4},{\"d\":\"2026-06-25\",\"n\":\"Amazon Br   *Amazon Br\",\"v\":45.5,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-25\",\"n\":\"Sim Poa Ceara\",\"v\":10.78,\"c\":\"Carro / Transporte\"},{\"d\":\"2026-06-25\",\"n\":\"Tenda Harmonia\",\"v\":87.16,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-24\",\"n\":\"Comercio Vef\",\"v\":22.77,\"c\":\"Mercadinho\"},{\"d\":\"2026-06-24\",\"n\":\"Nutripao\",\"v\":20.56,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-24\",\"n\":\"Iof Compra Internaciona\",\"v\":1.92,\"c\":\"Taxas / Impostos\"},{\"d\":\"2026-06-24\",\"n\":\"Sim Poa Ipiranga Puc\",\"v\":269.2,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-06-23\",\"n\":\"Ec          *Melimais\",\"v\":10.33,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-23\",\"n\":\"Fomeria\",\"v\":33.86,\"c\":\"Delivery\"},{\"d\":\"2026-06-23\",\"n\":\"Ifd*carboni E Dier Com\",\"v\":44.41,\"c\":\"Delivery\"},{\"d\":\"2026-06-23\",\"n\":\"Ec          *Shellbox\",\"v\":49.26,\"c\":\"Combust\u00edvel\"},{\"d\":\"2026-06-23\",\"n\":\"Anthropic\",\"v\":54.8,\"c\":\"Assinaturas / Apps\"},{\"d\":\"2026-06-23\",\"n\":\"Mester Cafe\",\"v\":50.0,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-23\",\"n\":\"Elaize Silva Pezzi Cia\",\"v\":47.16,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-23\",\"n\":\"Anuar Pezzi Supermerca\",\"v\":35.96,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-22\",\"n\":\"Verisure Brasil Mo\",\"v\":66.5,\"c\":\"Revisar categoria\",\"pi\":5,\"pn\":6},{\"d\":\"2026-06-22\",\"n\":\"Raia1939\",\"v\":51.39,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-06-22\",\"n\":\"Zaffari O. Nmeyer\",\"v\":248.75,\"c\":\"Supermercado\"},{\"d\":\"2026-06-22\",\"n\":\"Verisure Brasil Mo\",\"v\":66.5,\"c\":\"Revisar categoria\",\"pi\":4,\"pn\":6},{\"d\":\"2026-06-22\",\"n\":\"Ec          *Melimais\",\"v\":9.9,\"c\":\"Revisar categoria\"},{\"d\":\"2026-06-22\",\"n\":\"Comercio Vef\",\"v\":23.78,\"c\":\"Mercadinho\"},{\"d\":\"2026-06-22\",\"n\":\"Verisure Brasil Mo\",\"v\":66.5,\"c\":\"Revisar categoria\",\"pi\":3,\"pn\":6},{\"d\":\"2026-06-22\",\"n\":\"Via Napole Restaurante\",\"v\":41.9,\"c\":\"Restaurante\"},{\"d\":\"2026-06-22\",\"n\":\"Verisure Brasil Mo\",\"v\":66.5,\"c\":\"Revisar categoria\",\"pi\":2,\"pn\":6},{\"d\":\"2026-06-22\",\"n\":\"Verisure Brasil Mo\",\"v\":66.5,\"c\":\"Revisar categoria\",\"pi\":6,\"pn\":6},{\"d\":\"2026-06-22\",\"n\":\"Verisure Brasil Mo\",\"v\":66.5,\"c\":\"Revisar categoria\",\"pi\":1,\"pn\":6},{\"d\":\"2026-06-21\",\"n\":\"Panvel Filial 845\",\"v\":51.95,\"c\":\"Farm\u00e1cia\"},{\"d\":\"2026-06-21\",\"n\":\"Bourbon Canoas\",\"v\":131.43,\"c\":\"Restaurante\"},{\"d\":\"2026-06-21\",\"n\":\"Panvel*digital\",\"v\":73.33,\"c\":\"Farm\u00e1cia\",\"pi\":1,\"pn\":3},{\"d\":\"2026-06-19\",\"n\":\"Central Gaucha De\",\"v\":68.39,\"c\":\"Revisar categoria\",\"pi\":2,\"pn\":3}]";
+
+  /* ============================================================
+     PARTE 1 — IMPORTADOR DE FATURA
+     ============================================================ */
+  var DESP=['cartao','dani','saida','cofre'];
+  function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+  function keyItem(i){return [i.mes,i.tipo,i.data,norm(i.nome),Number(i.valor||0).toFixed(2)].join('|');}
+
+  /* Detecta "Dani" no nome para separar automaticamente */
+  function ehDani(nome){return /\bdani\b/i.test(nome);}
+
+  function parseFatura(txt){
+    var arr;
+    try{arr=JSON.parse(txt);}catch(e){return null;}
+    if(!Array.isArray(arr))return null;
+    return arr;
+  }
+
+  /* Distribui uma compra parcelada nos meses futuros */
+  function lancarCompra(c,estoque,cont){
+    var d=c.d||'';                      /* data AAAA-MM-DD */
+    var mesCompra=d?parseInt(d.slice(5,7)):(mesAtual||7);
+    var tipo=ehDani(c.n)?'dani':'cartao';
+    var catFinal=ehDani(c.n)?(c.c||'Revisar categoria'):(c.c||'Revisar categoria');
+    if(c.pn&&c.pn>1){
+      /* parcelada: lança da parcela atual (pi) até a última (pn) */
+      var faltam=c.pn-c.pi+1;
+      var grp='imp_'+norm(c.n).replace(/[^a-z0-9]/g,'').slice(0,10)+'_'+Math.floor(Math.random()*9999);
+      for(var k=0;k<faltam;k++){
+        var mesP=mesCompra+k;
+        if(mesP>12)break;               /* não passa de dezembro do ano vigente */
+        var numP=c.pi+k;
+        var dataP=d.slice(0,4)+'-'+String(mesP).padStart(2,'0')+'-'+d.slice(8,10);
+        var item={id:mkId(),grp:grp,mes:mesP,nome:c.n,valor:c.v,cat:catFinal,tipo:tipo,
+                  parcela:numP+'/'+c.pn,data:dataP,obs:'',_src:'fatura-import'};
+        var kk=keyItem(item);
+        if(estoque[kk]>0){estoque[kk]--;continue;}
+        DB.items.push(item);cont.add++;
+      }
+    }else{
+      var item2={id:mkId(),mes:mesCompra,nome:c.n,valor:c.v,cat:catFinal,tipo:tipo,
+                 parcela:'',data:d,obs:'',_src:'fatura-import'};
+      var k2=keyItem(item2);
+      if(estoque[k2]>0){estoque[k2]--;return;}
+      DB.items.push(item2);cont.add++;
+    }
+  }
+
+  window.importarFaturaTexto=function(txt){
+    var arr=parseFatura(txt);
+    if(!arr){toast('Não consegui ler o texto colado. Cole o conteúdo em formato de lista.');return;}
+    var estoque={};
+    DB.items.forEach(function(i){var k=keyItem(i);estoque[k]=(estoque[k]||0)+1;});
+    var cont={add:0};
+    arr.forEach(function(c){lancarCompra(c,estoque,cont);});
+    dbSave();render();
+    var rev=DB.items.filter(function(i){return i._src==='fatura-import'&&(i.cat==='Revisar categoria');}).length;
+    toast(cont.add+' lançamentos importados'+(cont.add===0?' (nenhum novo — já estavam lançados)':'')
+      +(rev?'. '+rev+' precisam de categoria (veja Pendências).':'.'));
+    fecharImport();
+  };
+
+  /* Importa a fatura de julho embutida (demonstração/atalho) */
+  window.importarFaturaJulho=function(){
+    if(!confirm('Importar as 176 compras da fatura de julho/2026?\n\nParceladas serão lançadas nos meses futuros. Lançamentos com "Dani" no nome vão para os gastos do Dani. Itens repetidos não serão duplicados.'))return;
+    importarFaturaTexto(FATURA_JULHO_2026);
+  };
+
+  function fecharImport(){var o=el('import-overlay');if(o)o.remove();}
+  window.abrirImportFatura=function(){
+    if(el('import-overlay'))return;
+    var ov=document.createElement('div');
+    ov.id='import-overlay';
+    ov.style.cssText='position:fixed;inset:0;background:rgba(30,15,25,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px';
+    ov.innerHTML=''
+      +'<div style="background:var(--card);border-radius:16px;max-width:560px;width:100%;padding:24px 26px;box-shadow:0 12px 48px rgba(0,0,0,.28)">'
+      +'<div style="font-family:Outfit,sans-serif;font-size:18px;font-weight:700;color:var(--t);margin-bottom:4px">Importar fatura do cartão</div>'
+      +'<div style="font-size:12.5px;color:var(--t3);line-height:1.6;margin-bottom:18px">O sistema classifica cada compra por palavra-chave e distribui as parcelas nos meses futuros. Compras com “Dani” no nome entram nos gastos do Dani. Lançamentos repetidos não são duplicados.</div>'
+      +'<button class="btn-s" style="width:100%;margin-bottom:14px" onclick="importarFaturaJulho()">Importar fatura de julho/2026 (176 compras)</button>'
+      +'<div style="font-size:11px;color:var(--t3);text-align:center;margin-bottom:14px">— ou cole outra fatura em formato de lista —</div>'
+      +'<textarea id="import-txt" placeholder=\'[{"d":"2026-07-20","n":"Estabelecimento","v":153.37,"c":"Supermercado"}]\' style="width:100%;height:110px;border:1px solid var(--bd);border-radius:10px;padding:10px;font-family:monospace;font-size:11px;background:var(--bg);color:var(--t);box-sizing:border-box;resize:vertical"></textarea>'
+      +'<div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">'
+      +'<button class="fb" onclick="fecharImportOv()">Cancelar</button>'
+      +'<button class="btn-s" onclick="importarFaturaTexto(document.getElementById(\'import-txt\').value)">Importar lista colada</button>'
+      +'</div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click',function(e){if(e.target===ov)fecharImport();});
+  };
+  window.fecharImportOv=fecharImport;
+
+  /* Botão de importação na tela de lançamentos do mês */
+  function injetarBotaoImport(){
+    var host=el('fat-cats');
+    if(!host)return;
+    var painel=host.closest('.sec');
+    if(!painel)return;
+    var hdr=painel.querySelector('.sec-h');
+    if(!hdr||hdr.querySelector('.btn-import-fat'))return;
+    var b=document.createElement('button');
+    b.className='mn-add btn-import-fat';
+    b.style.cssText='margin-left:8px';
+    b.innerHTML='Importar fatura';
+    b.onclick=window.abrirImportFatura;
+    hdr.appendChild(b);
+  }
+
+  /* ============================================================
+     PARTE 2 — PLANNER DIÁRIO (aba Anotações)
+     Ciclo de fatura: dia CICLO_INI de um mês ao dia (CICLO_INI-1) do seguinte.
+     ============================================================ */
+  var PLAN_SK='pjm-planner-diario-v1';
+  function planLer(){try{return JSON.parse(localStorage.getItem(PLAN_SK)||'{}');}catch(e){return {};}}
+  function planGravar(o){
+    try{localStorage.setItem(PLAN_SK,JSON.stringify(o));}catch(e){}
+    if(typeof fsScheduleWrite==='function')fsScheduleWrite();
+    if(typeof cloudScheduleWrite==='function')cloudScheduleWrite();
+  }
+  function planDefault(){
+    var p=planLer();
+    if(p.cicloIni===undefined)p.cicloIni=22;     /* fechamento da fatura */
+    if(p.meta===undefined)p.meta=0;
+    if(p.gasto===undefined)p.gasto=0;
+    return p;
+  }
+  window.planSet=function(campo,v){
+    var p=planDefault();
+    p[campo]=parseFloat(v)||0;
+    planGravar(p);renderPlanner();
+  };
+
+  var MESNOME=(typeof MESES!=='undefined')?MESES:['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var DIASMES=[31,28,31,30,31,30,31,31,30,31,30,31];
+  function bissexto(a){return (a%4===0&&a%100!==0)||a%400===0;}
+
+  function cicloAtual(cicloIni){
+    var hoje=new Date();hoje.setHours(0,0,0,0);
+    var ini=new Date(hoje);
+    if(hoje.getDate()>=cicloIni){ini.setDate(cicloIni);}
+    else{ini.setMonth(ini.getMonth()-1);ini.setDate(cicloIni);}
+    var fim=new Date(ini);fim.setMonth(fim.getMonth()+1);fim.setDate(cicloIni-1);
+    return {ini:ini,fim:fim,hoje:hoje};
+  }
+
+  function renderPlanner(){
+    var host=el('planner-diario');
+    if(!host)return;
+    var p=planDefault();
+    var c=cicloAtual(p.cicloIni);
+    var msDia=86400000;
+    var totalDias=Math.round((c.fim-c.ini)/msDia)+1;
+    var diasPassados=Math.max(0,Math.round((c.hoje-c.ini)/msDia));
+    var diasRestantes=Math.max(1,totalDias-diasPassados);
+    var sobra=Math.max(0,p.meta-p.gasto);
+    var porDia=sobra/diasRestantes;
+
+    var h=''
+      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px">'
+      +campoEdit('Quero gastar no ciclo','meta',p.meta,'var(--t)')
+      +campoEdit('Já gastei','gasto',p.gasto,'var(--t)')
+      +'<div style="background:var(--bg);border-radius:10px;padding:12px 14px;border-left:3px solid var(--ok)">'
+        +'<div style="font-size:11px;color:var(--t3)">Sobra para os dias restantes</div>'
+        +'<div style="font-size:22px;font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums;letter-spacing:-.02em">'+RK(sobra)+'</div></div>'
+      +'</div>';
+
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin:0 0 12px">'
+      +'<div style="font-size:14px;font-weight:600;color:var(--t)">Ciclo '+c.ini.getDate()+'/'+MESNOME[c.ini.getMonth()].slice(0,3).toLowerCase()
+      +' → '+c.fim.getDate()+'/'+MESNOME[c.fim.getMonth()].slice(0,3).toLowerCase()+'</div>'
+      +'<div style="font-size:12.5px;color:var(--t3)">'+diasRestantes+' dias restantes · <strong style="color:var(--ok)">'+RK(porDia)+'/dia</strong></div>'
+      +'</div>';
+
+    /* Configuração do dia de fechamento */
+    h+='<div style="font-size:11.5px;color:var(--t3);margin-bottom:14px">Meu ciclo começa no dia '
+      +'<input type="number" min="1" max="28" value="'+p.cicloIni+'" onchange="planSet(\'cicloIni\',this.value)" '
+      +'style="width:52px;border:1px solid var(--bd);border-radius:7px;padding:4px 7px;font-family:inherit;font-size:12px;text-align:center;background:var(--card);color:var(--t)"> '
+      +'(fechamento da fatura anterior).</div>';
+
+    /* Calendário */
+    var diasSemana=['seg','ter','qua','qui','sex','sáb','dom'];
+    h+='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">';
+    diasSemana.forEach(function(d){h+='<div style="text-align:center;font-size:10px;color:var(--t3);padding-bottom:2px">'+d+'</div>';});
+    /* preencher espaços até o dia da semana do início (seg=0) */
+    var primeiroDiaSemana=(c.ini.getDay()+6)%7;
+    for(var e=0;e<primeiroDiaSemana;e++)h+='<div></div>';
+
+    var cursor=new Date(c.ini);
+    for(var i=0;i<totalDias;i++){
+      var ehHoje=cursor.getTime()===c.hoje.getTime();
+      var passou=cursor<c.hoje;
+      var dNum=cursor.getDate();
+      var estilo,txtDia;
+      if(passou){
+        estilo='background:var(--bg);border-radius:7px;padding:5px;opacity:.42';
+        txtDia='<div style="font-size:11px;font-weight:600;color:var(--t3)">'+dNum+'</div>';
+      }else if(ehHoje){
+        estilo='background:var(--gl);border:1.5px solid var(--ok);border-radius:7px;padding:5px';
+        txtDia='<div style="font-size:11px;font-weight:700;color:var(--ok)">'+dNum+'</div>'
+          +'<div style="font-size:8.5px;color:var(--ok)">hoje</div>'
+          +'<div style="font-size:10px;font-weight:700;color:var(--t)">'+RK(porDia)+'</div>';
+      }else{
+        estilo='background:var(--card);border:1px solid var(--bd);border-radius:7px;padding:5px';
+        txtDia='<div style="font-size:11px;font-weight:600;color:var(--t)">'+dNum+'</div>'
+          +'<div style="font-size:10px;color:var(--t3)">'+RK(porDia)+'</div>';
+      }
+      h+='<div style="'+estilo+';min-height:46px">'+txtDia+'</div>';
+      cursor.setDate(cursor.getDate()+1);
+    }
+    h+='</div>';
+
+    h+='<div style="margin-top:16px;background:var(--bg);border-radius:8px;padding:11px 14px;font-size:12px;color:var(--t3);line-height:1.6">'
+      +'<strong style="color:var(--t2)">Como funciona:</strong> o limite por dia é a sobra dividida pelos dias que ainda faltam no ciclo. '
+      +'Atualize “já gastei” conforme o mês avança — se um dia você gastar mais, os próximos recalculam para menos, e vice-versa.</div>';
+
+    host.innerHTML=h;
+  }
+  function campoEdit(rotulo,campo,valor,cor){
+    return '<div style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:11px 13px">'
+      +'<div style="font-size:11px;color:var(--t3)">'+rotulo+'</div>'
+      +'<div style="display:flex;align-items:baseline;gap:4px">'
+      +'<span style="font-size:13px;color:var(--t3)">R$</span>'
+      +'<input type="number" min="0" step="10" value="'+(valor||'')+'" onchange="planSet(\''+campo+'\',this.value)" '
+      +'placeholder="0" style="width:100%;border:none;background:none;font-family:Outfit,sans-serif;font-size:20px;font-weight:700;'
+      +'color:'+cor+';padding:0;font-variant-numeric:tabular-nums;outline:none">'
+      +'</div></div>';
+  }
+  window.renderPlanner=renderPlanner;
+
+  /* Injetar o planner no topo da aba Anotações */
+  function injetarPlanner(){
+    var pg=el('v-anotacoes');
+    if(!pg||el('planner-diario-wrap'))return;
+    var wrap=document.createElement('div');
+    wrap.id='planner-diario-wrap';
+    wrap.innerHTML='<div class="sec" style="margin-bottom:24px">'
+      +'<div class="sec-h"><div class="sec-t">Planner de gastos do mês</div></div>'
+      +'<div style="padding:16px 18px"><div id="planner-diario"></div></div></div>';
+    var sub=pg.querySelector('.pg-sub');
+    if(sub&&sub.nextSibling)pg.insertBefore(wrap,sub.nextSibling);
+    else pg.appendChild(wrap);
+    renderPlanner();
+  }
+
+  /* ============================================================
+     PARTE 3 — REEQUILÍBRIO DA TELA DO MÊS
+     Fatura e conta ganham dois cartões grandes no topo;
+     Dani é enxugado a um indicador com link para detalhe.
+     ============================================================ */
+  function totalDani(m){
+    var itens=itensMes(m,'dani').concat(itensMes(m,'cartao').filter(function(i){return i.cat==='Dani';}));
+    return {total:itens.reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0),n:itens.length};
+  }
+  function refazerTopo(){
+    var host=el('mes-stats');
+    if(!host)return;
+    var m=(typeof mesAtual!=='undefined')?mesAtual:7;
+    var ent=itensMes(m,'entrada').concat(itensMes(m,'reembolso'),itensMes(m,'outros'))
+      .reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0);
+    var cofre=itensMes(m,'cofre').reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0);
+    var dani=totalDani(m);
+    /* Faixa de resumo enxuta: só o que os painéis abaixo NÃO mostram.
+       Fatura e conta têm seções próprias — não duplicar aqui. */
+    var h='<div class="mes-mini">'
+        +'<div class="mes-mini-c"><div class="l">Salário / entradas</div><div class="v">'+RK(ent)+'</div></div>'
+        +'<div class="mes-mini-c"><div class="l">Cofrinhos</div><div class="v">'+RK(cofre)+'</div></div>'
+        +'<div class="mes-mini-c mes-mini-dani" onclick="irParaDani()">'
+          +'<div class="l"><span class="dani-dot"></span>Gastos Dani</div>'
+          +'<div class="v">'+RK(dani.total)+'</div>'
+          +'<div class="s">'+dani.n+' lançamento'+(dani.n===1?'':'s')+' · ver abaixo</div>'
+        +'</div>'
+      +'</div>';
+    host.innerHTML=h;
+    host.className='';
+  }
+  window.irParaDani=function(){
+    var el2=document.querySelector('#v-mes .sec-t');
+    var alvo=null;
+    document.querySelectorAll('#v-mes .sec-t').forEach(function(t){if(/Gastos Dani/.test(t.textContent))alvo=t;});
+    if(alvo)alvo.closest('.sec').scrollIntoView({behavior:'smooth',block:'center'});
+  };
+
+  var cssTopo=''
+   +'.mes-topo{display:grid;grid-template-columns:1.55fr 1fr;gap:14px;margin-bottom:14px}'
+   +'.mes-big{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:15px 18px;position:relative;overflow:hidden}'
+   +'.mes-big::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}'
+   +'.mes-big-fat::before{background:var(--m)}.mes-big-conta::before{background:var(--ok)}'
+   +'.mes-big-l{font-size:12px;color:var(--t3)}'
+   +'.mes-big-v{font-size:27px;font-weight:700;color:var(--t);letter-spacing:-.022em;font-variant-numeric:tabular-nums;margin:2px 0}'
+   +'.mes-big-s{font-size:11.5px;color:var(--t3)}'
+   +'.mes-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}'
+   +'.mes-mini-c{background:var(--bg);border-radius:8px;padding:11px 13px}'
+   +'.mes-mini-c .l{font-size:11.5px;color:var(--t3)}'
+   +'.mes-mini-c .v{font-size:17px;font-weight:700;color:var(--t);font-variant-numeric:tabular-nums}'
+   +'.mes-mini-c .s{font-size:10.5px;color:var(--t3);margin-top:1px}'
+   +'.mes-mini-dani{border:0.5px dashed var(--bd);cursor:pointer;transition:.15s}'
+   +'.mes-mini-dani:hover{border-color:var(--m)}'
+   +'.mes-mini-dani .l{color:var(--m);display:flex;align-items:center;gap:5px}'
+   +'.dani-dot{width:7px;height:7px;border-radius:50%;background:var(--m);display:inline-block}'
+   +'@media(max-width:900px){.mes-topo{grid-template-columns:1fr}.mes-mini{grid-template-columns:1fr}}';
+  var stTopo=document.createElement('style');stTopo.id='v23-topo';stTopo.textContent=cssTopo;
+  document.head.appendChild(stTopo);
+
+  /* ============================================================
+     GANCHOS
+     ============================================================ */
+  var _render=window.render;
+  window.render=function(){
+    var r=_render.apply(this,arguments);
+    try{
+      if(typeof vAtual==='undefined'||vAtual==='mes'){refazerTopo();injetarBotaoImport();}
+      if(typeof vAtual!=='undefined'&&vAtual==='anotacoes')injetarPlanner();
+    }catch(e){console.error(e);}
+    return r;
+  };
+  render=window.render;
+
+  var _goTo=window.goTo;
+  window.goTo=function(v,mes){
+    var r=_goTo.apply(this,arguments);
+    setTimeout(function(){
+      try{
+        if(v==='mes'){refazerTopo();injetarBotaoImport();}
+        if(v==='anotacoes')injetarPlanner();
+      }catch(e){console.error(e);}
+    },20);
+    return r;
+  };
+  goTo=window.goTo;
+
+  try{
+    if(typeof vAtual==='undefined'||vAtual==='mes'){refazerTopo();injetarBotaoImport();}
+  }catch(e){}
+  console.log('v23: importador de fatura, planner diário e reequilíbrio carregados.');
+})();
+</script>
+
+
+<script>
+/* ============================================================
+   SISTEMA DE DESIGN — FINANÇAS (definitivo)
+   Substitui as camadas visuais anteriores por um único conjunto
+   coerente. Neutraliza as folhas antigas ao carregar, preserva
+   toda a lógica. Daqui em diante, a estética mora só aqui.
+   ============================================================ */
+(function(){
+  /* Desativa as camadas visuais anteriores (mantém a lógica JS delas) */
+  ['camada-design-financas','camada-v22'].forEach(function(id){
+    var s=document.getElementById(id);
+    if(s)s.disabled=true;
+  });
+  /* v23-topo é substituído; removemos sua folha e reaproveitamos a lógica */
+  var topo=document.getElementById('v23-topo');
+  if(topo)topo.remove();
+
+  var css=`
+  :root{
+    --ds-ink:#1a1410; --ds-ink2:#6b5847; --ds-ink3:#a08a78;
+    --ds-line:#ebe5dc; --ds-line2:#e0d8ce; --ds-card:#ffffff; --ds-canvas:#f6f4f1;
+    --ds-marsala:#5C2444; --ds-marsala-soft:#f3e9ef; --ds-gold:#8B7546;
+    --ds-pos:#1a6b3c; --ds-neg:#a83232;
+    --ds-r:14px; --ds-r-sm:9px; --ds-gap:22px;
+    --ds-x:clamp(24px,4vw,56px);
+  }
+
+  /* ---------- Ritmo da página: respiro lateral proporcional à tela ---------- */
+  .page{max-width:none!important;width:auto!important;padding:32px var(--ds-x) 80px!important;margin:0!important}
+  .pg-title{font-size:23px!important;font-weight:700!important;letter-spacing:-.025em!important;color:var(--ds-ink)!important}
+  .pg-sub{font-size:13px!important;color:var(--ds-ink3)!important;margin:5px 0 30px!important}
+  .dv{font-size:10px!important;font-weight:700!important;letter-spacing:.13em!important;text-transform:uppercase!important;
+      color:var(--ds-ink3)!important;margin:30px 0 12px!important;padding:0!important;border:none!important;background:none!important;
+      display:flex!important;align-items:center!important;gap:14px!important}
+  .dv::after{content:"";flex:1;height:1px;background:var(--ds-line)}
+
+  /* ---------- Superfícies: uma linguagem só ---------- */
+  .sec,.pl-card,.parc-client-card{background:var(--ds-card)!important;border:1px solid var(--ds-line2)!important;
+     border-radius:var(--ds-r)!important;box-shadow:none!important;margin-bottom:var(--ds-gap)!important;overflow:hidden}
+  .sec-h,.pl-hdr{padding:16px 20px!important;min-height:0!important;border-bottom:1px solid var(--ds-line)!important;
+     display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;
+     background:none!important;position:static!important;flex-wrap:wrap!important}
+  .sec-h::before,.pl-hdr::before{display:none!important}
+  .sec-t,.pl-hdr h3{font-family:Outfit,sans-serif!important;font-size:15.5px!important;font-weight:700!important;
+     letter-spacing:-.015em!important;color:var(--ds-ink)!important;text-transform:none!important}
+  .pl-hdr small{display:block!important;font-size:11.5px!important;font-weight:400!important;color:var(--ds-ink3)!important;
+     margin-top:3px!important;letter-spacing:0!important;text-transform:none!important}
+  .sec-r{font-size:14px!important;font-weight:700!important;font-variant-numeric:tabular-nums!important;color:var(--ds-ink)!important}
+  .g2{gap:var(--ds-gap)!important;align-items:start!important}
+
+  /* ---------- Ações: hierarquia clara ---------- */
+  .mn-add,.btn-s{background:var(--ds-marsala)!important;color:#fff!important;border:none!important;
+     border-radius:var(--ds-r-sm)!important;font-weight:600!important;font-size:12.5px!important;padding:8px 15px!important;
+     box-shadow:none!important;transition:filter .15s}
+  .mn-add:hover,.btn-s:hover{filter:brightness(1.08)}
+  .fb{background:none!important;border:none!important;color:var(--ds-marsala)!important;font-weight:600!important;
+     font-size:12.5px!important;padding:6px 4px!important;cursor:pointer;text-decoration:none!important}
+  .fb:hover{text-decoration:underline!important;text-underline-offset:3px}
+  .pl-btn{background:var(--ds-marsala)!important;color:#fff!important;border:none!important;border-radius:var(--ds-r-sm)!important;
+     font-weight:600!important;font-size:12.5px!important;padding:8px 15px!important}
+  .pl-btn.sec{background:none!important;color:var(--ds-ink2)!important;border:1px solid var(--ds-line2)!important}
+
+  /* botões-ícone (setas de recolher) ficam neutros e pequenos */
+  .sec-h button[onclick*="toggle"],.sec-h button[title*="inimizar"]{width:28px!important;height:28px!important;
+     border:1px solid var(--ds-line2)!important;background:var(--ds-canvas)!important;border-radius:8px!important}
+
+  /* ---------- Linhas de lançamento ---------- */
+  .li{display:grid!important;grid-template-columns:auto minmax(0,1fr) 148px auto!important;align-items:center!important;
+     gap:16px!important;padding:12px 20px!important;border-bottom:1px solid var(--ds-line)!important;transition:background .12s}
+  .li:hover{background:var(--ds-canvas)!important}
+  .li:last-child{border-bottom:none!important}
+  .li-acts{justify-self:end;display:flex;gap:2px;opacity:0;transition:opacity .12s}
+  .li:hover .li-acts{opacity:1}
+  .li-nome{font-size:13.5px!important;font-weight:500!important;color:var(--ds-ink)!important}
+  .li-val{font-size:13.5px!important;font-weight:700!important;text-align:right!important;justify-self:end!important;
+     font-variant-numeric:tabular-nums!important;color:var(--ds-ink)!important;min-width:0!important}
+  .li-val.entrada,.li-val.ok{color:var(--ds-pos)!important}
+  .li-val.saida{color:var(--ds-neg)!important}
+
+  /* categoria: ponto + texto, sem selo preenchido */
+  .cat-tag{display:inline-flex!important;align-items:center;gap:6px;font-size:10.5px!important;font-weight:600!important;
+     color:var(--ds-ink3)!important;background:none!important;border:none!important;padding:0!important;margin-right:12px;white-space:nowrap}
+  .cat-tag i{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:block}
+  .v32-chip-date{background:none!important;border:none!important;color:var(--ds-ink3)!important;padding:0!important;
+     font-size:10.5px!important;font-weight:500!important;opacity:.8}
+  .v32-chip-row{gap:0!important;margin-top:4px!important}
+
+  /* ---------- Assinatura: linha de cota nos separadores de dia ---------- */
+  .fat-date-sep{display:flex!important;align-items:center!important;gap:14px!important;padding:20px 20px 9px!important;
+     background:none!important;border:none!important}
+  .fat-date-sep span{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;
+     letter-spacing:.13em!important;color:var(--ds-ink3)!important;flex-shrink:0}
+  .fat-date-sep>div{flex:1!important;height:1px!important;background:var(--ds-line2)!important;position:relative!important;min-width:20px}
+  .fat-date-sep>div::before,.fat-date-sep>div::after{content:"";position:absolute;top:-3px;width:1px;height:7px;background:var(--ds-line2)}
+  .fat-date-sep>div::before{left:0}.fat-date-sep>div::after{right:0}
+  .fat-date-sep .conta-day-total{font-size:10.5px!important;color:var(--ds-ink3)!important;font-style:normal!important;
+     font-variant-numeric:tabular-nums!important;flex-shrink:0}
+
+  /* ---------- Totais de rodapé ---------- */
+  .tot-row{border-top:1px solid var(--ds-line)!important;background:var(--ds-canvas)!important;padding:13px 20px!important}
+  .tot-l{font-size:12px!important;color:var(--ds-ink3)!important;font-weight:600!important}
+  .tot-v{font-size:15px!important;font-weight:700!important;font-variant-numeric:tabular-nums!important;color:var(--ds-ink)!important}
+
+  /* ---------- Planejamento (orçamento, projeção, pendências, custo fixo) ---------- */
+  .pl-body{padding:18px 20px!important}
+  .pl-note{font-size:12.5px!important;line-height:1.65!important;color:var(--ds-ink3)!important;font-style:normal!important;max-width:none!important}
+  .pl-tot,.v21-grid,.cf-strip{border-top:1px solid var(--ds-line)!important;background:var(--ds-canvas)!important}
+  .pl-tot div,.v21-grid>div,.cf-strip>div{padding:15px 20px!important}
+  .pl-tot .l,.v21-grid .l,.cf-strip .l{font-size:9.5px!important;letter-spacing:.11em!important;color:var(--ds-ink3)!important}
+  .pl-tot .v,.v21-grid .v,.cf-strip .v{font-size:26px!important;font-weight:700!important;letter-spacing:-.025em!important;font-variant-numeric:tabular-nums!important}
+  .orc-row{grid-template-columns:minmax(0,1fr) 122px 132px 68px!important;gap:16px!important;padding:12px 0!important}
+  .orc-inp{border:1px solid var(--ds-line2)!important;background:var(--ds-card)!important;border-radius:var(--ds-r-sm)!important;text-align:right!important;font-variant-numeric:tabular-nums!important}
+  .orc-inp:focus{border-color:var(--ds-marsala)!important;outline:none}
+  .proj-row{grid-template-columns:140px minmax(0,1fr) 132px!important;gap:18px!important;padding:12px 0!important}
+  .pend-item{display:grid!important;grid-template-columns:minmax(0,1fr) 240px 110px 76px!important;gap:16px!important;
+     align-items:center!important;padding:12px 0!important;font-size:13.5px!important;border-bottom:1px solid var(--ds-line)!important}
+  .pend-item .m{font-size:11px!important;text-align:right!important;color:var(--ds-ink3)!important;overflow:hidden;text-overflow:ellipsis}
+  .pend-item .v{text-align:right!important;font-variant-numeric:tabular-nums!important}
+  .pend-item .pl-btn{justify-self:end}
+  .fix-grid{grid-template-columns:minmax(0,1.8fr) 120px minmax(0,1.3fr) 140px 80px 46px!important;gap:14px!important}
+  .pl-alert{background:var(--ds-marsala-soft)!important;color:var(--ds-marsala)!important;border:none!important;
+     border-left:3px solid var(--ds-marsala)!important;border-radius:0 var(--ds-r-sm) var(--ds-r-sm) 0!important;
+     padding:12px 16px!important;font-size:12.5px!important;line-height:1.6!important;margin-bottom:var(--ds-gap)!important}
+
+  /* financiamentos em coluna única, parcelas pagas integradas */
+  #financ-lista{display:block!important}
+  #financ-lista>*{margin-bottom:var(--ds-gap)}
+  .paid-list{background:var(--ds-canvas)!important;border:none!important;border-top:1px solid var(--ds-line)!important;
+     border-radius:0!important;padding:12px 18px 14px!important;margin:14px -18px -14px!important}
+  .paid-list-title{font-size:9.5px!important;color:var(--ds-ink3)!important;letter-spacing:.11em!important;font-weight:700!important;margin-bottom:8px!important}
+
+  /* parcelamentos recolhíveis */
+  .v8-parc-month-h{cursor:pointer!important;position:relative!important;padding-right:44px!important;user-select:none}
+  .v8-parc-month-h::after{content:"";position:absolute;right:20px;top:50%;width:8px;height:8px;
+     border-right:2px solid var(--ds-ink3);border-bottom:2px solid var(--ds-ink3);
+     transform:translateY(-70%) rotate(45deg);transition:transform .2s}
+  .v8-parc-month.fechado .v8-parc-month-h::after{transform:translateY(-30%) rotate(-135deg)}
+  .v8-parc-month.fechado>*:not(.v8-parc-month-h){display:none!important}
+  .v8-parc-month{margin-bottom:12px!important}
+
+  /* avisos discretos */
+  .backup-reminder{display:none!important}
+  .v13-rule-note{background:none!important;border:none!important;border-left:2px solid var(--ds-line2)!important;
+     border-radius:0!important;padding:2px 0 2px 12px!important;margin:0 0 18px!important;font-size:11.5px!important;
+     color:var(--ds-ink3)!important;line-height:1.55!important}
+  .fin-summary-note,.v8-note{font-size:11.5px!important;color:var(--ds-ink3)!important;line-height:1.6!important}
+
+  /* ---------- Topo do mês: fatura e conta em destaque ---------- */
+  .mes-topo{display:grid!important;grid-template-columns:1.6fr 1fr!important;gap:16px!important;margin-bottom:16px!important}
+  .mes-big{background:var(--ds-card)!important;border:1px solid var(--ds-line2)!important;border-radius:var(--ds-r)!important;
+     padding:17px 20px!important;position:relative!important;overflow:hidden!important}
+  .mes-big::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}
+  .mes-big-fat::before{background:var(--ds-marsala)}.mes-big-conta::before{background:var(--ds-pos)}
+  .mes-big-l{font-size:12px!important;color:var(--ds-ink3)!important}
+  .mes-big-v{font-size:29px!important;font-weight:700!important;color:var(--ds-ink)!important;letter-spacing:-.025em!important;
+     font-variant-numeric:tabular-nums!important;margin:3px 0!important}
+  .mes-big-s{font-size:11.5px!important;color:var(--ds-ink3)!important}
+  .mes-mini{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important;margin-bottom:26px!important}
+  .mes-mini-c{background:var(--ds-canvas)!important;border-radius:var(--ds-r-sm)!important;padding:12px 15px!important}
+  .mes-mini-c .l{font-size:11.5px!important;color:var(--ds-ink3)!important}
+  .mes-mini-c .v{font-size:18px!important;font-weight:700!important;color:var(--ds-ink)!important;font-variant-numeric:tabular-nums!important}
+  .mes-mini-c .s{font-size:10.5px!important;color:var(--ds-ink3)!important;margin-top:1px!important}
+  .mes-mini-dani{border:1px dashed var(--ds-line2)!important;background:none!important;cursor:pointer;transition:border-color .15s}
+  .mes-mini-dani:hover{border-color:var(--ds-marsala)!important}
+  .mes-mini-dani .l{color:var(--ds-marsala)!important;display:flex;align-items:center;gap:5px}
+  .dani-dot{width:7px;height:7px;border-radius:50%;background:var(--ds-marsala);display:inline-block}
+
+  /* ---------- Barra de meta do mês ---------- */
+  .barra-meta,.v8-goal-bar{border-radius:var(--ds-r-sm)!important;overflow:hidden!important;background:var(--ds-line)!important}
+
+  /* ---------- Responsivo: descontando a barra lateral ---------- */
+  @media(max-width:1240px){
+    .mes-topo{grid-template-columns:1fr!important}
+    .mes-mini{grid-template-columns:1fr!important}
+    .pend-item{grid-template-columns:minmax(0,1fr) 110px 74px!important}.pend-item .m{display:none}
+  }
+  @media(max-width:900px){
+    .li{grid-template-columns:auto minmax(0,1fr) 100px auto!important;gap:11px!important;padding:11px 16px!important}
+    .orc-row{grid-template-columns:minmax(0,1fr) 88px 92px 52px!important;gap:9px!important}
+    .proj-row{grid-template-columns:100px minmax(0,1fr) 96px!important;gap:11px!important}
+    .sec-h,.pl-hdr{padding:14px 16px!important}
+  }
+  `;
+  var st=document.createElement('style');st.id='sistema-design-final';st.textContent=css;
+  document.head.appendChild(st);
+  /* garante que seja a última folha do head (maior prioridade) */
+  document.head.appendChild(st);
+
+  console.log('sistema de design final aplicado.');
+})();
+</script>
+
+
+<script>
+/* ============================================================
+   V24 — PARTE 1: RESUMO DA FATURA
+   Área "Resumo da fatura" acima da lista de lançamentos do cartão,
+   com dados reais + campos editáveis persistidos por mês.
+   ============================================================ */
+(function(){
+  if(typeof DB==='undefined'){console.error('v24: DB indisponível');return;}
+  var DESP=['cartao','dani'];
+  var FAT_SK='pjm-fatura-info-v1';
+
+  function infoLer(){try{return JSON.parse(localStorage.getItem(FAT_SK)||'{}');}catch(e){return {};}}
+  function infoGravar(o){
+    try{localStorage.setItem(FAT_SK,JSON.stringify(o));}catch(e){}
+    if(typeof fsScheduleWrite==='function')fsScheduleWrite();
+    if(typeof cloudScheduleWrite==='function')cloudScheduleWrite();
+  }
+  function infoMes(m){var o=infoLer();return o[m]||{};}
+  window.fatSet=function(m,campo,v){
+    var o=infoLer();if(!o[m])o[m]={};
+    o[m][campo]=v;infoGravar(o);renderResumoFatura();
+  };
+
+  /* Dia de fechamento: 22, recuando para sexta se cair no fim de semana */
+  function diaFechamento(ano,mes){
+    var d=new Date(ano,mes-1,22);
+    var dow=d.getDay();
+    if(dow===6)d.setDate(21);       /* sábado -> sexta 21 */
+    else if(dow===0)d.setDate(20);  /* domingo -> sexta 20 */
+    return d;
+  }
+  function fmtBR(d){
+    if(!d)return '—';
+    if(typeof d==='string'){var p=d.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:d;}
+    return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+  }
+
+  /* Cálculos a partir dos lançamentos reais */
+  function dadosFatura(m){
+    var ano=(typeof ANO_PLANILHA!=='undefined')?ANO_PLANILHA:2026;
+    var lanc=DB.items.filter(function(i){return i.mes===m&&DESP.indexOf(i.tipo)>=0;});
+    var total=(typeof faturaTotal==='function')?faturaTotal(m):
+              lanc.reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0);
+    var parceladas=lanc.filter(function(i){return i.parcela;});
+    /* parcelas futuras: mesmos grupos, meses seguintes */
+    var grupos={};
+    parceladas.forEach(function(i){if(i.grp)grupos[i.grp]=true;});
+    var futuras=DB.items.filter(function(i){
+      return i.grp&&grupos[i.grp]&&i.mes>m&&DESP.indexOf(i.tipo)>=0;
+    });
+    var valFuturas=futuras.reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0);
+    /* próximas faturas (3 meses) */
+    var prox=[];
+    for(var k=1;k<=3;k++){
+      var mm=m+k;if(mm>12)break;
+      var v=DB.items.filter(function(i){return i.mes===mm&&DESP.indexOf(i.tipo)>=0;})
+        .reduce(function(a,i){return a+(parseFloat(i.valor||0)||0);},0);
+      prox.push({mes:mm,val:v});
+    }
+    var info=infoMes(m);
+    var pago=parseFloat(info.pago)||0;
+    var fech=info.fechamento||fmtBR(diaFechamento(ano,m));
+    var venc=info.vencimento||fmtBR(new Date(ano,m-1,28));
+    return {total:total,parceladas:parceladas.length,valFuturas:valFuturas,futuras:futuras.length,
+            prox:prox,pago:pago,pendente:Math.max(0,total-pago),
+            fechamento:fech,vencimento:venc,situacao:info.situacao||'aberta',
+            ultImport:info.ultImport||null,nLanc:lanc.length};
+  }
+
+  var SITUACOES={aberta:['Aberta','var(--ds-gold,#8B7546)'],fechada:['Fechada','var(--ds-marsala,#5C2444)'],
+                 paga:['Paga','var(--ds-pos,#1a6b3c)'],parcial:['Parcial','var(--ds-gold,#8B7546)'],
+                 vencida:['Vencida','var(--ds-neg,#a83232)']};
+
+  var css=`
+   .rf-wrap{background:var(--ds-card,#fff);border:1px solid var(--ds-line,#ebe5dc);border-radius:18px;
+      margin-bottom:22px;padding:22px 26px 20px;box-shadow:0 1px 3px rgba(60,40,50,.04)}
+   .rf-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+   .rf-eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ds-ink3,#a08a78);margin-bottom:9px}
+   .rf-hero{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+   .rf-hero .big{font-family:Outfit,sans-serif;font-size:34px;font-weight:700;letter-spacing:-.03em;color:var(--ds-ink,#1a1410);font-variant-numeric:tabular-nums;line-height:1}
+   .rf-badge{font-size:10.5px;font-weight:700;padding:4px 12px;border-radius:999px;color:#fff;letter-spacing:.02em}
+   .rf-actions{display:flex;align-items:center;gap:8px}
+   .rf-line{display:flex;flex-wrap:wrap;gap:8px 32px;padding:16px 0 4px;border-top:1px solid var(--ds-line,#ebe5dc);margin-top:4px}
+   .rf-stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+   .rf-stat .l{font-size:10.5px;color:var(--ds-ink3,#a08a78);font-weight:500}
+   .rf-stat .v{font-size:15px;font-weight:700;color:var(--ds-ink,#1a1410);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+   .rf-stat .v.pos{color:var(--ds-pos,#1a6b3c)}.rf-stat .v.neg{color:var(--ds-neg,#a83232)}
+   .rf-stat.edit{cursor:pointer;border-radius:8px;margin:-4px -8px;padding:4px 8px;transition:background .12s}
+   .rf-stat.edit:hover{background:var(--ds-canvas,#f6f4f1)}
+   .rf-prox{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--ds-line,#ebe5dc)}
+   .rf-prox .tag{font-size:10px;color:var(--ds-ink3,#a08a78);font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+   .rf-prox .item{font-size:12.5px;color:var(--ds-ink3,#a08a78)}
+   .rf-prox .item strong{color:var(--ds-ink,#1a1410);font-variant-numeric:tabular-nums;font-weight:700}
+   .rf-foot{font-size:10.5px;color:var(--ds-ink3,#a08a78);margin-top:14px;display:flex;align-items:center;gap:6px}
+   .rf-editrow{display:none;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-top:16px;padding-top:16px;border-top:1px solid var(--ds-line,#ebe5dc)}
+   .rf-editrow.on{display:flex}
+   .rf-field{display:flex;flex-direction:column;gap:4px}
+   .rf-field label{font-size:10px;color:var(--ds-ink3,#a08a78);font-weight:600;letter-spacing:.04em}
+   .rf-field input,.rf-field select{border:1px solid var(--ds-line2,#e0d8ce);border-radius:9px;padding:7px 10px;
+      font-family:inherit;font-size:12.5px;background:var(--ds-card,#fff);color:var(--ds-ink,#1a1410)}}
+  `;
+  var st=document.createElement('style');st.id='v24-fatura';st.textContent=css;document.head.appendChild(st);
+
+  function renderResumoFatura(){
+    var host=document.getElementById('resumo-fatura-host');
+    if(!host)return;
+    var m=(typeof mesAtual!=='undefined')?mesAtual:7;
+    var d=dadosFatura(m);
+    var sit=SITUACOES[d.situacao]||SITUACOES.aberta;
+
+    var h='<div class="rf-wrap">'
+      +'<div class="rf-head">'
+        +'<div><div class="rf-eyebrow">Fatura · '+MESES[m-1]+'</div>'
+        +'<div class="rf-hero"><span class="big">'+RK(d.total)+'</span>'
+        +'<span class="rf-badge" style="background:'+sit[1]+'">'+sit[0]+'</span></div></div>'
+        +'<div class="rf-actions">'
+        +'<button class="fb" onclick="fatToggleEdit()">Editar</button>'
+        +'<button class="pl-btn" onclick="abrirImportFatura&&abrirImportFatura()">Importar / atualizar</button>'
+        +'</div></div>'
+      +'<div class="rf-line">'
+        +stat('Fechamento', d.fechamento)
+        +stat('Vencimento', d.vencimento)
+      +'</div>';
+
+    h+='<div class="rf-editrow" id="rf-editrow">'
+      +field('Situação','situacao','select',d.situacao)
+      +field('Fechamento','fechamento','text',d.fechamento)
+      +field('Vencimento','vencimento','text',d.vencimento)
+      +'<button class="fb" onclick="fatToggleEdit()">Fechar</button>'
+      +'</div>';
+
+    if(d.ultImport)h+='<div class="rf-foot"><i class="ti ti-clock" aria-hidden="true"></i>Última importação: '+d.ultImport+'</div>';
+    h+='</div>';
+    host.innerHTML=h;
+  }
+  function stat(l,v,cls,edit,campo){
+    var vcls=cls?(' '+cls):'';
+    if(edit==='edit'){
+      return '<div class="rf-stat edit" onclick="fatEditFocus(\''+campo+'\')"><span class="l">'+l+'</span><span class="v'+vcls+'">'+v+'</span></div>';
+    }
+    return '<div class="rf-stat"><span class="l">'+l+'</span><span class="v'+vcls+'">'+v+'</span></div>';
+  }
+  function field(lbl,campo,tipo,val){
+    var m=(typeof mesAtual!=='undefined')?mesAtual:7;
+    if(tipo==='select'){
+      var opts=Object.keys(SITUACOES).map(function(k){
+        return '<option value="'+k+'"'+(val===k?' selected':'')+'>'+SITUACOES[k][0]+'</option>';
+      }).join('');
+      return '<div class="rf-field"><label>'+lbl+'</label><select onchange="fatSet('+m+',\''+campo+'\',this.value)">'+opts+'</select></div>';
+    }
+    return '<div class="rf-field"><label>'+lbl+'</label><input id="rf-inp-'+campo+'" type="'+tipo+'" value="'+(val||'')+'" '
+      +'onchange="fatSet('+m+',\''+campo+'\',this.value)"></div>';
+  }
+  window.fatToggleEdit=function(){var r=document.getElementById('rf-editrow');if(r)r.classList.toggle('on');};
+  window.fatEditFocus=function(campo){
+    var r=document.getElementById('rf-editrow');if(r)r.classList.add('on');
+    setTimeout(function(){var i=document.getElementById('rf-inp-'+campo);if(i)i.focus();},30);
+  };
+    window.renderResumoFatura=renderResumoFatura;
+
+  /* Marca a hora da importação (engancha no importador existente) */
+  if(typeof window.importarFaturaTexto==='function'){
+    var _imp=window.importarFaturaTexto;
+    window.importarFaturaTexto=function(txt){
+      var r=_imp.apply(this,arguments);
+      var m=(typeof mesAtual!=='undefined')?mesAtual:7;
+      var agora=new Date();
+      var ts=fmtBR(agora)+' '+String(agora.getHours()).padStart(2,'0')+':'+String(agora.getMinutes()).padStart(2,'0');
+      var o=infoLer();if(!o[m])o[m]={};o[m].ultImport=ts;infoGravar(o);
+      renderResumoFatura();
+      return r;
+    };
+    importarFaturaTexto=window.importarFaturaTexto;
+  }
+
+  /* Insere o host acima da lista de lançamentos do cartão */
+  function injetar(){
+    if(document.getElementById('resumo-fatura-host'))return;
+    var fat=document.getElementById('fat-cats');
+    if(!fat)return;
+    var painel=fat.closest('.sec');
+    if(!painel)return;
+    /* Ancorar antes do GRID .g2 (cartão | conta), não dentro dele,
+       senão o resumo vira um item de coluna e quebra o layout. */
+    var grid=painel.closest('.g2')||painel;
+    if(!grid.parentNode)return;
+    var host=document.createElement('div');
+    host.id='resumo-fatura-host';
+    grid.parentNode.insertBefore(host,grid);
+    renderResumoFatura();
+  }
+
+  var _render=window.render;
+  window.render=function(){
+    var r=_render.apply(this,arguments);
+    try{if(typeof vAtual==='undefined'||vAtual==='mes'){injetar();renderResumoFatura();}}catch(e){console.error(e);}
+    return r;
+  };
+  render=window.render;
+  var _goTo=window.goTo;
+  window.goTo=function(v,mes){
+    var r=_goTo.apply(this,arguments);
+    if(v==='mes')setTimeout(function(){injetar();renderResumoFatura();},25);
+    return r;
+  };
+  goTo=window.goTo;
+  try{if(typeof vAtual==='undefined'||vAtual==='mes'){injetar();}}catch(e){}
+  console.log('v24 parte 1: resumo da fatura carregado.');
+})();
+</script>
+
+
+
+
+<script id="consolidacao-ui-v2">
+(function(){
+  'use strict';
+  var qs=function(s,r){return (r||document).querySelector(s);};
+  var qsa=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+  var LAST_SAVE_KEY='fin26_last_save_ts_v2';
+  var LAST_BACKUP_KEY='fin26_last_backup_ts_v2';
+  var nativeSetItem=Storage.prototype.setItem;
+  var saveState='ok';
+  var saveTimer=null;
+  var legacyGoTo=null;
+
+  function formatTime(ts){
+    if(!ts)return 'ainda não registrado';
+    var d=new Date(Number(ts));
+    if(isNaN(d.getTime()))return 'ainda não registrado';
+    return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' às '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  }
+  function modeText(){
+    var parts=[];
+    try{if(typeof _cloudUser!=='undefined'&&_cloudUser)parts.push('nuvem conectada');}catch(e){}
+    try{if(typeof _fsHandle!=='undefined'&&_fsHandle)parts.push('arquivo vinculado');}catch(e){}
+    if(!parts.length)parts.push('armazenamento local');
+    return parts.join(' + ');
+  }
+  function updateSyncCard(){
+    var card=qs('#sync-card');if(!card)return;
+    var ts=localStorage.getItem(LAST_SAVE_KEY);
+    card.className='sync-card '+saveState;
+    var main=qs('.sync-main',card),sub=qs('.sync-sub',card);
+    if(main)main.textContent=saveState==='pending'?'Salvando alterações…':(saveState==='bad'?'Falha no salvamento':'Dados salvos');
+    if(sub)sub.textContent='Último: '+formatTime(ts)+' · '+modeText();
+    var bk=localStorage.getItem(LAST_BACKUP_KEY);
+    card.title='Último salvamento: '+formatTime(ts)+'\nÚltimo backup manual: '+formatTime(bk);
+  }
+  function markSaved(){
+    saveState='ok';
+    nativeSetItem.call(localStorage,LAST_SAVE_KEY,String(Date.now()));
+    updateSyncCard();
+  }
+  function markPending(){
+    saveState='pending';updateSyncCard();
+    clearTimeout(saveTimer);saveTimer=setTimeout(markSaved,850);
+  }
+
+  /* Centraliza o indicador sem alterar o formato dos dados. */
+  Storage.prototype.setItem=function(k,v){
+    var ret=nativeSetItem.call(this,k,v);
+    if(this===localStorage&&k!==LAST_SAVE_KEY&&k!==LAST_BACKUP_KEY)markPending();
+    return ret;
+  };
+
+  function createSyncCard(){
+    if(qs('#sync-card'))return;
+    var sb=qs('.sb');if(!sb)return;
+    var tools=Array.prototype.find.call(sb.children,function(n){return n.querySelector&&n.querySelector('#btn-exportar');});
+    var card=document.createElement('div');card.id='sync-card';card.className='sync-card ok';
+    card.innerHTML='<span class="sync-dot"></span><div class="sync-main">Dados salvos</div><div class="sync-sub"></div>';
+    sb.insertBefore(card,tools||null);updateSyncCard();
+  }
+
+  function setupTools(){
+    var sb=qs('.sb');if(!sb)return;
+    var tools=Array.prototype.find.call(sb.children,function(n){return n.querySelector&&n.querySelector('#btn-exportar');});
+    if(!tools||tools.classList.contains('sb-tools'))return;
+    tools.classList.add('sb-tools','closed');
+    var body=document.createElement('div');body.className='sb-tools-body';
+    while(tools.firstChild)body.appendChild(tools.firstChild);
+    var toggle=document.createElement('button');toggle.type='button';toggle.className='sb-tools-toggle';toggle.textContent='Dados, backup e arquivo';
+    toggle.setAttribute('aria-expanded','false');
+    toggle.onclick=function(){var closed=tools.classList.toggle('closed');toggle.setAttribute('aria-expanded',String(!closed));};
+    tools.appendChild(toggle);tools.appendChild(body);
+    ['btn-exportar','btn-salvar-html'].forEach(function(id){
+      var b=qs('#'+id);if(b)b.addEventListener('click',function(){nativeSetItem.call(localStorage,LAST_BACKUP_KEY,String(Date.now()));updateSyncCard();},true);
+    });
+  }
+
+  function unwrapModuleContainers(nav){
+    Array.prototype.slice.call(nav.children).forEach(function(ch){
+      if(ch.classList.contains('sb-sec')||ch.classList.contains('ni')||ch.id==='sb-meses'||ch.classList.contains('nav-group'))return;
+      if(ch.querySelector&&ch.querySelector(':scope > .sb-sec')){
+        while(ch.firstChild)nav.insertBefore(ch.firstChild,ch);
+        ch.remove();
+      }
+    });
+  }
+  function dedupeNav(nav){
+    var seen={};
+    qsa('.ni[data-v]',nav).forEach(function(n){
+      var key=n.getAttribute('data-v');
+      if(!key)return;
+      if(seen[key])n.remove();else seen[key]=n;
+    });
+  }
+  function groupMenu(){
+    var nav=qs('.sb-nav');if(!nav||nav.dataset.grouped==='1')return;
+    unwrapModuleContainers(nav);dedupeNav(nav);
+    var current=null;
+    Array.prototype.slice.call(nav.children).forEach(function(node){
+      if(node.classList.contains('sb-sec')){
+        var title=(node.textContent||'Seção').trim();
+        var section=document.createElement('section');section.className='nav-group';section.dataset.group=title.toLowerCase();
+        var bt=document.createElement('button');bt.type='button';bt.className='nav-group-toggle';bt.textContent=title;bt.setAttribute('aria-expanded','true');
+        var body=document.createElement('div');body.className='nav-group-body';
+        section.appendChild(bt);section.appendChild(body);nav.insertBefore(section,node);node.remove();current=body;
+        bt.onclick=function(){var g=bt.parentElement;var closed=g.classList.toggle('closed');bt.setAttribute('aria-expanded',String(!closed));};
+      }else if(current){current.appendChild(node);}
+    });
+    nav.dataset.grouped='1';
+    qsa('.nav-group').forEach(function(g){
+      var t=g.dataset.group||'';
+      if(t.indexOf('geral')<0&&t.indexOf('meses')<0)g.classList.add('closed');
+      var b=qs('.nav-group-toggle',g);if(b)b.setAttribute('aria-expanded',String(!g.classList.contains('closed')));
+    });
+  }
+  function openActiveGroup(){
+    var active=qs('.ni.on');if(!active)return;
+    var g=active.closest('.nav-group');if(g){g.classList.remove('closed');var b=qs('.nav-group-toggle',g);if(b)b.setAttribute('aria-expanded','true');}
+  }
+
+  function createMobile(){
+    if(qs('#mobile-appbar'))return;
+    var main=qs('.main'),sb=qs('.sb');if(!main||!sb)return;
+    var bar=document.createElement('div');bar.id='mobile-appbar';bar.className='mobile-appbar';
+    bar.innerHTML='<button class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button><div><div class="mobile-app-title">Finanças 2026</div><div class="mobile-app-sub" id="mobile-view-name">Painel 2026</div></div>';
+    var overlay=document.createElement('div');overlay.className='mobile-overlay';overlay.id='mobile-overlay';
+    document.body.insertBefore(bar,sb);document.body.insertBefore(overlay,main);
+    var btn=qs('.mobile-menu-btn',bar);
+    function setOpen(on){sb.classList.toggle('mobile-open',on);overlay.classList.toggle('on',on);btn.setAttribute('aria-expanded',String(on));btn.textContent=on?'×':'☰';}
+    btn.onclick=function(){setOpen(!sb.classList.contains('mobile-open'));};overlay.onclick=function(){setOpen(false);};
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')setOpen(false);});
+    document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('.ni[data-v],.ni[data-irm]')&&innerWidth<=760)setOpen(false);});
+  }
+  function updateMobileTitle(){
+    var active=qs('.ni.on');var title=active?(active.childNodes[active.childNodes.length-1].textContent||active.textContent).trim():'';
+    var pg=qs('.page.on .pg-title');if(pg)title=pg.textContent.trim();
+    var out=qs('#mobile-view-name');if(out)out.textContent=title||'Finanças 2026';
+  }
+
+  function normalizeView(view){return view==='analises'||view==='resumo'?'painel':view;}
+  function finalNavigate(view,mes){
+    view=normalizeView(view);
+    var ok=false;
+    try{if(typeof legacyGoTo==='function'){legacyGoTo(view,mes);ok=!!qs('#v-'+view+'.on');}}catch(err){console.error('Falha na navegação legada',err);}
+    if(!ok){
+      try{window.vAtual=view;}catch(e){}
+      if(mes){try{window.mesAtual=mes;}catch(e){}}
+      qsa('.ni').forEach(function(n){n.classList.remove('on');});
+      var nav=mes?qs('.ni[data-irm="'+mes+'"]'):qs('.ni[data-v="'+view+'"]');if(nav)nav.classList.add('on');
+      qsa('.page').forEach(function(p){p.classList.remove('on');});var pg=qs('#v-'+view);if(pg)pg.classList.add('on');
+      try{if(typeof window.render==='function')window.render();}catch(err2){console.error('Falha ao renderizar '+view,err2);}
+      ok=!!pg;
+    }
+    var main=qs('.main');if(main)main.scrollTop=0;
+    openActiveGroup();updateMobileTitle();
+    if(window.innerWidth<=760){var side=qs('.sb'),ov=qs('#mobile-overlay'),mb=qs('.mobile-menu-btn');if(side)side.classList.remove('mobile-open');if(ov)ov.classList.remove('on');if(mb){mb.setAttribute('aria-expanded','false');mb.textContent='☰';}}
+    return ok;
+  }
+  function setupNavigation(){
+    legacyGoTo=window.goTo;
+    window.goTo=finalNavigate;
+    try{goTo=window.goTo;}catch(e){}
+    document.addEventListener('click',function(e){
+      var n=e.target.closest&&e.target.closest('.ni[data-irm],.ni[data-v]');if(!n)return;
+      e.preventDefault();e.stopImmediatePropagation();
+      var m=n.getAttribute('data-irm');if(m)finalNavigate('mes',parseInt(m,10));else finalNavigate(n.getAttribute('data-v'));
+    },true);
+    document.addEventListener('keydown',function(e){
+      if(e.key!=='Enter'&&e.key!==' ')return;var n=e.target.closest&&e.target.closest('.ni[data-irm],.ni[data-v]');if(n){e.preventDefault();n.click();}
+    });
+    qsa('.ni[data-v],.ni[data-irm]').forEach(function(n){n.setAttribute('role','button');n.setAttribute('tabindex','0');});
+  }
+
+  function setupFatura(){
+    var original=window.toggleFatura;
+    window.toggleFatura=function(){
+      var box=qs('#fat-collapse'),ico=qs('#fat-toggle-ico'),btn=qs('#btn-toggle-fatura');if(!box)return;
+      var minimized=!box.classList.contains('fat-min');
+      box.classList.toggle('fat-min',minimized);box.style.setProperty('max-height',minimized?'0px':'5000px','important');box.style.setProperty('overflow','hidden','important');
+      if(ico)ico.style.transform=minimized?'rotate(180deg)':'rotate(0deg)';
+      if(btn)btn.setAttribute('aria-expanded',String(!minimized));
+      try{nativeSetItem.call(localStorage,'fin26_fatura_min',minimized?'1':'0');}catch(e){}
+    };
+    try{toggleFatura=window.toggleFatura;}catch(e){}
+    var minimized=localStorage.getItem('fin26_fatura_min')==='1';
+    var box=qs('#fat-collapse');if(box){box.classList.toggle('fat-min',minimized);box.style.setProperty('max-height',minimized?'0px':'5000px','important');box.style.setProperty('overflow','hidden','important');}
+    var btn=qs('#btn-toggle-fatura');if(btn)btn.setAttribute('aria-expanded',String(!minimized));
+  }
+
+  var undoCallback=null,undoTimer=null;
+  function showUndo(message,callback){
+    var bar=qs('#action-undo');if(!bar){bar=document.createElement('div');bar.id='action-undo';bar.className='action-undo';bar.innerHTML='<span></span><button type="button">Desfazer</button>';document.body.appendChild(bar);qs('button',bar).onclick=function(){if(undoCallback)undoCallback();undoCallback=null;bar.classList.remove('on');};}
+    qs('span',bar).textContent=message;undoCallback=callback;bar.classList.add('on');clearTimeout(undoTimer);undoTimer=setTimeout(function(){bar.classList.remove('on');undoCallback=null;},9000);
+  }
+  function setupExtendedUndo(){
+    document.addEventListener('click',function(e){
+      var parc=e.target.closest&&e.target.closest('[data-del-parc]');
+      if(parc&&typeof DB!=='undefined'){
+        e.preventDefault();e.stopImmediatePropagation();var id=parc.getAttribute('data-del-parc');var idx=DB.parcs.findIndex(function(x){return x.id===id;});if(idx<0)return;
+        if(!confirm('Excluir este parcelamento?'))return;var item=DB.parcs[idx];DB.parcs.splice(idx,1);dbSave();renderParcelamentos();buildSb();
+        showUndo('Parcelamento removido.',function(){DB.parcs.splice(Math.min(idx,DB.parcs.length),0,item);dbSave();renderParcelamentos();buildSb();});return;
+      }
+      var fin=e.target.closest&&e.target.closest('[data-del-financ-custom]');
+      if(fin&&typeof FINANC!=='undefined'){
+        e.preventDefault();e.stopImmediatePropagation();var fid=fin.getAttribute('data-del-financ-custom');var list=FINANC.custom||[];var fi=list.findIndex(function(x){return x.id===fid;});if(fi<0)return;
+        if(!confirm('Excluir este financiamento?'))return;var fitem=list[fi];list.splice(fi,1);financSave();renderFinanc();
+        showUndo('Financiamento removido.',function(){list.splice(Math.min(fi,list.length),0,fitem);financSave();renderFinanc();});return;
+      }
+      var bloco=e.target.closest&&e.target.closest('[data-del-bloco]');
+      if(bloco&&typeof ANOT_DB!=='undefined'){
+        e.preventDefault();e.stopImmediatePropagation();var bid=bloco.getAttribute('data-del-bloco');var bi=ANOT_DB.findIndex(function(x){return x.id===bid;});if(bi<0)return;
+        if(!confirm('Excluir este bloco e todas as suas linhas?'))return;var bitem=ANOT_DB[bi];ANOT_DB.splice(bi,1);anotSave();renderAnotacoes();
+        showUndo('Bloco de anotações removido.',function(){ANOT_DB.splice(Math.min(bi,ANOT_DB.length),0,bitem);anotSave();renderAnotacoes();});return;
+      }
+      var fixa=e.target.closest&&e.target.closest('[data-fix-del]');
+      if(fixa&&typeof DB!=='undefined'&&DB.fixas){
+        e.preventDefault();e.stopImmediatePropagation();var xid=fixa.getAttribute('data-fix-del');var xi=DB.fixas.findIndex(function(x){return x.id===xid;});if(xi<0)return;
+        var xitem=DB.fixas[xi];DB.fixas.splice(xi,1);dbSave();if(typeof renderFixas==='function')renderFixas();
+        showUndo('Despesa fixa removida.',function(){DB.fixas.splice(Math.min(xi,DB.fixas.length),0,xitem);dbSave();if(typeof renderFixas==='function')renderFixas();});return;
+      }
+    },true);
+  }
+
+  function cleanupLabels(){
+    var labels={fixos:'Comprometimento',fixas:'Contas recorrentes',financ:'Financiamentos',pendencias:'Pendências'};
+    var recatNav=qs('.ni[data-v="recat"]');if(recatNav)recatNav.remove();
+    Object.keys(labels).forEach(function(v){var n=qs('.ni[data-v="'+v+'"]');if(!n)return;var textNodes=Array.prototype.filter.call(n.childNodes,function(x){return x.nodeType===3;});if(textNodes.length)textNodes[textNodes.length-1].nodeValue=labels[v];});
+  }
+
+  function init(){
+    groupMenu();cleanupLabels();createSyncCard();setupTools();createMobile();setupNavigation();setupFatura();setupExtendedUndo();openActiveGroup();updateMobileTitle();updateSyncCard();
+    setInterval(updateSyncCard,5000);
+    new MutationObserver(function(){qsa('.ni[data-v],.ni[data-irm]').forEach(function(n){n.setAttribute('role','button');n.setAttribute('tabindex','0');});}).observe(qs('.sb-nav')||document.body,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(init,0);});else setTimeout(init,0);
 })();
 </script>
 
