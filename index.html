@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Finanças 2026</title>
+<title>Finanças 2026 — versão móvel corrigida</title>
+<!-- v27: evita recarregamento infinito da nuvem em visualizadores iOS e libera modo local com segurança. -->
 <!-- v20: modulo de planejamento (orcamento por categoria, projecao de fluxo, despesas fixas, pendencias, aviso de virada de ano) e correcao dos separadores no filtro da fatura. -->
 <!-- v19: listas do cartao e da conta corrente ordenadas da data mais recente para a mais antiga. -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
@@ -407,7 +408,7 @@ body{font-size:14px!important}
 </style>
 
 
-<style id="consolidacao-ui-v2">
+<style id="consolidacao-ui-v2-css">
 /* Camada consolidada de interface e usabilidade. */
 :root{
   --ui-accent:#82566d;
@@ -601,10 +602,11 @@ body{letter-spacing:0}
 
 </head>
 <body>
-<div id="cloud-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#5C2444,#3E1730);display:flex;align-items:center;justify-content:center;font-family:Calibri,Arial,sans-serif;">
+<div id="cloud-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#5C2444,#3E1730);display:none;align-items:center;justify-content:center;font-family:Calibri,Arial,sans-serif;">
   <div id="cloud-loading" style="text-align:center;color:#F4F1E7;">
     <div style="width:38px;height:38px;border:3px solid rgba(244,241,231,.3);border-top-color:#F4F1E7;border-radius:50%;margin:0 auto 16px;animation:cloudspin 0.9s linear infinite;"></div>
     <div style="font-size:13px;letter-spacing:.5px;">Carregando seus dados…</div>
+    <button id="cloud-skip" style="display:none;margin-top:18px;background:transparent;border:1px solid rgba(244,241,231,.4);color:#F4F1E7;border-radius:8px;padding:7px 14px;font-size:12px;font-family:inherit;cursor:pointer;">Continuar sem sincronizar</button>
   </div>
   <div id="cloud-login-form" style="display:none;background:#FBF9F6;border-radius:14px;padding:36px 32px;width:320px;max-width:88vw;box-shadow:0 20px 60px rgba(0,0,0,.35);">
     <div style="font-size:18px;font-weight:700;color:#5C2444;margin-bottom:2px;">Finanças 2026</div>
@@ -615,6 +617,53 @@ body{letter-spacing:0}
     <div id="cloud-login-err" style="color:#B3261E;font-size:11.5px;margin-top:10px;min-height:14px;"></div>
   </div>
 </div>
+<script id="cloud-boot-guard">
+(function(){
+  var gate=document.getElementById('cloud-gate');
+  if(gate)gate.style.display='flex';
+  window.__cloudGateResolved=false;
+  window.__releaseCloudGate=function(reason){
+    if(window.__cloudGateResolved)return;
+    window.__cloudGateResolved=true;
+    var g=document.getElementById('cloud-gate');
+    if(g)g.style.display='none';
+    if(reason)console.warn(reason);
+  };
+  /* Botão de escape manual: aparece após 2,5 s para o usuário nunca ficar preso na tela de carregamento. */
+  window.setTimeout(function(){
+    var skip=document.getElementById('cloud-skip');
+    var login=document.getElementById('cloud-login-form');
+    var loginVisivel=login&&getComputedStyle(login).display!=='none';
+    if(skip&&!loginVisivel){
+      skip.style.display='inline-block';
+      skip.onclick=function(){window.__releaseCloudGate('Interface liberada manualmente em modo local.');};
+    }
+  },2500);
+  /* Se autenticação ou rede não responderem, libera a interface local automaticamente. */
+  window.__cloudGateTimer=window.setTimeout(function(){
+    var login=document.getElementById('cloud-login-form');
+    var loginVisivel=login&&getComputedStyle(login).display!=='none';
+    if(!loginVisivel)window.__releaseCloudGate('Nuvem indisponível nesta visualização; interface liberada em modo local.');
+  },4500);
+  window.addEventListener('pageshow',function(){
+    window.setTimeout(function(){
+      var loading=document.getElementById('cloud-loading');
+      var login=document.getElementById('cloud-login-form');
+      var carregando=loading&&getComputedStyle(loading).display!=='none';
+      var loginVisivel=login&&getComputedStyle(login).display!=='none';
+      if(carregando&&!loginVisivel)window.__releaseCloudGate('Carregamento da nuvem excedeu o tempo limite.');
+    },6500);
+  });
+})();
+</script>
+<noscript>
+  <div style="position:fixed;inset:0;z-index:100000;background:#F6F7F9;display:flex;align-items:center;justify-content:center;padding:28px;font-family:Arial,sans-serif;color:#27303B;text-align:center">
+    <div style="max-width:420px;background:#fff;border:1px solid #DDE1E6;border-radius:16px;padding:24px;box-shadow:0 10px 32px rgba(39,48,59,.10)">
+      <div style="font-size:18px;font-weight:700;margin-bottom:10px">Abra este arquivo em um navegador</div>
+      <div style="font-size:14px;line-height:1.55;color:#5A6470">A visualização de arquivos não executa o aplicativo. Use Safari, Chrome ou outro navegador compatível com JavaScript.</div>
+    </div>
+  </div>
+</noscript>
 <style>@keyframes cloudspin{to{transform:rotate(360deg)}}</style>
 <aside class="sb">
   <div class="sb-top">
@@ -677,14 +726,14 @@ body{letter-spacing:0}
   <!-- Fatura e conta corrente: informações principais do mês -->
   <div class="g2 mes-primary-grid">
     <div class="sec">
-      <div class="sec-h"><div class="sec-t">Cartão de crédito</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="fat-tot-hdr"></div><button class="mn-add" id="btn-add-cartao" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-ver-tudo-cartao" onclick="toggleVerTudoCartao()" style="font-size:11px;padding:5px 10px">Ver tudo</button><button id="btn-toggle-fatura" onclick="toggleFatura()" title="Minimizar/expandir fatura" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0"><svg id="fat-toggle-ico" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div>
+      <div class="sec-h"><div class="sec-t">Cartão de crédito</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="fat-tot-hdr"></div><button class="mn-add" id="btn-add-cartao" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-ver-tudo-cartao" onclick="toggleVerTudoCartao()" style="font-size:11px;padding:5px 10px">Tudo</button><button id="btn-toggle-fatura" onclick="toggleFatura()" title="Minimizar/expandir fatura" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0"><svg id="fat-toggle-ico" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div>
       <div id="fat-collapse" style="overflow:hidden;transition:max-height .3s ease"><div id="fat-cats"></div>
       <div class="tot-row"><div class="tot-l">Total cartão</div><div class="tot-v" id="fat-tot-foot"></div></div></div>
     </div>
     <div>
       <!-- Conta extra -->
       <div class="sec" style="margin-bottom:14px">
-        <div class="sec-h"><div class="sec-t">Conta corrente</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="conta-tot-hdr"></div><button class="mn-add" id="btn-add-conta" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-saldo-inicial" style="font-size:11px;padding:5px 10px">Saldo inicial</button><button class="fb" id="btn-ver-tudo-conta" onclick="toggleVerTudoConta()" style="font-size:11px;padding:5px 10px">Ver tudo</button><button onclick="toggleSection('conta-body','conta-chev')" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Minimizar/expandir"><svg id="conta-chev" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div><div id="conta-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease"><div id="saldo-inicial-display"></div>
+        <div class="sec-h"><div class="sec-t">Conta corrente</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="conta-tot-hdr"></div><button class="mn-add" id="btn-add-conta" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-saldo-inicial" style="font-size:11px;padding:5px 10px">Saldo inicial</button><button class="fb" id="btn-ver-tudo-conta" onclick="toggleVerTudoConta()" style="font-size:11px;padding:5px 10px">Tudo</button><button onclick="toggleSection('conta-body','conta-chev')" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Minimizar/expandir"><svg id="conta-chev" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div><div id="conta-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease"><div id="saldo-inicial-display"></div>
         <div id="conta-lista"></div>
       </div></div>
     </div>
@@ -702,8 +751,8 @@ body{letter-spacing:0}
   
   <div class="dv">Top categorias do mês</div>
   <div class="sec" style="margin-bottom:14px"><div id="top-cats"></div></div>
-  <div class="dv">Cofrinhos</div>
-  <div class="sec" style="margin-bottom:14px">
+  <div class="dv dv-cofre">Cofrinhos</div>
+  <div class="sec sec-cofre" style="margin-bottom:14px">
     <div class="sec-h">
       <div class="sec-t">Valor guardado este mês</div>
       <div style="display:flex;align-items:center;gap:8px">
@@ -6363,6 +6412,9 @@ var _cloudUser = null;
 var _cloudWriteTimer = null;
 
 function cloudShowLogin(err){
+  if(window.__cloudGateTimer)clearTimeout(window.__cloudGateTimer);
+  window.__cloudGateResolved=true;
+  var gate=el('cloud-gate');if(gate)gate.style.display='flex';
   el('cloud-loading').style.display = 'none';
   el('cloud-login-form').style.display = 'block';
   el('cloud-login-err').textContent = err || '';
@@ -6372,8 +6424,9 @@ function cloudShowLoading(){
   el('cloud-login-form').style.display = 'none';
 }
 function cloudHideGate(){
-  var gate = el('cloud-gate');
-  if(gate) gate.style.display = 'none';
+  if(window.__cloudGateTimer)clearTimeout(window.__cloudGateTimer);
+  if(typeof window.__releaseCloudGate==='function')window.__releaseCloudGate();
+  else {var gate=el('cloud-gate');if(gate)gate.style.display='none';}
 }
 
 function cloudApplyBackup(data){
@@ -6388,15 +6441,33 @@ function cloudApplyBackup(data){
   if(data.anotacoes) put('anot26v1', data.anotacoes);
 }
 
+function cloudRefreshRuntime(data){
+  try{
+    if(data&&data.db&&typeof DB!=='undefined'){
+      DB=data.db;
+      if(!DB.items)DB.items=[];
+      if(!DB.parcs)DB.parcs=[];
+    }
+    if(data&&data.financ&&typeof FINANC!=='undefined'){
+      FINANC=data.financ;
+      ['jeep_extras','ape_extras','pronampe_extras','fgi_extras','cartao_extras','cartao_ren_1_extras','cartao_ren_2_extras','mutua_extras'].forEach(function(k){if(!FINANC[k])FINANC[k]=[];});
+    }
+    if(data&&data.anotacoes&&typeof ANOT_DB!=='undefined')ANOT_DB=data.anotacoes;
+    if(typeof render==='function')render();
+    if(typeof vAtual!=='undefined'&&vAtual==='anotacoes'&&typeof renderAnotacoes==='function')renderAnotacoes();
+  }catch(e){console.warn('Falha ao atualizar a interface após sincronização',e);}
+}
 function cloudSyncDown(){
-  if(sessionStorage.getItem('_cloudSynced')){ cloudHideGate(); return; }
+  if(window.__cloudSyncedThisPage){cloudHideGate();return;}
+  window.__cloudSyncedThisPage=true;
   firebase.database().ref('users/'+_cloudUser.uid+'/financas').get().then(function(snap){
-    var data = snap.exists() ? snap.val() : null;
+    var data=snap.exists()?snap.val():null;
     cloudApplyBackup(data);
-    try{ sessionStorage.setItem('_cloudSynced','1'); }catch(e){}
-    location.reload();
+    cloudRefreshRuntime(data);
+    try{sessionStorage.setItem('_cloudSynced','1');}catch(e){}
+    cloudHideGate();
   }).catch(function(e){
-    console.warn('Falha ao sincronizar com a nuvem', e);
+    console.warn('Falha ao sincronizar com a nuvem',e);
     cloudHideGate();
   });
 }
@@ -6414,12 +6485,20 @@ function cloudScheduleWrite(){
   _cloudWriteTimer = setTimeout(cloudWriteAll, 600);
 }
 
+var _cloudAuthGuard=setTimeout(function(){
+  if(!_cloudUser){
+    var login=el('cloud-login-form');
+    var loginVisivel=login&&getComputedStyle(login).display!=='none';
+    if(!loginVisivel)cloudHideGate();
+  }
+},5500);
 firebase.auth().onAuthStateChanged(function(user){
+  clearTimeout(_cloudAuthGuard);
   if(user){
-    _cloudUser = user;
+    _cloudUser=user;
     cloudShowLoading();
     cloudSyncDown();
-  } else {
+  }else{
     cloudShowLogin();
   }
 });
@@ -7931,7 +8010,7 @@ function toggleVerTudoCartao(){
   var fc=el('fat-cats');
   var b=el('btn-ver-tudo-cartao');
   if(fc){ if(CARTAO_VER_TUDO)fc.classList.add('fat-full-list'); else fc.classList.remove('fat-full-list'); }
-  if(b)b.textContent=CARTAO_VER_TUDO?'Ver menos':'Ver tudo';
+  if(b)b.textContent=CARTAO_VER_TUDO?'Menos':'Tudo';
 }
 var CONTA_VER_TUDO=false;
 function toggleVerTudoConta(){
@@ -7939,7 +8018,7 @@ function toggleVerTudoConta(){
   var cl=el('conta-lista');
   var b=el('btn-ver-tudo-conta');
   if(cl){ if(CONTA_VER_TUDO)cl.classList.add('fat-full-list'); else cl.classList.remove('fat-full-list'); }
-  if(b)b.textContent=CONTA_VER_TUDO?'Ver menos':'Ver tudo';
+  if(b)b.textContent=CONTA_VER_TUDO?'Menos':'Tudo';
 }
 
 
@@ -7996,26 +8075,7 @@ try{render();}catch(e){console.error(e);}
   var css='.v31-card-date{display:inline-flex;align-items:center;border:1px solid var(--bds);border-radius:999px;padding:1px 6px;margin-left:5px;font-size:9.3px;color:var(--t3);background:var(--bg);font-weight:600}.v31-card-sub{font-size:10.5px;color:var(--t3);margin-top:1px}.v31-card-note{padding:6px 15px 2px;font-size:11px;color:var(--t3);font-style:italic}';
   var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 })();
-function mkLiCartaoCompacto(i){
-  var isReembolso=parseFloat(i.valor||0)<0;
-  var cor=v32CatColor(i.cat||i.tipo||'Revisar categoria');
-  var valCls=isReembolso?'ok':(i.tipo==='dani'?'dani':'cartao');
-  var d=i.data?fmtDataCurta(i.data):'';
-  var dataChip=d?'<span class="v31-card-date">'+E(d)+'</span>':'';
-  var parc=i.parcela?'<span style="font-size:10px;color:var(--t3);margin-left:5px">'+E(i.parcela)+'</span>':'';
-  var obsHtml=i.obs?'<div class="li-obs">'+E(i.obs)+'</div>':'';
-  var sub='<div class="v31-card-sub">'+E(i.cat||'')+parc+dataChip+'</div>';
-  var id=i.id;
-  return '<div class="li" data-cat="'+E(i.cat||'')+'" data-tipo="'+E(i.tipo||'')+'" data-valor="'+(parseFloat(i.valor||0)||0)+'" data-parcela="'+E(i.parcela||'')+'">'
-    +'<div class="li-dot" style="background:'+cor+'"></div>'
-    +'<div class="li-info"><div class="li-nome">'+E(i.nome||'Lançamento')+'</div>'+sub+obsHtml+'</div>'
-    +'<div class="li-val '+valCls+'">'+R(i.valor)+'</div>'
-    +'<div class="li-acts">'
-    +'<button class="li-btn" data-copy="'+id+'" title="Duplicar"><svg viewBox="0 0 16 16"><rect x="5" y="5" width="8" height="9" rx="1"/><rect x="3" y="3" width="8" height="9" rx="1" style="fill:none;stroke:currentColor"/></svg></button>'
-    +'<button class="li-btn e" data-edit="'+id+'"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button>'
-    +'<button class="li-btn" data-del="'+id+'"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button>'
-    +'</div></div>';
-}
+/* v35: definição antiga (v31) de mkLiCartaoCompacto removida — a versão vigente está mais abaixo. */
 /* v18: definições duplicadas de mkLiCartaoCompacto e renderFatCats removidas */
 try{render();}catch(e){console.error(e);}
 
@@ -9087,7 +9147,6 @@ try{
   })();
 
   try{contarPendencias();}catch(e){console.error(e);}
-  console.log('v20: módulo de planejamento carregado.');
 })();
 </script>
 
@@ -9439,7 +9498,6 @@ try{
   };
   goTo=window.goTo;
 
-  console.log('v21: custo fixo, recorrentes, alívios, variação e reclassificação carregados.');
 })();
 </script>
 
@@ -9953,7 +10011,6 @@ try{
   render=window.render;
 
   try{renomear();enxugarAvisos();}catch(e){}
-  console.log('v22: ajustes de uso carregados.');
 })();
 </script>
 
@@ -10291,7 +10348,6 @@ try{
   try{
     if(typeof vAtual==='undefined'||vAtual==='mes'){refazerTopo();injetarBotaoImport();}
   }catch(e){}
-  console.log('v23: importador de fatura, planner diário e reequilíbrio carregados.');
 })();
 </script>
 
@@ -10484,7 +10540,6 @@ try{
   /* garante que seja a última folha do head (maior prioridade) */
   document.head.appendChild(st);
 
-  console.log('sistema de design final aplicado.');
 })();
 </script>
 
@@ -10598,12 +10653,16 @@ try{
     var m=(typeof mesAtual!=='undefined')?mesAtual:7;
     var d=dadosFatura(m);
     var sit=SITUACOES[d.situacao]||SITUACOES.aberta;
+    var salarioMes=(typeof totalSalario==='function')?totalSalario(m):0;
 
     var h='<div class="rf-wrap">'
       +'<div class="rf-head">'
-        +'<div><div class="rf-eyebrow">Fatura · '+MESES[m-1]+'</div>'
+        +'<div class="rf-invoice"><div class="rf-eyebrow">Fatura · '+MESES[m-1]+'</div>'
         +'<div class="rf-hero"><span class="big">'+RK(d.total)+'</span>'
         +'<span class="rf-badge" style="background:'+sit[1]+'">'+sit[0]+'</span></div></div>'
+        +'<div class="rf-salary"><div class="rf-salary-label">Salário · '+MESES[m-1]+'</div>'
+        +'<div class="rf-salary-value">'+RK(salarioMes)+'</div>'
+        +'<div class="rf-salary-sub">Entradas classificadas como salário</div></div>'
         +'<div class="rf-actions">'
         +'<button class="fb" onclick="fatToggleEdit()">Editar</button>'
         +'<button class="pl-btn" onclick="abrirImportFatura&&abrirImportFatura()">Importar / atualizar</button>'
@@ -10696,7 +10755,6 @@ try{
   };
   goTo=window.goTo;
   try{if(typeof vAtual==='undefined'||vAtual==='mes'){injetar();}}catch(e){}
-  console.log('v24 parte 1: resumo da fatura carregado.');
 })();
 </script>
 
@@ -10934,12 +10992,81 @@ try{
 
   function init(){
     groupMenu();cleanupLabels();createSyncCard();setupTools();createMobile();setupNavigation();setupFatura();setupExtendedUndo();openActiveGroup();updateMobileTitle();updateSyncCard();
-    setInterval(updateSyncCard,5000);
+    setInterval(function(){if(!document.hidden)updateSyncCard();},15000);
+    document.addEventListener('visibilitychange',function(){if(!document.hidden)updateSyncCard();});
     new MutationObserver(function(){qsa('.ni[data-v],.ni[data-irm]').forEach(function(n){n.setAttribute('role','button');n.setAttribute('tabindex','0');});}).observe(qs('.sb-nav')||document.body,{childList:true,subtree:true});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(init,0);});else setTimeout(init,0);
 })();
 </script>
+
+<!-- Ajustes de hierarquia visual e estabilidade — 31/07/2026 -->
+<style id="ajustes-mensais-estaveis-v28">
+/* O resumo secundário de entradas/saídas deixa de competir com os dados principais. */
+#v-mes #mes-stats{display:none!important}
+
+/* Fatura e conta corrente: blocos principais do mês. */
+#v-mes .mes-primary-grid{gap:16px!important;margin-bottom:14px!important;align-items:start!important}
+#v-mes .mes-primary-grid>.sec:first-child,
+#v-mes .mes-primary-grid>div>.sec{
+  border-color:#D9DEE4!important;
+  background:#fff!important;
+  box-shadow:0 9px 26px rgba(39,48,59,.075)!important;
+}
+#v-mes .mes-primary-grid>.sec:first-child{box-shadow:inset 0 3px 0 var(--bad,#B24747),0 9px 26px rgba(39,48,59,.075)!important}
+#v-mes .mes-primary-grid>div>.sec{box-shadow:inset 0 3px 0 var(--ok,#2F7D59),0 9px 26px rgba(39,48,59,.075)!important}
+#v-mes .sec-h>div:last-child{gap:6px!important}
+#v-mes #btn-ver-tudo-cartao,#v-mes #btn-ver-tudo-conta{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-width:46px!important;height:28px!important;padding:4px 8px!important;
+  font-size:10.5px!important;line-height:1!important;white-space:nowrap!important;flex:0 0 auto!important;
+}
+
+/* Salário integrado ao cabeçalho da fatura. */
+#v-mes .rf-head{
+  display:grid!important;
+  grid-template-columns:minmax(230px,1.15fr) minmax(185px,.65fr) auto!important;
+  align-items:start!important;column-gap:24px!important;row-gap:12px!important;
+}
+#v-mes .rf-invoice{min-width:0}
+#v-mes .rf-salary{min-width:0;padding-left:24px;border-left:1px solid var(--bds,#ECEFF2)}
+#v-mes .rf-salary-label{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--t3,#8A949F);margin-bottom:9px}
+#v-mes .rf-salary-value{font-family:Outfit,sans-serif;font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--ok,#2F7D59);font-variant-numeric:tabular-nums;white-space:nowrap}
+#v-mes .rf-salary-sub{font-size:10.5px;color:var(--t3,#8A949F);margin-top:7px}
+#v-mes .rf-actions{justify-self:end;white-space:nowrap}
+
+/* Gastos Dani: quadro secundário, menor e sem ocupar toda a largura. */
+#v-mes .sec-dani{
+  width:min(100%,560px)!important;max-width:560px!important;margin:4px 0 16px auto!important;
+  border-color:var(--bds,#ECEFF2)!important;box-shadow:none!important;background:#FBFCFD!important;
+}
+#v-mes .sec-dani .sec-h{min-height:44px!important;padding:8px 12px!important;background:#FBFCFD!important}
+#v-mes .sec-dani .sec-t{color:var(--t2,#5A6470)!important;font-size:10px!important}
+#v-mes .sec-dani .sec-r{color:var(--t2,#5A6470)!important;font-size:12px!important}
+#v-mes .sec-dani .mn-add,#v-mes .sec-dani .fb{height:27px!important;padding:4px 8px!important;font-size:10px!important;box-shadow:none!important}
+#v-mes .sec-dani #dani-lista{max-height:190px!important;overflow-y:auto!important}
+
+/* Cofrinhos: informação auxiliar, sem cartão de destaque. */
+#v-mes .dv-cofre{display:none!important}
+#v-mes .sec-cofre{
+  max-width:620px!important;margin:0 0 14px auto!important;border-color:var(--bds,#ECEFF2)!important;
+  box-shadow:none!important;background:#FBFCFD!important;border-radius:10px!important;
+}
+#v-mes .sec-cofre .sec-h{background:#FBFCFD!important;min-height:42px!important;padding:8px 12px!important}
+#v-mes .sec-cofre .sec-t,#v-mes .sec-cofre .sec-r{color:var(--t2,#5A6470)!important}
+#v-mes .sec-cofre #cofre-lista{padding:7px 12px!important;font-size:11px!important}
+
+@media(max-width:1100px){
+  #v-mes .rf-head{grid-template-columns:minmax(220px,1fr) minmax(180px,.7fr)!important}
+  #v-mes .rf-actions{grid-column:1/-1;justify-self:start}
+}
+@media(max-width:760px){
+  #v-mes .rf-head{grid-template-columns:1fr!important}
+  #v-mes .rf-salary{padding-left:0;border-left:0;border-top:1px solid var(--bds,#ECEFF2);padding-top:14px}
+  #v-mes .rf-actions{grid-column:auto!important}
+  #v-mes .sec-dani,#v-mes .sec-cofre{width:100%!important;max-width:none!important;margin-left:0!important}
+}
+</style>
 
 </body>
 </html>
