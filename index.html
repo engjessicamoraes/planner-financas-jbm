@@ -70,7 +70,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--i
 .search svg{width:14px;height:14px}
 
 /* summary strip */
-.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.strip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
 .strip .cell{background:#fff;padding:15px 18px}
 .strip .k{font-size:11.5px;color:var(--ink3);font-weight:600;letter-spacing:.2px;display:flex;align-items:center;gap:7px}
 .strip .k .pip{width:7px;height:7px;border-radius:2px}
@@ -109,7 +109,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--i
 .foot-tot{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;background:#FCFCFD;border-top:1px solid var(--line)}
 .foot-tot .l{font-weight:600;color:var(--ink2);font-size:13px}
 .foot-tot .t{font-family:'Outfit';font-weight:700;font-size:16px}
-.more{padding:10px 18px;text-align:center;color:var(--ink3);font-size:12px;font-weight:500;background:#FCFCFD;border-top:1px solid var(--line2)}
+.more{padding:10px 18px;text-align:center;color:var(--ink3);font-size:12px;font-weight:500;background:#FCFCFD;border-top:1px solid var(--line2);cursor:pointer;transition:.12s}
+.more:hover{color:var(--marsala);background:#F7F2F3}
+.row.extra{display:none}
+.sec.open .row.extra{display:grid}
+.sec.open .more{display:none}
 
 /* progress */
 .prog .head{border-bottom:0;padding-bottom:6px}
@@ -208,27 +212,32 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--i
         <!-- summary strip -->
         <div class="strip span">
           <div class="cell"><div class="k"><span class="pip" style="background:var(--neg)"></span>Total no cartão</div><div class="v neg tabular">R$ 7.041,12</div><div class="sub">Fatura de julho</div></div>
-          <div class="cell"><div class="k"><span class="pip" style="background:var(--violet)"></span>Gastos Dani</div><div class="v violet tabular">R$ 792,56</div><div class="sub">7 lançamentos</div></div>
           <div class="cell"><div class="k"><span class="pip" style="background:var(--pos)"></span>Salário / entradas</div><div class="v pos tabular">R$ 11.926,01</div><div class="sub">recebido no mês</div></div>
-          <div class="cell"><div class="k"><span class="pip" style="background:var(--gold)"></span>Gasto vs teto</div><div class="v gold tabular">92%</div><div class="sub">faltam R$ 673,81</div></div>
         </div>
 
         <!-- 2col: cartão | conta -->
-        <div class="sec rail-neg">
-          <div class="head tt-neg"><span class="ttl">Cartão de crédito</span><div class="rgt"><span class="amt tabular" style="color:var(--neg)">R$ 7.041,12</span><button class="mini-btn solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Lançar</button></div></div>
+        <div class="sec rail-neg" id="card-cartao">
+          <div class="head tt-neg"><span class="ttl">Cartão de crédito</span><div class="rgt"><span class="amt tabular" style="color:var(--neg)">R$ 7.041,12</span><button class="mini-btn" onclick="toggleCard('card-cartao',this)">Tudo</button><button class="mini-btn solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Lançar</button></div></div>
           <div class="row"><span class="sq" style="background:var(--marsala)"></span><div><div class="nm">Supermercado Zaffari</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--pos)"></span>Alimentação</span><span class="date">15/07/2026</span></div></div><div class="val neg tabular">R$ 288,00</div></div>
           <div class="row"><span class="sq" style="background:var(--marsala)"></span><div><div class="nm">Shell</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--blue)"></span>Carro / Transporte</span><span class="date">15/07/2026</span></div></div><div class="val neg tabular">R$ 251,93</div></div>
           <div class="row"><span class="sq" style="background:var(--marsala)"></span><div><div class="nm">Lhamastche</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--violet)"></span>Lazer</span><span class="date">15/07/2026</span></div></div><div class="val neg tabular">R$ 14,00</div></div>
-          <div class="more">+ mais 18 lançamentos no cartão</div>
+          <div class="row extra"><span class="sq" style="background:var(--marsala)"></span><div><div class="nm">Raia</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--pos)"></span>Saúde</span><span class="date">14/07/2026</span></div></div><div class="val neg tabular">R$ 132,25</div></div>
+          <div class="row extra"><span class="sq" style="background:var(--marsala)"></span><div><div class="nm">Posto Jockey</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--blue)"></span>Carro / Transporte</span><span class="date">14/07/2026</span></div></div><div class="val neg tabular">R$ 50,00</div></div>
+          <div class="row extra"><span class="sq" style="background:var(--marsala)"></span><div><div class="nm">Burguer King</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--amber)"></span>Restaurante</span><span class="date">13/07/2026</span></div></div><div class="val neg tabular">R$ 52,80</div></div>
+          <div class="row extra"><span class="sq" style="background:var(--marsala)"></span><div><div class="nm">H&M</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--violet)"></span>Vestuário · Parcela 1/6</span><span class="date">12/07/2026</span></div></div><div class="val neg tabular">R$ 98,91</div></div>
+          <div class="more" onclick="toggleCard('card-cartao',document.querySelector('#card-cartao .mini-btn'))">+ mais 18 lançamentos no cartão</div>
           <div class="foot-tot"><span class="l">Total cartão</span><span class="t tabular" style="color:var(--neg)">R$ 7.041,12</span></div>
         </div>
 
-        <div class="sec rail-pos">
-          <div class="head tt-pos"><span class="ttl">Conta corrente</span><div class="rgt"><span class="amt tabular" style="color:var(--pos)">R$ 5.121,49</span><button class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Lançar</button></div></div>
+        <div class="sec rail-pos" id="card-conta">
+          <div class="head tt-pos"><span class="ttl">Conta corrente</span><div class="rgt"><span class="amt tabular" style="color:var(--pos)">R$ 5.121,49</span><button class="mini-btn" onclick="toggleCard('card-conta',this)">Tudo</button><button class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Lançar</button></div></div>
           <div class="row"><span class="sq" style="background:var(--pos)"></span><div><div class="nm">Itaú</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--pos)"></span>Supermercado</span><span class="date">03/07/2026</span></div></div><div class="val pos tabular">+R$ 0,01</div></div>
           <div class="row"><span class="sq" style="background:var(--neg)"></span><div><div class="nm">Claro</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--amber)"></span>Casa</span><span class="date">03/07/2026</span></div></div><div class="val neg tabular">−R$ 127,75</div></div>
           <div class="row"><span class="sq" style="background:var(--neg)"></span><div><div class="nm">B&M Soluções em Engenharia</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--blue)"></span>Movimentação financeira</span><span class="date">03/07/2026</span></div></div><div class="val neg tabular">−R$ 10,00</div></div>
           <div class="row"><span class="sq" style="background:var(--pos)"></span><div><div class="nm">Itaú — Pagamento</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--pos)"></span>Entradas</span><span class="date">03/07/2026</span></div></div><div class="val pos tabular">+R$ 639,75</div></div>
+          <div class="row extra"><span class="sq" style="background:var(--neg)"></span><div><div class="nm">PIX QRS PJBANK</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--amber)"></span>Casa</span><span class="date">01/07/2026</span></div></div><div class="val neg tabular">−R$ 787,61</div></div>
+          <div class="row extra"><span class="sq" style="background:var(--neg)"></span><div><div class="nm">Juros</div><div class="meta"><span class="cat"><span class="cdot" style="background:var(--marsala)"></span>Taxas / Impostos</span><span class="date">01/07/2026</span></div></div><div class="val neg tabular">−R$ 881,22</div></div>
+          <div class="more" onclick="toggleCard('card-conta',document.querySelector('#card-conta .mini-btn'))">+ mais 9 lançamentos na conta</div>
           <div class="foot-tot"><span class="l">Saldo em conta</span><span class="t tabular" style="color:var(--pos)">R$ 5.121,49</span></div>
         </div>
 
@@ -288,5 +297,16 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--i
     </div>
   </main>
 </div>
+<script>
+/* Demonstra o "abrir todos os lançamentos": alterna a classe .open no card,
+   revelando as linhas ocultas e trocando o rótulo do botão Tudo/Menos. */
+function toggleCard(id, btn){
+  var card = document.getElementById(id);
+  if(!card) return;
+  var open = card.classList.toggle('open');
+  var b = card.querySelector('.mini-btn');
+  if(b) b.textContent = open ? 'Menos' : 'Tudo';
+}
+</script>
 </body>
 </html>
