@@ -713,19 +713,63 @@ body{letter-spacing:0}
     <input id="busca-mes" type="text" placeholder="Buscar lançamento..." style="width:100%;padding:8px 14px;border:1px solid var(--bd);border-radius:8px;font-size:13px;background:var(--bg);color:var(--t);outline:none;box-sizing:border-box">
   </div>
   <!-- Fatura e conta corrente: informações principais do mês -->
-  <div class="g2 mes-primary-grid">
-    <div class="sec">
-      <div class="sec-h"><div class="sec-t">Cartão de crédito</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="fat-tot-hdr"></div><button class="mn-add" id="btn-add-cartao" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-ver-tudo-cartao" onclick="toggleVerTudoCartao()" style="font-size:11px;padding:5px 10px">Tudo</button><button id="btn-toggle-fatura" onclick="toggleFatura()" title="Minimizar/expandir fatura" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0"><svg id="fat-toggle-ico" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div>
-      <div id="fat-collapse" style="overflow:hidden;transition:max-height .3s ease"><div id="fat-cats"></div>
-      <div class="tot-row"><div class="tot-l">Total cartão</div><div class="tot-v" id="fat-tot-foot"></div></div></div>
-    </div>
-    <div>
-      <!-- Conta extra -->
-      <div class="sec" style="margin-bottom:14px">
-        <div class="sec-h"><div class="sec-t">Conta corrente</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="conta-tot-hdr"></div><button class="mn-add" id="btn-add-conta" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-saldo-inicial" style="font-size:11px;padding:5px 10px">Saldo inicial</button><button class="fb" id="btn-ver-tudo-conta" onclick="toggleVerTudoConta()" style="font-size:11px;padding:5px 10px">Tudo</button><button onclick="toggleSection('conta-body','conta-chev')" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Minimizar/expandir"><svg id="conta-chev" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div><div id="conta-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease"><div id="saldo-inicial-display"></div>
-        <div id="conta-lista"></div>
-      </div></div>
-    </div>
+  <div class="g2 mes-primary-grid finance-panels-grid">
+    <section class="sec finance-panel-card" data-finance-panel="cartao" aria-labelledby="finance-title-cartao">
+      <div class="sec-h finance-panel-header">
+        <div class="finance-panel-topline">
+          <div class="finance-panel-heading">
+            <span class="finance-panel-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="12" rx="2.5"/><line x1="2.5" y1="8" x2="17.5" y2="8"/><line x1="6" y1="13" x2="9" y2="13"/></svg>
+            </span>
+            <div><div class="sec-t" id="finance-title-cartao">Cartão de crédito</div><div class="finance-panel-subtitle">Compras, parcelas e reembolsos</div></div>
+          </div>
+          <div class="finance-panel-head-value"><span>Fatura atual</span><strong class="sec-r" id="fat-tot-hdr"></strong></div>
+        </div>
+        <div class="finance-panel-actions">
+          <button class="mn-add" id="btn-add-cartao"><svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Lançar</button>
+          <button class="fb finance-text-btn" id="btn-ver-tudo-cartao" onclick="toggleVerTudoCartao()">Ver todos</button>
+          <button class="finance-collapse-btn" id="btn-toggle-fatura" onclick="toggleFatura()" aria-expanded="true" title="Recolher cartão">
+            <span id="fat-collapse-label">Recolher</span><svg id="fat-toggle-ico" viewBox="0 0 16 16"><polyline points="3,10 8,5 13,10"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="finance-panel-summary" id="cartao-summary" aria-label="Resumo do cartão"></div>
+      <div id="fat-collapse" class="finance-panel-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease">
+        <div id="fat-cats" class="finance-panel-list"></div>
+        <div class="tot-row finance-panel-footer"><div class="tot-l">Total da fatura</div><div class="tot-v" id="fat-tot-foot"></div></div>
+      </div>
+    </section>
+
+    <section class="sec finance-panel-card" data-finance-panel="conta" aria-labelledby="finance-title-conta">
+      <div class="sec-h finance-panel-header">
+        <div class="finance-panel-topline">
+          <div class="finance-panel-heading">
+            <span class="finance-panel-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20"><path d="M3 7.2h14v8.3H3z"/><path d="M2.5 7.2 10 3l7.5 4.2"/><line x1="5.5" y1="9.2" x2="5.5" y2="14"/><line x1="9" y1="9.2" x2="9" y2="14"/><line x1="12.5" y1="9.2" x2="12.5" y2="14"/><line x1="16" y1="9.2" x2="16" y2="14"/></svg>
+            </span>
+            <div><div class="sec-t" id="finance-title-conta">Conta corrente</div><div class="finance-panel-subtitle">Entradas, saídas e valores reservados</div></div>
+          </div>
+          <div class="finance-panel-head-value"><span>Saldo atual</span><strong class="sec-r" id="conta-tot-hdr"></strong></div>
+        </div>
+        <div class="finance-panel-actions">
+          <button class="mn-add" id="btn-add-conta"><svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Lançar</button>
+          <button class="fb finance-text-btn" id="btn-ver-tudo-conta" onclick="toggleVerTudoConta()">Ver todos</button>
+          <button class="finance-collapse-btn" id="btn-toggle-conta" onclick="toggleFinancePanel('conta-body','conta-chev','conta-collapse-label','btn-toggle-conta')" aria-expanded="true" title="Recolher conta corrente">
+            <span id="conta-collapse-label">Recolher</span><svg id="conta-chev" viewBox="0 0 16 16"><polyline points="3,10 8,5 13,10"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="finance-panel-summary" id="conta-summary" aria-label="Resumo da conta corrente">
+        <div class="finance-summary-cell"><div class="finance-summary-inline"><div class="finance-summary-label">Saldo inicial</div><button class="finance-summary-edit" id="btn-saldo-inicial" type="button">Editar</button></div><div class="finance-summary-value">Não informado</div></div>
+        <div class="finance-summary-cell"><div class="finance-summary-label">Entradas</div><div class="finance-summary-value">R$ 0,00</div></div>
+        <div class="finance-summary-cell"><div class="finance-summary-label">Saídas</div><div class="finance-summary-value">R$ 0,00</div></div>
+      </div>
+      <div id="saldo-inicial-display" hidden></div>
+      <div id="conta-body" class="finance-panel-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease">
+        <div id="conta-lista" class="finance-panel-list"></div>
+        <div class="tot-row finance-panel-footer"><div class="tot-l">Saldo final da conta</div><div class="tot-v" id="conta-tot-foot"></div></div>
+      </div>
+    </section>
   </div>
   <div id="fat-progress"></div>
   <!-- Resumo secundário, abaixo da fatura e da conta corrente -->
@@ -11086,6 +11130,263 @@ try{
    lançamento — deixando as duas listas contínuas e iguais. */
 .fat-date-sep{ display:none !important; }
 </style>
+
+
+<style id="padronizacao-cartao-conta-v1">
+/* Padronização final dos dois módulos financeiros principais. */
+#v-mes .finance-panels-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+  align-items:stretch!important;
+}
+#v-mes .finance-panel-card{
+  min-width:0!important;
+  height:100%!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+  border:1px solid var(--bd)!important;
+  border-radius:16px!important;
+  background:var(--card)!important;
+  box-shadow:0 7px 22px rgba(39,48,59,.055)!important;
+}
+#v-mes .finance-panel-header{
+  display:block!important;
+  min-height:0!important;
+  padding:15px 17px 12px!important;
+  background:#fff!important;
+  border-bottom:1px solid var(--bds)!important;
+}
+#v-mes .finance-panel-topline{display:flex;align-items:center;justify-content:space-between;gap:18px;min-width:0}
+#v-mes .finance-panel-heading{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+#v-mes .finance-panel-icon{
+  width:34px;height:34px;border:1px solid #e1e5e9;border-radius:10px;background:#f8f9fa;
+  display:flex;align-items:center;justify-content:center;color:#6f7882;flex:0 0 auto
+}
+#v-mes .finance-panel-icon svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+#v-mes .finance-panel-heading .sec-t{font-size:11.5px!important;color:#46515d!important;letter-spacing:.065em!important}
+#v-mes .finance-panel-subtitle{font-size:10.5px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#v-mes .finance-panel-head-value{text-align:right;flex:0 0 auto;min-width:116px}
+#v-mes .finance-panel-head-value>span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:3px}
+#v-mes .finance-panel-head-value .sec-r{display:block;font-family:Outfit,sans-serif;font-size:18px!important;font-weight:700!important;color:var(--t)!important;white-space:nowrap}
+#v-mes .finance-panel-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:12px;min-width:0;flex-wrap:wrap!important;overflow:visible!important}
+#v-mes .finance-panel-actions .mn-add{min-height:32px!important;padding:7px 12px!important;font-size:11.5px!important;border-radius:8px!important}
+#v-mes .finance-panel-actions .mn-add svg{width:11px!important;height:11px!important}
+#v-mes .finance-text-btn{min-height:32px!important;padding:6px 9px!important;font-size:11.5px!important;white-space:nowrap}
+#v-mes .finance-collapse-btn{
+  width:auto!important;min-width:32px!important;min-height:32px;height:32px;border:1px solid var(--bd)!important;background:#f8f9fa!important;color:var(--t2)!important;
+  border-radius:8px!important;padding:0 9px!important;display:inline-flex!important;align-items:center!important;gap:6px!important;
+  font:600 11.5px Inter,sans-serif!important;cursor:pointer;white-space:nowrap
+}
+#v-mes .finance-collapse-btn:hover{background:var(--ml)!important;border-color:#cfc4ca!important;color:var(--m)!important}
+#v-mes .finance-collapse-btn svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s}
+#v-mes .finance-panel-actions .btn-import-fat{
+  width:auto!important;min-height:32px!important;height:32px!important;padding:6px 10px!important;margin:0!important;
+  background:#fff!important;color:var(--m)!important;border:1px solid #d9cdd3!important;border-radius:8px!important;
+  box-shadow:none!important;font-size:11.5px!important;font-weight:600!important;flex:0 1 auto!important
+}
+#v-mes .finance-panel-actions .btn-import-fat:hover{background:var(--ml)!important;border-color:#b88aa2!important}
+#v-mes .finance-panel-summary{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:#fafbfc;border-bottom:1px solid var(--bds);min-height:68px
+}
+#v-mes .finance-summary-cell{padding:11px 13px;min-width:0;border-right:1px solid var(--bds)}
+#v-mes .finance-summary-cell:last-child{border-right:0}
+#v-mes .finance-summary-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#v-mes .finance-summary-value{font-family:Outfit,sans-serif;font-size:14px;font-weight:700;color:var(--t);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+#v-mes .finance-summary-value.positive{color:var(--ok)}
+#v-mes .finance-summary-value.negative{color:var(--bad)}
+#v-mes .finance-summary-inline{display:flex;align-items:center;justify-content:space-between;gap:5px;min-width:0}
+#v-mes .finance-summary-edit{border:0;background:none;color:var(--m);font:600 9.5px Inter,sans-serif;cursor:pointer;padding:2px 0;white-space:nowrap}
+#v-mes .finance-summary-edit:hover{text-decoration:underline;text-underline-offset:2px}
+#v-mes .finance-panel-body{display:flex;flex-direction:column;flex:1;min-height:0}
+#v-mes .finance-panel-list{max-height:430px!important;overflow-y:auto!important;overscroll-behavior:contain;flex:1}
+#v-mes .finance-panel-card .li{
+  grid-template-columns:auto minmax(0,1fr) minmax(92px,120px) auto!important;
+  gap:11px!important;padding:11px 15px!important;min-height:56px
+}
+#v-mes .finance-panel-card .li-dot{width:8px!important;height:8px!important;border-radius:50%!important}
+#v-mes .finance-panel-card .li-nome{font-size:12.8px!important}
+#v-mes .finance-panel-card .li-val{font-size:13px!important;min-width:88px!important}
+#v-mes .finance-panel-card .li-acts{opacity:1!important}
+#v-mes .finance-panel-card .v32-chip-row{gap:5px!important;margin-top:3px!important}
+#v-mes .finance-panel-card .v32-chip{display:inline-flex!important;align-items:center!important;max-width:180px}
+#v-mes .finance-panel-card .v32-chip-date{display:inline-flex!important}
+#v-mes .finance-panel-footer{margin-top:auto!important;min-height:46px;padding:12px 15px!important;background:#f8f9fa!important;border-top:1px solid var(--bds)!important}
+#v-mes .finance-panel-footer .tot-l{color:var(--t2)!important;font-weight:700!important}
+#v-mes .finance-panel-footer .tot-v{color:var(--t)!important;font-size:15px!important}
+#v-mes .finance-panel-card .empty{padding:30px 18px!important;line-height:1.55}
+#v-mes .finance-panel-card .fat-date-sep{display:none!important}
+#v-mes #saldo-inicial-display{display:none!important}
+#v-mes #fat-progress{margin-top:2px}
+
+@media(max-width:1080px){
+  #v-mes .finance-panels-grid{grid-template-columns:1fr!important}
+  #v-mes .finance-panel-list{max-height:390px!important}
+}
+@media(max-width:620px){
+  #v-mes .finance-panel-header{padding:13px 13px 11px!important}
+  #v-mes .finance-panel-topline{align-items:flex-start;gap:10px}
+  #v-mes .finance-panel-icon{width:32px;height:32px}
+  #v-mes .finance-panel-head-value{min-width:104px}
+  #v-mes .finance-panel-head-value .sec-r{font-size:16px!important}
+  #v-mes .finance-panel-actions{justify-content:flex-start;flex-wrap:wrap}
+  #v-mes .finance-panel-actions .mn-add{flex:1 1 auto;justify-content:center}
+  #v-mes .finance-panel-summary{grid-template-columns:1fr 1fr}
+  #v-mes .finance-summary-cell:nth-child(3){grid-column:1/-1;border-top:1px solid var(--bds);border-right:0}
+  #v-mes .finance-summary-cell:nth-child(2){border-right:0}
+  #v-mes .finance-panel-card .li{grid-template-columns:auto minmax(0,1fr) auto!important;gap:9px!important;padding:11px 12px!important}
+  #v-mes .finance-panel-card .li-val{grid-column:3;grid-row:1;align-self:start;min-width:0!important;font-size:12.5px!important}
+  #v-mes .finance-panel-card .li-acts{grid-column:2/4;justify-self:end;margin-top:-2px}
+  #v-mes .finance-panel-card .v32-chip{max-width:145px}
+}
+@media(max-width:390px){
+  #v-mes .finance-panel-subtitle{display:none}
+  #v-mes .finance-collapse-btn span{display:none}
+  #v-mes .finance-collapse-btn{width:32px!important;padding:0!important;justify-content:center}
+}
+</style>
+<script id="padronizacao-cartao-conta-js-v1">
+(function(){
+  function numero(v){v=parseFloat(v);return isFinite(v)?v:0;}
+  function soma(arr,fn){return (arr||[]).reduce(function(t,i){return t+numero(fn?fn(i):i);},0);}
+  function classeValor(v){return v<0?'negative':(v>0?'positive':'');}
+  function celula(label,value,cls,extra){
+    return '<div class="finance-summary-cell"><div class="finance-summary-inline"><div class="finance-summary-label">'+label+'</div>'+(extra||'')+'</div><div class="finance-summary-value '+(cls||'')+'">'+value+'</div></div>';
+  }
+  function saldoConta(m){
+    var si=typeof getSaldoInicial==='function'?getSaldoInicial(m):0;
+    si=si===null?0:numero(si);
+    var entradas=soma(typeof ENTRADAS_BASE!=='undefined'?ENTRADAS_BASE[m]:[],function(x){return x.v;});
+    ['entrada','reembolso','outros'].forEach(function(t){entradas+=soma(itensMes(m,t),function(x){return x.valor;});});
+    var saidas=0;
+    ['saida','cofre'].forEach(function(t){saidas+=soma(itensMes(m,t),function(x){return Math.abs(numero(x.valor));});});
+    return {inicial:si,entradas:entradas,saidas:saidas,final:si+entradas-saidas};
+  }
+  function organizarAcoesExtras(){
+    var imp=document.querySelector('#v-mes .btn-import-fat');
+    var a=document.querySelector('[data-finance-panel="cartao"] .finance-panel-actions');
+    if(imp&&a&&imp.parentNode!==a){a.insertBefore(imp,a.children[1]||null);}
+    if(imp){imp.classList.add('finance-secondary-action');imp.removeAttribute('style');}
+    document.querySelectorAll('#v-mes .finance-panel-heading .sec-t').forEach(function(t){t.style.setProperty('color','#46515d','important');});
+  }
+
+  window.atualizarResumoFinanceiro=function(m){
+    m=m||mesAtual;
+    organizarAcoesExtras();
+    var fat=typeof faturaTotal==='function'?numero(faturaTotal(m)):0;
+    var meta=typeof getMeta==='function'?numero(getMeta(m)):0;
+    var margem=meta-fat;
+    var qtd=(itensMes(m,'cartao')||[]).length+(itensMes(m,'dani')||[]).length;
+    var c=el('cartao-summary');
+    if(c)c.innerHTML=celula('Meta mensal',meta?RK(meta):'Não definida','')
+      +celula(meta?'Margem até a meta':'Situação',meta?((margem<0?'-':'')+RK(Math.abs(margem))):'Defina uma meta',meta?classeValor(margem):'')
+      +celula('Lançamentos',String(qtd),'');
+
+    var conta=saldoConta(m);
+    var siReal=typeof getSaldoInicial==='function'?getSaldoInicial(m):null;
+    var edit='<button class="finance-summary-edit" id="btn-saldo-inicial" type="button">Editar</button>';
+    var cc=el('conta-summary');
+    if(cc)cc.innerHTML=celula('Saldo inicial',siReal===null?'Não informado':((conta.inicial<0?'-':'')+RK(Math.abs(conta.inicial))),classeValor(conta.inicial),edit)
+      +celula('Entradas','+'+RK(conta.entradas),conta.entradas?'positive':'')
+      +celula('Saídas','-'+RK(conta.saidas),conta.saidas?'negative':'');
+    var foot=el('conta-tot-foot');if(foot){foot.textContent=(conta.final<0?'-':'')+RK(Math.abs(conta.final));foot.style.color=conta.final<0?'var(--bad)':'var(--t)';}
+    var hdr=el('conta-tot-hdr');if(hdr){hdr.textContent=(conta.final<0?'-':'')+RK(Math.abs(conta.final));hdr.style.color='var(--t)';}
+    var fh=el('fat-tot-hdr');if(fh){fh.style.color='var(--t)';}
+    reinstalarSaldoInicial();
+  };
+
+  function reinstalarSaldoInicial(){
+    var b=el('btn-saldo-inicial');
+    if(!b||b._padronizado)return;
+    b._padronizado=true;
+    b.addEventListener('click',function(){
+      var atual=typeof getSaldoInicial==='function'?getSaldoInicial(mesAtual):null;
+      var r=prompt('Saldo da conta no primeiro dia do mês:',atual===null?'':String(atual).replace('.',','));
+      if(r===null)return;
+      var v=parseFloat(String(r).replace(/\./g,'').replace(',','.'));
+      if(!isFinite(v)){toast('Informe um valor válido.');return;}
+      if(typeof setSaldoInicial==='function')setSaldoInicial(mesAtual,v);
+      else {SALDOS_INICIAIS[mesAtual]=v;dbSave();}
+      renderContaLista(mesAtual);atualizarResumoFinanceiro(mesAtual);toast('Saldo inicial atualizado.');
+    });
+  }
+
+  window.toggleFinancePanel=function(bodyId,chevId,labelId,buttonId){
+    var body=el(bodyId),ico=el(chevId),label=el(labelId),btn=el(buttonId);
+    if(!body)return;
+    var aberto=body.style.maxHeight!=='0px'&&body.style.maxHeight!=='0';
+    body.style.maxHeight=aberto?'0px':'5000px';
+    if(ico)ico.style.transform=aberto?'rotate(180deg)':'rotate(0deg)';
+    if(label)label.textContent=aberto?'Expandir':'Recolher';
+    if(btn){btn.setAttribute('aria-expanded',aberto?'false':'true');btn.title=(aberto?'Expandir ':'Recolher ')+(bodyId==='fat-collapse'?'cartão':'conta corrente');}
+  };
+  window.toggleFatura=function(){toggleFinancePanel('fat-collapse','fat-toggle-ico','fat-collapse-label','btn-toggle-fatura');};
+
+  window.toggleVerTudoCartao=function(){
+    CARTAO_VER_TUDO=!CARTAO_VER_TUDO;
+    var lista=el('fat-cats'),b=el('btn-ver-tudo-cartao');
+    if(lista)lista.classList.toggle('fat-full-list',CARTAO_VER_TUDO);
+    if(b)b.textContent=CARTAO_VER_TUDO?'Ver menos':'Ver todos';
+  };
+  window.toggleVerTudoConta=function(){
+    CONTA_VER_TUDO=!CONTA_VER_TUDO;
+    var lista=el('conta-lista'),b=el('btn-ver-tudo-conta');
+    if(lista)lista.classList.toggle('fat-full-list',CONTA_VER_TUDO);
+    if(b)b.textContent=CONTA_VER_TUDO?'Ver menos':'Ver todos';
+  };
+
+  window.v35ChipRowCartao=function(i){
+    var chips='';
+    chips+=v32CatChip(i.cat||i.tipo||'Revisar categoria');
+    chips+=v32DateChip(i.data||'');
+    chips+=v35ObsChip(i.obs||'');
+    chips+=v32ParcelaChip(i.parcela||'',i.obs||'');
+    if(i._conc)chips+='<span class="v32-chip v32-chip-date">Conferido</span>';
+    return '<div class="v32-chip-row">'+chips+'</div>';
+  };
+
+  window.renderContaLista=function(m){
+    var dataBase='2026-'+String(m).padStart(2,'0')+'-01';
+    var arr=[];
+    (ENTRADAS_BASE[m]||[]).forEach(function(e,idx){arr.push({base:true,id:'base_'+idx,data:dataBase,nome:e.n||e.t,cat:e.t,tipo:'entrada',valor:e.v});});
+    itensMes(m,'entrada').concat(itensMes(m,'reembolso')).concat(itensMes(m,'outros')).concat(itensMes(m,'saida')).concat(itensMes(m,'cofre')).forEach(function(i){arr.push(i);});
+    arr.sort(function(a,b){var da=a.data||dataBase,db=b.data||dataBase;return da===db?0:(da>db?-1:1);});
+    function sinal(i){var v=numero(i.valor);return (i.tipo==='entrada'||i.tipo==='reembolso'||i.tipo==='outros'||i.base)?v:-Math.abs(v);}
+    var h='';
+    arr.forEach(function(i){
+      var entrada=sinal(i)>=0,valorAbs=Math.abs(numero(i.valor));
+      var cor=v32CatColor(i.cat||i.tipo||(entrada?'Entrada':'Revisar categoria'));
+      var cls=i._conc?'li conciliado':'li';
+      h+='<div class="'+cls+'" data-cat="'+E(i.cat||'')+'" data-tipo="'+E(i.tipo||'')+'" data-valor="'+numero(i.valor)+'" data-parcela="'+E(i.parcela||'')+'">'
+        +'<div class="li-dot" style="background:'+cor+'"></div>'
+        +'<div class="li-info"><div class="li-nome">'+E(i.nome||'Lançamento')+'</div>'+v32ChipRow(i,{dataBase:dataBase,parcela:false})+'</div>'
+        +'<div class="li-val '+(entrada?'entrada':'saida')+'">'+(entrada?'+':'-')+RK(valorAbs)+'</div>';
+      if(!i.base){
+        h+='<div class="li-acts">'
+          +'<button class="li-btn" data-copy="'+i.id+'" title="Duplicar" aria-label="Duplicar lançamento"><svg viewBox="0 0 16 16"><rect x="5" y="5" width="8" height="9" rx="1"/><rect x="3" y="3" width="8" height="9" rx="1" style="fill:none;stroke:currentColor"/></svg></button>'
+          +'<button class="li-btn e" data-edit="'+i.id+'" title="Editar" aria-label="Editar lançamento"><svg viewBox="0 0 16 16"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg></button>'
+          +'<button class="li-btn" data-del="'+i.id+'" title="Excluir" aria-label="Excluir lançamento"><svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg></button></div>';
+      }
+      h+='</div>';
+    });
+    if(!arr.length)h='<div class="empty">Nenhuma movimentação na conta neste mês.<br>Use “Lançar” para registrar a primeira.</div>';
+    sh('conta-lista',h);
+    atualizarResumoFinanceiro(m);
+  };
+
+  var renderFatCatsAnterior=window.renderFatCats;
+  window.renderFatCats=function(m){
+    renderFatCatsAnterior(m);
+    var vazio=el('fat-cats');
+    if(vazio&&!itensMes(m,'cartao').length&&!itensMes(m,'dani').length)vazio.innerHTML='<div class="empty">Nenhuma compra no cartão neste mês.<br>Use “Lançar” para registrar a primeira.</div>';
+    atualizarResumoFinanceiro(m);
+  };
+
+  var renderMesAnterior=window.renderMes;
+  window.renderMes=function(){renderMesAnterior();atualizarResumoFinanceiro(mesAtual);};
+  try{render();}catch(e){console.error('Falha ao aplicar padronização financeira:',e);}
+})();
+</script>
 
 </body>
 </html>
