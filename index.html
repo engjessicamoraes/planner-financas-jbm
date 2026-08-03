@@ -11118,6 +11118,16 @@ try{
   else document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
+<style id="bm-sem-corte-lista-v1">
+/* As listas de cartão e conta tinham altura fixa com rolagem interna
+   (max-height:320px), o que cortava a última linha no meio ("cortado do
+   nada"). Aqui elas fluem por inteiro — a página rola normalmente e
+   nenhuma linha fica cortada. O card ainda pode ser minimizado pela seta. */
+#fat-cats, #conta-lista{
+  max-height:none !important;
+  overflow:visible !important;
+}
+</style>
 
 </body>
 </html>
