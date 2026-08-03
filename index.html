@@ -724,6 +724,7 @@ body{letter-spacing:0}
       <div class="sec" style="margin-bottom:14px">
         <div class="sec-h"><div class="sec-t">Conta corrente</div><div style="display:flex;align-items:center;gap:8px"><div class="sec-r" id="conta-tot-hdr"></div><button class="mn-add" id="btn-add-conta" style="padding:5px 10px;font-size:11px"><svg viewBox="0 0 16 16" style="width:10px;height:10px"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg> Lançar</button><button class="fb" id="btn-saldo-inicial" style="font-size:11px;padding:5px 10px">Saldo inicial</button><button class="fb" id="btn-ver-tudo-conta" onclick="toggleVerTudoConta()" style="font-size:11px;padding:5px 10px">Tudo</button><button onclick="toggleSection('conta-body','conta-chev')" style="width:26px;height:26px;border:1.5px solid var(--bd);background:var(--bg);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Minimizar/expandir"><svg id="conta-chev" viewBox="0 0 16 16" style="width:10px;height:10px;stroke:var(--t2);fill:none;stroke-width:2.2;stroke-linecap:round;transition:transform .2s"><polyline points="3,10 8,5 13,10"/></svg></button></div></div><div id="conta-body" style="overflow:hidden;max-height:5000px;transition:max-height .3s ease"><div id="saldo-inicial-display"></div>
         <div id="conta-lista"></div>
+        <div class="tot-row"><div class="tot-l">Saldo em conta</div><div class="tot-v" id="conta-tot-foot"></div></div>
       </div></div>
     </div>
   </div>
@@ -11055,6 +11056,68 @@ try{
 .li-acts{ opacity:1 !important; visibility:visible !important; }
 .li:hover .li-acts{ opacity:1 !important; }
 </style>
+<style id="bm-dani-largura-v1">
+/* Cards "Gastos Dani" e "Valor guardado / Cofrinhos" ocupando a largura
+   toda da tela do mês — elimina o espaço em branco ao lado. As regras
+   antigas de largura total só valiam em telas pequenas (@media 760px);
+   esta vale em qualquer tamanho e cobre tanto o caso de bloco quanto o
+   de grade. */
+#v-mes .sec-dani, #v-mes .sec-cofre{
+  width:100% !important;
+  max-width:none !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  float:none !important;
+  grid-column:1 / -1 !important;
+}
+</style>
+<script id="bm-conta-saldo-rodape-v1">
+/* Espelha o saldo do cabeçalho da conta corrente (#conta-tot-hdr, sempre
+   preenchido pela renderização) no novo rodapé (#conta-tot-foot), para a
+   conta ficar simétrica ao cartão ("Total cartão" / "Saldo em conta"),
+   independentemente de qual versão da função de render rode. */
+(function(){
+  function sync(){
+    var h=document.getElementById('conta-tot-hdr'),
+        f=document.getElementById('conta-tot-foot');
+    if(h&&f){ f.textContent=h.textContent||''; try{f.style.color=getComputedStyle(h).color;}catch(e){} }
+  }
+  function init(){
+    var h=document.getElementById('conta-tot-hdr');
+    if(!h){ return void setTimeout(init,500); }
+    try{ new MutationObserver(sync).observe(h,{childList:true,characterData:true,subtree:true,attributes:true}); }catch(e){}
+    sync();
+  }
+  if(document.readyState!=='loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script id="bm-mover-anotacoes-v1">
+/* Mantém "Anotações" logo abaixo de "Painel 2026" (grupo Geral), tirando-o
+   do grupo Empresa. Usa um observador para reaplicar caso a barra lateral
+   seja remontada (ex.: após a sincronização da nuvem). */
+(function(){
+  var moving=false;
+  function ensure(){
+    if(moving) return;
+    var anot=document.querySelector('.sb-nav .ni[data-v="anotacoes"]');
+    var painel=document.querySelector('.sb-nav .ni[data-v="painel"]');
+    if(!anot||!painel) return;
+    if(painel.nextElementSibling===anot) return; /* já está no lugar */
+    moving=true;
+    try{ painel.parentNode.insertBefore(anot, painel.nextElementSibling); }catch(e){}
+    moving=false;
+  }
+  function init(){
+    var nav=document.querySelector('.sb-nav');
+    if(!nav){ return void setTimeout(init,400); }
+    ensure();
+    try{ new MutationObserver(function(){ ensure(); }).observe(nav,{childList:true,subtree:true}); }catch(e){}
+  }
+  if(document.readyState!=='loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
 
 </body>
 </html>
