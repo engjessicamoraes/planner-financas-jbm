@@ -11128,6 +11128,25 @@ try{
   overflow:visible !important;
 }
 </style>
+<style id="bm-cabecalho-conta-v1">
+/* A coluna do cartão era mais larga que a da conta, o que fazia o
+   cabeçalho da conta quebrar em duas linhas (título em cima, saldo
+   embaixo) e ficar alto. Aqui as duas colunas ficam iguais (cards
+   simétricos) e o cabeçalho não quebra — título e saldo lado a lado,
+   numa linha só, como no cartão. */
+@media (min-width:1000px){
+  #v-mes .mes-primary-grid{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  }
+  #v-mes .sec-h{
+    flex-wrap:nowrap !important;
+    align-items:center !important;
+  }
+  #v-mes .sec-h > div:last-child{
+    flex-wrap:nowrap !important;
+  }
+}
+</style>
 
 </body>
 </html>
