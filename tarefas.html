@@ -1227,10 +1227,10 @@ body{background:var(--bg)!important;color:var(--t)!important}
     <button class="nav-btn-backup" onclick="exportBackup()" title="Exportar backup dos dados">
       <svg viewBox="0 0 16 16"><path d="M8 2v8"/><polyline points="4,6 8,10 12,6"/><path d="M2 13h12"/></svg><span>Backup</span>
     </button>
-    <button class="nav-btn-backup" onclick="document.getElementById('backup-file').click()" title="Importar backup">
-      <svg viewBox="0 0 16 16"><path d="M8 14V6"/><polyline points="4,10 8,6 12,10"/><path d="M2 3h12"/></svg><span>Importar</span>
+    <button class="nav-btn-backup nav-btn-icon" onclick="document.getElementById('backup-file').click()" title="Importar backup (restaurar de um arquivo salvo)">
+      <svg viewBox="0 0 16 16"><path d="M8 14V6"/><polyline points="4,10 8,6 12,10"/><path d="M2 3h12"/></svg>
     </button>
-    <button class="nav-btn-backup" id="fs-status-btn" onclick="fsButtonClick()" title="Salvar automaticamente num arquivo no seu computador">
+    <button class="nav-btn-backup" id="fs-status-btn" onclick="fsButtonClick()" title="Salvar automaticamente num arquivo no seu computador" style="display:none">
       <svg viewBox="0 0 16 16"><path d="M2 4a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4z"/></svg><span id="fs-status-label">Vincular arquivo</span>
     </button>
     <button class="nav-btn-foco" onclick="focoAbrir()">
@@ -5219,6 +5219,23 @@ var HT = (function() {
       +'</span>';
   }
 
+  function contarVencendo(){
+    var atr=0,urg=0;
+    KEYS.forEach(function(k){(D[k]||[]).forEach(function(p){
+      if(isA(p)||allDone(p))return;
+      var u=urgCalc(p.date,p.forceUrgency);
+      if(u==='atr')atr++; else if(u==='urg')urg++;
+    });});
+    return {atr:atr,urg:urg,total:atr+urg};
+  }
+  function atualizarBadgeFila(){
+    var b=document.getElementById('fila-badge'); if(!b)return;
+    var c=contarVencendo();
+    if(c.total>0){ b.textContent=c.total; b.style.display=''; b.className='nav-tab-ct'+(c.atr?'':' amb'); }
+    else{ b.style.display='none'; }
+  }
+  window.atualizarBadgeFila=atualizarBadgeFila;
+
   function render(){
     var body=document.getElementById('fila-body'); if(!body) return;
     var itens=ativas();
@@ -5247,6 +5264,15 @@ var HT = (function() {
       +'<div><div class="l">Aguardando terceiros</div><div class="v">'+cobr.length+'</div></div>'
       +'</div>'
       +'<div class="fila-help">A ordem é calculada: risco técnico pesa mais, a pressão do cliente entra limitada, e o tempo em aberto faz o antigo subir. Prazo fatal vai ao topo pela data; risco crítico fura a fila. Ajuste os campos e a ordem se refaz sozinha.</div>';
+
+    var cv=contarVencendo();
+    if(cv.total>0){
+      h+='<div class="fila-alerta">&#9888; '
+        +(cv.atr?('<strong>'+cv.atr+' atrasada'+(cv.atr>1?'s':'')+'</strong>'):'')
+        +(cv.atr&&cv.urg?' · ':'')
+        +(cv.urg?(cv.urg+' vencendo em até 2 dias'):'')
+        +'</div>';
+    }
 
     var chips=[['','Todas'],['parada','Paradas'],['a_iniciar','A iniciar'],['em_execucao','Em execução'],
       ['revisao','Em revisão'],['entregar','A entregar'],['naoclass','A classificar']];
@@ -5289,6 +5315,7 @@ var HT = (function() {
     });
 
     body.innerHTML=h;
+    atualizarBadgeFila();
   }
 
   window.filaSet=function(id,campo,valor){
@@ -5333,10 +5360,13 @@ var HT = (function() {
   if(ref&&ref.parentNode&&!document.getElementById('ntab-fila')){
     var b=document.createElement('button');
     b.className=ref.className;b.id='ntab-fila';
-    b.innerHTML='<svg viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h6"/></svg>Fila';
+    b.innerHTML='<svg viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h6"/></svg>Fila'
+      +'<span class="nav-tab-ct" id="fila-badge" style="display:none" title="Tarefas atrasadas ou vencendo em até 2 dias"></span>';
     b.onclick=function(){switchMod('fila');};
     ref.parentNode.insertBefore(b,ref.nextSibling);
   }
+  setTimeout(atualizarBadgeFila,600);
+  setInterval(atualizarBadgeFila,60000);
   var _prev=window.switchMod;
   window.switchMod=function(mod){
     if(mod==='fila'){
@@ -5527,6 +5557,23 @@ var HT = (function() {
   padding-right:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
 }
 .agenda-workspace{max-width:none!important}
+
+/* Barra de navegação: abas roláveis quando não cabem, e os botões da
+   direita (Backup, Importar, Vincular) sempre visíveis — nada mais fica
+   cortado e inalcançável na borda. */
+.nav-tabs{min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-right{flex-shrink:0!important}
+.nav-tab{padding-left:14px!important;padding-right:14px!important}
+.nav-tab-ct.amb{background:rgba(184,134,11,.85)!important}
+/* Botão só-ícone (Importar recolhido ao lado do Backup). */
+.nav-btn-icon{padding-left:9px!important;padding-right:9px!important}
+.nav-btn-icon svg{margin:0!important}
+
+/* Aviso de vencimento no topo da Fila. */
+.fila-alerta{background:rgba(180,60,60,.09);border:1px solid rgba(180,60,60,.28);
+  color:#b23c3c;font-size:13px;font-weight:500;padding:10px 14px;border-radius:10px;margin:0 0 16px}
+.fila-alerta strong{font-weight:700}
 
 /* Gutter proporcional em telas menores. */
 @media(max-width:1000px){:root{--pjm-gut:24px}}
