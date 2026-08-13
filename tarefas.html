@@ -1220,6 +1220,7 @@ body{background:var(--bg)!important;color:var(--t)!important}
     </button>
   </div>
   <div class="nav-right">
+    <span id="save-status" class="save-status" title="Situação da gravação na nuvem">salvo</span>
     <button class="nav-btn-add" onclick="openAdd(_curMod==='senge'?'senge_eventos':(_curMod==='pessoal'?'pessoal':'empresa'))">
       <svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Nova tarefa
     </button>
@@ -1556,6 +1557,17 @@ function upri(u){return UPRI[u]!=null?UPRI[u]:4;}
 function isA(p){return p.archived===true;}
 function allDone(p){return p.steps&&p.steps.length>0&&p.steps.every(function(s){return s.done;});}
 function eh(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function autoRisco(p){
+  var txt = (p && typeof p==='object')
+    ? ((p.name||'')+' '+((p.steps||[]).map(function(s){return s.name||'';}).join(' '))+' '+(p.nextAction||''))
+    : (p||'');
+  var n=txt.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(/marquise|sacada|queda|desprendiment|despendiment|colaps|desab|rota de fuga|risco de inc/.test(n))return 'critico';
+  if(/(corros|armadura)[\s\S]*(pilar|viga|estrutur)|(pilar|viga)[\s\S]*(corros|armadura)/.test(n))return 'critico';
+  if(/fachada|infiltra|fissur|trinca|rachadura|corros|armadura|ppci|incendio|estrutural/.test(n))return 'alto';
+  if(/revestiment|pintura|reparo|umidade|estetic|impermeabiliz/.test(n))return 'medio';
+  return '';
+}
 function norm(p){
   if(!Array.isArray(p.steps))p.steps=[];
   if(p.obs==null)p.obs='';
@@ -1563,6 +1575,12 @@ function norm(p){
   if(!p.createdAt)p.createdAt=new Date().toISOString();
   if(!p.forceUrgency)p.forceUrgency='auto';
   if(p.recurrence===undefined)p.recurrence='';
+  if(!p.inicio)p.inicio=(p.createdAt||'').slice(0,10);
+  // Risco automático: recalculado a cada carga a partir do nome + etapas +
+  // próximo passo, EXCETO quando você definiu o risco à mão (riscoAuto=false).
+  if(p.riscoAuto!==false){ p.risco=autoRisco(p); p.riscoAuto=true; }
+  if(p.pressao===undefined)p.pressao='nenhuma';
+  if(p.situacao===undefined)p.situacao=(p.forceUrgency==='wait'?'aguardando':'');
 }
 function save(){try{localStorage.setItem(SK,JSON.stringify({D:D,uid:uid}));}catch(e){} fsScheduleWrite();cloudScheduleWrite();}
 function loadSaved(){
@@ -2080,18 +2098,40 @@ function cloudPayload(){
     habitos: localStorage.getItem('ht-v3')
   };
 }
+var __ultimoSalvo=0, __salvando=false;
+function rotuloSalvo(){
+  if(!__ultimoSalvo) return 'salvo';
+  var s=Math.max(0,Math.round((Date.now()-__ultimoSalvo)/1000));
+  if(s<5) return 'salvo agora';
+  if(s<60) return 'salvo há '+s+'s';
+  var m=Math.round(s/60);
+  if(m<60) return 'salvo há '+m+' min';
+  return 'salvo há '+Math.round(m/60)+'h';
+}
+function setSaveStatus(estado){
+  var el=document.getElementById('save-status'); if(!el) return;
+  if(!_cloudUser){ el.style.display='none'; return; }
+  el.style.display='';
+  if(estado==='salvando'){ __salvando=true; el.className='save-status saving'; el.textContent='salvando…'; return; }
+  if(estado==='erro'){ __salvando=false; el.className='save-status erro'; el.textContent='falha ao salvar'; return; }
+  __salvando=false; el.className='save-status ok'; el.textContent=rotuloSalvo();
+}
 function cloudWriteAll(){
   if(!_cloudUser) return;
   try{
+    setSaveStatus('salvando');
     firebase.database().ref('users/'+_cloudUser.uid+'/planner').set(cloudPayload())
-      .catch(function(e){ console.warn('Falha ao salvar na nuvem', e); });
-  }catch(e){ console.warn('Falha ao salvar na nuvem', e); }
+      .then(function(){ __ultimoSalvo=Date.now(); setSaveStatus('ok'); })
+      .catch(function(e){ console.warn('Falha ao salvar na nuvem', e); setSaveStatus('erro'); });
+  }catch(e){ console.warn('Falha ao salvar na nuvem', e); setSaveStatus('erro'); }
 }
 function cloudScheduleWrite(){
   if(!_cloudUser) return;
+  setSaveStatus('salvando');
   if(_cloudWriteTimer) clearTimeout(_cloudWriteTimer);
   _cloudWriteTimer = setTimeout(cloudWriteAll, 600);
 }
+setInterval(function(){ if(!__salvando) setSaveStatus('ok'); }, 15000);
 
 firebase.auth().onAuthStateChanged(function(user){
   if(user){
@@ -4315,6 +4355,7 @@ var HT = (function() {
     if(p.cliente==null)p.cliente='';
     if(p.fatal==null)p.fatal=false;
     if(p.est==null)p.est=0;
+    if(p.estProx==null)p.estProx=0;
     if(p.planDay==null)p.planDay='';
     if(p.delegTo==null)p.delegTo='';
     if(p.delegAt==null)p.delegAt='';
@@ -4351,6 +4392,7 @@ var HT = (function() {
   /* ---------- Atualizadores de campo ---------- */
   window.p2Cliente=function(pid,v){var p=getP(pid);if(!p)return;p.cliente=v;save();};
   window.p2Est=function(pid,v){var p=getP(pid);if(!p)return;p.est=parseFloat(v)||0;save();};
+  window.p2EstProx=function(pid,v){var p=getP(pid);if(!p)return;p.estProx=parseFloat(v)||0;save();};
   window.p2Fatal=function(pid,v){var p=getP(pid);if(!p)return;p.fatal=!!v;save();render();var c=document.getElementById('pc-'+pid);if(c)c.classList.add('open');};
   window.p2Deleg=function(pid,v){
     var p=getP(pid);if(!p)return;
@@ -4389,8 +4431,10 @@ var HT = (function() {
     var campos='<div class="p2-fields">'
       +'<div class="p2-row"><label>Cliente</label>'
       +'<input type="text" value="'+eh(p.cliente)+'" placeholder="Condomínio, obra ou nº do processo" oninput="p2Cliente('+p.id+',this.value)"></div>'
-      +'<div class="p2-row"><label>Esforço</label>'
-      +'<input type="number" step="0.5" min="0" value="'+(p.est>0?p.est:'')+'" placeholder="horas estimadas" oninput="p2Est('+p.id+',this.value)"></div>'
+      +'<div class="p2-row"><label>Esforço do projeto</label>'
+      +'<input type="number" step="0.5" min="0" value="'+(p.est>0?p.est:'')+'" placeholder="horas no total" title="Esforço do projeto inteiro — só referência" oninput="p2Est('+p.id+',this.value)"></div>'
+      +'<div class="p2-row"><label>Esforço da próxima ação</label>'
+      +'<input type="number" step="0.5" min="0" value="'+(p.estProx>0?p.estProx:'')+'" placeholder="horas só da próxima ação" title="É este valor que conta na capacidade do dia" oninput="p2EstProx('+p.id+',this.value)"></div>'
       +'<div class="p2-row"><label>Delegado a</label>'
       +'<input type="text" value="'+eh(p.delegTo)+'" placeholder="quem está com a bola" oninput="p2Deleg('+p.id+',this.value)"></div>'
       +'<div class="p2-row"><label style="width:auto"></label>'
@@ -4477,7 +4521,7 @@ var HT = (function() {
       if(da===null)return 1;if(db===null)return -1;
       return da-db;
     });
-    var carga=noPlano.reduce(function(a,p){return a+(parseFloat(p.est)||0);},0);
+    var carga=noPlano.reduce(function(a,p){return a+(parseFloat(p.estProx)||0);},0);
     var pct=_capacidade>0?Math.round(carga/_capacidade*100):0;
     var cor=pct>100?'var(--red)':(pct>85?'var(--amb)':'var(--grn)');
 
@@ -4487,7 +4531,7 @@ var HT = (function() {
       return '<div class="p2-li">'
         +'<span class="ub '+ucls(u)+'" style="flex-shrink:0">'+ulbl(u)+'</span>'
         +'<span class="nm">'+eh(p.name)+(p.fatal?' <span class="p2-chip p2-fatal">fatal</span>':'')+'</span>'
-        +'<span class="mt">'+(p.cliente?eh(p.cliente)+' · ':'')+(dd===null?'sem prazo':(dd<0?Math.abs(dd)+'d atrasado':(dd===0?'vence hoje':'em '+dd+'d')))+(p.est>0?' · '+hs(p.est):'')+'</span>'
+        +'<span class="mt">'+(p.cliente?eh(p.cliente)+' · ':'')+(dd===null?'sem prazo':(dd<0?Math.abs(dd)+'d atrasado':(dd===0?'vence hoje':'em '+dd+'d')))+(dentro?(p.estProx>0?' · '+hs(p.estProx)+' na ação':' · sem estimativa da ação'):(p.estProx>0?' · '+hs(p.estProx):''))+'</span>'
         +'<button class="p2-btn mini '+(dentro?'sec':'')+'" onclick="p2Plan('+p.id+')">'+(dentro?'tirar':'+ hoje')+'</button>'
         +'</div>';
     }
@@ -4496,7 +4540,7 @@ var HT = (function() {
       +'<div style="display:flex;align-items:center;gap:7px"><span style="font-size:11px;color:var(--t3)">Horas disponíveis</span>'
       +'<input type="number" step="0.5" min="0" value="'+_capacidade+'" onchange="p2Capacidade(this.value)" style="width:64px;border:1.5px solid var(--bd);border-radius:var(--rx);padding:5px 8px;font-family:inherit;font-size:12.5px;text-align:right;background:var(--c0);color:var(--t)"></div>'
       +'</div><div class="p2-body">'
-      +'<div class="p2-note">Selecione abaixo o que você realmente pretende fazer hoje. A soma das estimativas é comparada com as horas disponíveis, de modo que o excesso fica visível antes do dia começar, e não depois. Tarefas sem estimativa entram no plano, mas não somam carga.</div>';
+      +'<div class="p2-note">Selecione abaixo o que você realmente pretende fazer hoje. O que soma na carga é o esforço da <strong>próxima ação</strong> de cada tarefa — não o projeto inteiro —, comparado com as horas disponíveis, de modo que o excesso fica visível antes do dia começar. Tarefas sem estimativa da ação entram no plano, mas não somam carga.</div>';
     if(!noPlano.length)h+='<div class="p2-empty">Nenhuma tarefa no plano de hoje. Escolha entre as sugestões abaixo.</div>';
     noPlano.forEach(function(p){h+=linha(p,true);});
     h+='<div class="p2-bar"><i style="width:'+Math.min(pct,100)+'%;background:'+cor+'"></i></div>';
@@ -4705,26 +4749,67 @@ var HT = (function() {
     if(c)c.classList.toggle('fechado');
   };
 
+  // Lista de condomínios conhecidos da B&M. Qualquer tarefa que cite um
+  // destes nomes — com ou sem o prefixo "Cond." — cai no cartão certo.
+  // Para incluir um novo, basta acrescentar o nome aqui.
+  var CONDS_CONHECIDOS=['Carajá','Galeria Silvas','Laguna','Nina Dy Paulo',
+    'Park Lisboa','San Marino','San Telmo','Parque Amazônia','Parque Belvedere',
+    'Allegro Partenon','José Candido Leal','Ipa','Castor','Bariloche'];
+
+  function semAcento(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+  // Chave de agrupamento: minúsculas, sem acento, sem "cond.", só letras/números.
+  // Junta variações do mesmo condomínio ("Cond. Ipa", "Cond. IPA", "cond ipa").
+  function chaveCond(s){
+    return semAcento(s).toLowerCase()
+      .replace(/^\s*cond(?:om[ií]nio)?\.?\s+/i,'')
+      .replace(/[^a-z0-9]+/g,' ').trim();
+  }
+
+  // Deduz o condomínio a partir do nome da tarefa quando o campo Cliente
+  // está vazio: 1) procura um condomínio conhecido em qualquer ponto do nome;
+  // 2) se não achar, reconhece os prefixos "Cond."/"Condomínio"/"Edifício"/
+  // "Ed."/"Residencial"/"Res.", inclusive no meio ("Laudo - Cond. Ipa"),
+  // descartando um parêntese final de contato ("(Lys)").
+  function inferirCliente(p){
+    var c=(p.cliente||'').trim();
+    if(c) return c;
+    var nome=(p.name||'').trim();
+    if(!nome) return '';
+    var hay=' '+semAcento(nome).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()+' ';
+    for(var i=0;i<CONDS_CONHECIDOS.length;i++){
+      var needle=' '+semAcento(CONDS_CONHECIDOS[i]).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()+' ';
+      if(hay.indexOf(needle)>=0) return 'Cond. '+CONDS_CONHECIDOS[i];
+    }
+    var re=/(?:^|[\-\u2013\u2014:\s])(cond(?:om[ií]nio)?\.?|ed(?:if[ií]cio)?\.?|res(?:idencial)?\.?)\s+([^\-\u2013\u2014:]+)/i;
+    var m=nome.match(re);
+    if(!m) return '';
+    var resto=m[2].replace(/\s*\([^)]*\)\s*$/,'').trim();
+    resto=resto.replace(/^(?:cond(?:om[ií]nio)?\.?|ed(?:if[ií]cio)?\.?|res(?:idencial)?\.?)\s+/i,'').trim();
+    if(!resto) return '';
+    return 'Cond. '+resto;
+  }
+
   function renderClientes(){
     var lista=todas();
-    var grupos={};
+    var grupos={},displays={};
     lista.forEach(function(p){
-      var k=(p.cliente||'').trim();
-      if(!k)k='— sem cliente definido';
-      if(!grupos[k])grupos[k]=[];
-      grupos[k].push(p);
+      var disp=inferirCliente(p),key;
+      if(!disp){key='—';disp='— sem cliente definido';}
+      else key=chaveCond(disp);
+      if(!grupos[key]){grupos[key]=[];displays[key]=disp;}
+      grupos[key].push(p);
     });
     var chaves=Object.keys(grupos).sort(function(a,b){
-      if(a.charAt(0)==='—')return 1;
-      if(b.charAt(0)==='—')return -1;
-      return a.localeCompare(b,'pt-BR');
+      if(a==='—')return 1;
+      if(b==='—')return -1;
+      return displays[a].localeCompare(displays[b],'pt-BR');
     });
     var visiveis=chaves.filter(function(k){
-      return !filtroCliente||k.toLowerCase().indexOf(filtroCliente)>=0;
+      return !filtroCliente||displays[k].toLowerCase().indexOf(filtroCliente)>=0;
     });
 
-    var comCliente=chaves.filter(function(k){return k.charAt(0)!=='—';}).length;
-    var semCliente=(grupos['— sem cliente definido']||[]).length;
+    var comCliente=chaves.filter(function(k){return k!=='—';}).length;
+    var semCliente=(grupos['—']||[]).length;
     var criticas=lista.filter(function(p){
       var u=urgCalc(p.date,p.forceUrgency);
       return u==='atr'||u==='urg';
@@ -4742,11 +4827,13 @@ var HT = (function() {
       +'value="'+eh(filtroCliente)+'" oninput="clFiltrar(this.value)">';
 
     if(!visiveis.length){
-      h+='<div class="cl-vazio">Nenhum cliente corresponde ao filtro. Preencha o campo Cliente no cartão de cada tarefa para que ela apareça aqui.</div>';
+      h+='<div class="cl-vazio">Nenhum cliente corresponde ao filtro.</div>';
       var b0=document.getElementById('p2-clientes-body');if(b0)b0.innerHTML=h;
+      renderClientes._cache={};
       return;
     }
 
+    var cache={};
     h+='<div class="cl-grid">';
     visiveis.forEach(function(k,idx){
       var g=grupos[k].slice().sort(function(a,b){
@@ -4755,21 +4842,30 @@ var HT = (function() {
         if(da===null)return 1;if(db===null)return -1;
         return da-db;
       });
+      var nome=displays[k];
+      cache[idx]={nome:nome,grupo:g};
       var prox=g.filter(function(p){return p.date;})[0];
       var nCrit=g.filter(function(p){
         var u=urgCalc(p.date,p.forceUrgency);return u==='atr'||u==='urg';
       }).length;
       var etapasTot=g.reduce(function(a,p){return a+p.steps.length;},0);
       var etapasFeitas=g.reduce(function(a,p){return a+p.steps.filter(function(s){return s.done;}).length;},0);
+      var pct=etapasTot?Math.round(etapasFeitas/etapasTot*100):0;
+      var pu=(prox&&prox.date)?urgCalc(prox.date,prox.forceUrgency):null;
+      var przCls=pu==='atr'?'cl-prazo--atr':(pu==='urg'?'cl-prazo--urg':'');
+      var ehTodos=(k==='—');
 
-      h+='<div class="cl-card" id="cl-card-'+idx+'">'
+      h+='<div class="cl-card'+(ehTodos?' cl-card--todos':'')+'" id="cl-card-'+idx+'">'
+        +(ehTodos?'':'<button class="cl-copy" title="Copiar resumo para enviar ao síndico" onclick="clResumo(event,'+idx+')">Resumo</button>')
         +'<div class="cl-hdr" onclick="clToggle(event,'+idx+')">'
-        +'<div class="cl-nome">'+eh(k)+'</div>'
+        +'<div class="cl-nome">'+eh(nome)+'</div>'
         +'<div class="cl-meta">'+g.length+' tarefa'+(g.length>1?'s':'')
         +(nCrit?' · <strong style="color:var(--red)">'+nCrit+' crítica'+(nCrit>1?'s':'')+'</strong>':'')
         +(etapasTot?' · '+etapasFeitas+'/'+etapasTot+' etapas':'')
-        +(prox&&prox.date?' · próximo prazo '+new Date(prox.date+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}):'')
-        +'</div></div><div class="cl-body">';
+        +(prox&&prox.date?' · <span class="cl-prazo '+przCls+'">próximo prazo '+new Date(prox.date+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+'</span>':'')
+        +'</div>'
+        +(etapasTot?'<div class="cl-prog" title="'+etapasFeitas+' de '+etapasTot+' etapas concluídas"><span style="width:'+pct+'%"></span></div>':'')
+        +'</div><div class="cl-body">';
       g.forEach(function(p){
         var u=urgCalc(p.date,p.forceUrgency);
         var dd=diasAte(p.date);
@@ -4787,8 +4883,52 @@ var HT = (function() {
       h+='</div></div>';
     });
     h+='</div>';
+    renderClientes._cache=cache;
     var b=document.getElementById('p2-clientes-body');if(b)b.innerHTML=h;
   }
+
+  /* ---------- Resumo do condomínio (copiar para WhatsApp/e-mail) ---------- */
+  function clFmtPrazo(p){
+    var dd=diasAte(p.date);
+    if(dd===null)return 'sem prazo';
+    if(dd<0)return Math.abs(dd)+' dia'+(Math.abs(dd)>1?'s':'')+' em atraso';
+    if(dd===0)return 'vence hoje';
+    return 'faltam '+dd+' dia'+(dd>1?'s':'');
+  }
+  function clFbCopy(txt){
+    try{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';
+      ta.style.left='-9999px';document.body.appendChild(ta);ta.focus();ta.select();
+      var r=document.execCommand('copy');document.body.removeChild(ta);return r;}catch(e){return false;}
+  }
+  function clToast(msg){
+    var t=document.getElementById('cl-toast');
+    if(!t){t=document.createElement('div');t.id='cl-toast';document.body.appendChild(t);}
+    t.textContent=msg;t.className='on';
+    clearTimeout(clToast._t);clToast._t=setTimeout(function(){t.className='';},2200);
+  }
+  window.clResumo=function(ev,idx){
+    if(ev){ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+    var d=(renderClientes._cache||{})[idx];
+    if(!d)return;
+    var linhas=[];
+    linhas.push(d.nome+' — pendências');
+    linhas.push('Atualizado em '+new Date().toLocaleDateString('pt-BR'));
+    linhas.push('');
+    d.grupo.forEach(function(p){
+      var et=(p.steps&&p.steps.length)?' ('+p.steps.filter(function(s){return s.done;}).length+'/'+p.steps.length+' etapas)':'';
+      var linha='• '+p.name+et+' — '+clFmtPrazo(p);
+      if(p.nextAction)linha+=' | próximo passo: '+p.nextAction;
+      linhas.push(linha);
+    });
+    var txt=linhas.join('\n');
+    function ok(){clToast('Resumo copiado');}
+    function fail(){if(!clFbCopy(txt)){try{window.prompt('Copie o resumo (Ctrl+C):',txt);}catch(e){}}else ok();}
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(ok,fail);
+      }else fail();
+    }catch(e){fail();}
+  };
 
   /* ---------- Página e aba ---------- */
   var host=document.querySelector('.module');
@@ -4980,5 +5120,417 @@ var HT = (function() {
   }
 })();
 </script>
+
+<script>
+/* ============================================================
+   FILA DE TRABALHO — prioridade calculada
+   Cada tarefa tem risco técnico, pressão do cliente, situação e
+   data de início. A nota é somada automaticamente e a fila sai
+   na ordem de execução. Travas: prazo fatal no topo (pela data)
+   e risco crítico furando a fila. "Aguardando terceiro" sai da
+   fila de execução e vai para a lista de cobrança.
+   ============================================================ */
+(function(){
+  var SIT={'':'A classificar',a_iniciar:'A iniciar',em_execucao:'Em execução',
+    aguardando:'Aguardando terceiro',parada:'Parada',revisao:'Em revisão',entregar:'A entregar'};
+  var RISCO={'':'Sem risco',baixo:'Baixo',medio:'Médio',alto:'Alto',critico:'Crítico'};
+  var PRES={nenhuma:'Nenhuma',alguma:'Alguma',alta:'Alta'};
+  var _filtro='';
+
+  function diasAte(dt){if(!dt)return null;var t=new Date();t.setHours(0,0,0,0);
+    var d=new Date(dt+'T00:00:00');return Math.round((d-t)/86400000);}
+  function mesesDesde(dt){if(!dt)return 0;var d=new Date(dt+'T00:00:00');
+    return Math.max(0,(Date.now()-d.getTime())/(86400000*30.44));}
+
+  function ativas(){
+    var out=[];
+    KEYS.forEach(function(k){
+      (D[k]||[]).forEach(function(p){ if(!isA(p)) out.push({p:p,area:k}); });
+    });
+    return out;
+  }
+  function cobrancaRe(t){return /\bcobr|aguard|retorn|resposta|aprova[çc]|assinatura|libera[çc]|pagament/i.test(t||'');}
+  // Situação efetiva: a escolha manual sempre vence; se estiver em branco,
+  // o app assume pelo que já existe — etapas todas feitas => "A entregar";
+  // próximo passo de cobrança => "Aguardando terceiro".
+  function sitEfetiva(p){
+    if(p.situacao) return p.situacao;
+    if(allDone(p)) return 'entregar';
+    if(cobrancaRe(p.nextAction)) return 'aguardando';
+    return '';
+  }
+  function mesesParada(p){ return p.paradaEm ? mesesDesde((p.paradaEm||'').slice(0,10)) : 0; }
+  function nota(p){
+    var r={critico:100,alto:60,medio:30,baixo:10}[p.risco]||0;
+    var pr={alta:20,alguma:8}[p.pressao]||0;
+    var u=urgCalc(p.date,p.forceUrgency);
+    var pz=u==='atr'?18:(u==='urg'?8:(u==='sem'?3:0));
+    var id=Math.min(Math.round(mesesDesde(p.inicio)*3),30);
+    var pa=0;
+    if(sitEfetiva(p)==='parada'){ pa=6+Math.min(Math.round(mesesParada(p)*2),12); }
+    return r+pr+pz+id+pa;
+  }
+  function tier(p){ if(p.fatal&&p.date)return 0; if(p.risco==='critico')return 1; return 2; }
+  function porque(p){
+    var r=[];
+    if(p.fatal&&p.date)r.push('prazo fatal');
+    var rl={critico:'risco crítico',alto:'risco alto',medio:'risco médio',baixo:'risco baixo'}[p.risco];
+    if(rl)r.push(rl);
+    var u=urgCalc(p.date,p.forceUrgency),dd=diasAte(p.date);
+    if(u==='atr'&&dd!=null)r.push(Math.abs(dd)+' d de atraso');
+    else if(u==='urg')r.push(dd===0?'vence hoje':'vence em '+dd+' d');
+    var se=sitEfetiva(p);
+    if(se==='parada'&&p.paradaEm){
+      var mp=Math.floor(mesesParada(p)), dp=Math.round(mesesParada(p)*30.44);
+      r.push('parada há '+(mp>=1?(mp+' '+(mp>1?'meses':'mês')):(dp+' d')));
+    }else{
+      var m=Math.floor(mesesDesde(p.inicio));
+      if(m>=2)r.push((se==='parada'?'parada há ':'aberta há ')+m+' meses');
+    }
+    if(p.pressao==='alta')r.push('cliente cobrando');
+    else if(p.pressao==='alguma')r.push('cliente aguardando');
+    return r.join(' · ')||'sem sinais de prioridade';
+  }
+  function aLabel(a){return (ALBL[a]||a).replace(/ \u2014 .*/,'');}
+
+  function opt(v,cur,lbl){return '<option value="'+v+'"'+(v===cur?' selected':'')+'>'+lbl+'</option>';}
+  function sel(campo,p,mapa,curVal){
+    var cur=(curVal!==undefined?curVal:p[campo]);
+    var h='<select class="fila-sel" onchange="filaSet('+p.id+',\''+campo+'\',this.value)">';
+    for(var v in mapa){ if(mapa.hasOwnProperty(v)) h+=opt(v,cur,mapa[v]); }
+    return h+'</select>';
+  }
+  function ctrls(p){
+    return '<div class="fila-ctrls">'
+      +'<span class="fila-tag">'+eh(aLabel(_areaDe(p.id)))+'</span>'
+      +'<label>Situação'+sel('situacao',p,SIT,sitEfetiva(p))+'</label>'
+      +'<label>Risco'+sel('risco',p,RISCO)+'</label>'
+      +'<label>Cliente'+sel('pressao',p,PRES)+'</label>'
+      +'<label>Início<input type="date" class="fila-data" value="'+eh(p.inicio||'')
+        +'" onchange="filaData('+p.id+',this.value)" title="Quando o trabalho entrou"></label>'
+      +'</div>';
+  }
+  var _areaMap={};
+  function _areaDe(id){return _areaMap[id]||'';}
+  function acts(p){
+    return '<span class="fila-acts">'
+      +'<button class="fila-act" title="Abrir a tarefa na área dela" onclick="filaAbrir('+p.id+')">Abrir</button>'
+      +'<button class="fila-act done" title="Concluir a tarefa" onclick="filaConcluir('+p.id+')">&#10003; Concluir</button>'
+      +'</span>';
+  }
+
+  function render(){
+    var body=document.getElementById('fila-body'); if(!body) return;
+    var itens=ativas();
+    _areaMap={};
+    itens.forEach(function(it){_areaMap[it.p.id]=it.area;});
+
+    var fila=itens.filter(function(it){return sitEfetiva(it.p)!=='aguardando';}).map(function(it){return it.p;});
+    var cobr=itens.filter(function(it){return sitEfetiva(it.p)==='aguardando';}).map(function(it){return it.p;});
+
+    fila.sort(function(a,b){
+      var ta=tier(a),tb=tier(b);
+      if(ta!==tb)return ta-tb;
+      if(ta===0)return (a.date||'9999-99-99').localeCompare(b.date||'9999-99-99');
+      return nota(b)-nota(a);
+    });
+    cobr.sort(function(a,b){return mesesDesde(b.inicio)-mesesDesde(a.inicio);});
+
+    var nCrit=fila.filter(function(p){return p.risco==='critico';}).length;
+    var nPar=fila.filter(function(p){return sitEfetiva(p)==='parada';}).length;
+    var nClass=fila.filter(function(p){return !p.situacao&&!p.risco;}).length;
+
+    var h='<div class="fila-stats">'
+      +'<div><div class="l">Na fila</div><div class="v">'+fila.length+'</div></div>'
+      +'<div><div class="l">Risco crítico</div><div class="v" style="color:'+(nCrit?'var(--red)':'var(--grn)')+'">'+nCrit+'</div></div>'
+      +'<div><div class="l">Paradas</div><div class="v" style="color:'+(nPar?'var(--amb,#B8860B)':'var(--grn)')+'">'+nPar+'</div></div>'
+      +'<div><div class="l">Aguardando terceiros</div><div class="v">'+cobr.length+'</div></div>'
+      +'</div>'
+      +'<div class="fila-help">A ordem é calculada: risco técnico pesa mais, a pressão do cliente entra limitada, e o tempo em aberto faz o antigo subir. Prazo fatal vai ao topo pela data; risco crítico fura a fila. Ajuste os campos e a ordem se refaz sozinha.</div>';
+
+    var chips=[['','Todas'],['parada','Paradas'],['a_iniciar','A iniciar'],['em_execucao','Em execução'],
+      ['revisao','Em revisão'],['entregar','A entregar'],['naoclass','A classificar']];
+    h+='<div class="fila-chips">';
+    chips.forEach(function(c){ h+='<button class="fila-chip'+(_filtro===c[0]?' on':'')+'" onclick="filaFiltro(\''+c[0]+'\')">'+c[1]+'</button>'; });
+    h+='</div>';
+
+    var fl=fila.filter(function(p){
+      if(!_filtro)return true;
+      if(_filtro==='naoclass')return !sitEfetiva(p)&&!p.risco;
+      return sitEfetiva(p)===_filtro;
+    });
+
+    h+='<div class="fila-sec-tit">Fila de trabalho <span class="fila-ct">'+fl.length+'</span></div>';
+    if(!fl.length) h+='<div class="fila-vazio">Nada nesta lista.</div>';
+    var rank=0;
+    fl.forEach(function(p){
+      rank++;
+      var t=tier(p);
+      h+='<div class="fila-row'+(t===0?' fatal':(t===1?' critico':''))+'">'
+        +'<div class="fila-head"><span class="fila-rank">'+rank+'</span>'
+        +'<span class="fila-name">'+eh(p.name)+(p.fatal?' <span class="fila-fatal">fatal</span>':'')+'</span>'
+        +acts(p)
+        +'<span class="fila-score" title="Nota de prioridade">'+nota(p)+'</span></div>'
+        +'<div class="fila-why">'+eh(porque(p))+'</div>'
+        +ctrls(p)+'</div>';
+    });
+
+    h+='<div class="fila-sec-tit cobr">Cobrança — dependem de terceiros <span class="fila-ct">'+cobr.length+'</span></div>'
+      +'<div class="fila-help">Estas não são para você executar agora: são para mandar uma mensagem cobrando o retorno. Assim que voltar para você, mude a situação e ela reentra na fila.</div>';
+    if(!cobr.length) h+='<div class="fila-vazio">Nada aguardando terceiros.</div>';
+    cobr.forEach(function(p){
+      var m=Math.floor(mesesDesde(p.inicio));
+      h+='<div class="fila-row cobr">'
+        +'<div class="fila-head"><span class="fila-name">'+eh(p.name)+'</span>'
+        +acts(p)
+        +'<span class="fila-score aguard">'+(m>=1?('há '+m+' m'):'recente')+'</span></div>'
+        +'<div class="fila-why">'+(p.nextAction?eh(p.nextAction):'sem próximo passo anotado')+'</div>'
+        +ctrls(p)+'</div>';
+    });
+
+    body.innerHTML=h;
+  }
+
+  window.filaSet=function(id,campo,valor){
+    var p=getP(id); if(!p)return;
+    if(campo==='risco'){ p.riscoAuto=false; }
+    if(campo==='situacao'){
+      if((valor==='parada'||valor==='aguardando') && p.situacao!==valor){ p.paradaEm=new Date().toISOString(); }
+      else if(valor!=='parada'&&valor!=='aguardando'){ if(p.paradaEm)delete p.paradaEm; }
+    }
+    p[campo]=valor; save(); render();
+  };
+  window.filaData=function(id,valor){ var p=getP(id); if(!p)return; p.inicio=valor; save(); render(); };
+  window.filaFiltro=function(v){ _filtro=v; render(); };
+  window.filaRender=render;
+  window.filaConcluir=function(id){
+    var p=getP(id); if(!p)return;
+    if(!window.confirm('Concluir "'+p.name+'"?\nEla sai da fila e vai para os concluídos.'))return;
+    try{ concluir(id); }catch(e){ p.steps.forEach(function(s){s.done=true;}); p.archived=true; p.archivedAt=new Date().toISOString(); save(); }
+    render();
+  };
+  window.filaAbrir=function(id){
+    var area=_areaDe(id); if(!area){ try{getP(id);}catch(e){} }
+    var mod=area.indexOf('senge')===0?'senge':(area||'empresa');
+    try{ switchMod(mod); }catch(e){ return; }
+    setTimeout(function(){
+      var el=document.getElementById('pc-'+id);
+      if(el){ el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+    },140);
+  };
+
+  /* ---------- Página e aba ---------- */
+  var host=document.querySelector('.module');
+  if(host&&host.parentNode&&!document.getElementById('mod-fila')){
+    var d=document.createElement('div');
+    d.className='module';d.id='mod-fila';
+    d.innerHTML='<div class="proj-header"><div class="proj-title">Fila de trabalho</div>'
+      +'<div class="proj-sub">O que fazer primeiro, na ordem calculada por risco, prazo, pressão e tempo em aberto</div></div>'
+      +'<div class="proj-body" id="fila-body"></div>';
+    host.parentNode.appendChild(d);
+  }
+  var ref=document.getElementById('ntab-clientes')||document.getElementById('ntab-empresa');
+  if(ref&&ref.parentNode&&!document.getElementById('ntab-fila')){
+    var b=document.createElement('button');
+    b.className=ref.className;b.id='ntab-fila';
+    b.innerHTML='<svg viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h6"/></svg>Fila';
+    b.onclick=function(){switchMod('fila');};
+    ref.parentNode.insertBefore(b,ref.nextSibling);
+  }
+  var _prev=window.switchMod;
+  window.switchMod=function(mod){
+    if(mod==='fila'){
+      document.querySelectorAll('.module').forEach(function(m){m.classList.remove('on');});
+      document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('on');});
+      document.querySelectorAll('.sb-mod').forEach(function(s){s.classList.remove('on');});
+      var mEl=document.getElementById('mod-fila');if(mEl)mEl.classList.add('on');
+      var tEl=document.getElementById('ntab-fila');if(tEl)tEl.classList.add('on');
+      try{_curMod='fila';}catch(e){}
+      var fab=document.getElementById('fab-add');if(fab)fab.style.display='none';
+      try{render();}catch(e){console.error(e);}
+      return;
+    }
+    return _prev.apply(this,arguments);
+  };
+  switchMod=window.switchMod;
+
+  /* ---------- Estilo ---------- */
+  var st=document.createElement('style');st.id='fila-css';
+  st.textContent=''
+    +'.fila-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:4px 0 16px}'
+    +'.fila-stats>div{border:1px solid var(--bd);border-radius:14px;padding:14px 16px;background:var(--c0)}'
+    +'.fila-stats .l{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--t3)}'
+    +'.fila-stats .v{font-family:Outfit,sans-serif;font-size:26px;font-weight:700;margin-top:4px;color:var(--t)}'
+    +'.fila-help{font-size:12.5px;color:var(--t3);line-height:1.5;margin:0 2px 14px}'
+    +'.fila-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}'
+    +'.fila-chip{border:1px solid var(--bd);background:var(--c0);color:var(--t2);font:inherit;font-size:12px;'
+      +'font-weight:600;padding:6px 13px;border-radius:999px;cursor:pointer}'
+    +'.fila-chip.on{background:var(--m,#7a3b46);color:#fff;border-color:var(--m,#7a3b46)}'
+    +'.fila-sec-tit{font-family:Outfit,sans-serif;font-size:15px;font-weight:700;color:var(--t);'
+      +'margin:22px 2px 12px;display:flex;align-items:center;gap:9px}'
+    +'.fila-sec-tit.cobr{margin-top:34px}'
+    +'.fila-ct{font-size:12px;font-weight:600;color:var(--t3);background:var(--bds,#efe9e2);'
+      +'padding:1px 9px;border-radius:999px}'
+    +'.fila-row{border:1px solid var(--bd);border-radius:13px;background:var(--c0);'
+      +'padding:13px 15px;margin-bottom:10px}'
+    +'.fila-row.critico{border-color:rgba(180,60,60,.5)}'
+    +'.fila-row.fatal{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}'
+    +'.fila-row.cobr{background:#FBF8F4}'
+    +'.fila-head{display:flex;align-items:center;gap:11px}'
+    +'.fila-rank{flex:0 0 auto;min-width:26px;height:26px;border-radius:8px;background:var(--m,#7a3b46);'
+      +'color:#fff;font-family:Outfit,sans-serif;font-weight:700;font-size:13px;'
+      +'display:flex;align-items:center;justify-content:center;padding:0 6px}'
+    +'.fila-name{flex:1 1 auto;font-weight:600;font-size:14.5px;color:var(--t);min-width:0}'
+    +'.fila-fatal{font-size:10px;font-weight:700;color:#fff;background:var(--red);padding:2px 7px;'
+      +'border-radius:6px;margin-left:6px;vertical-align:middle}'
+    +'.fila-score{flex:0 0 auto;font-family:Outfit,sans-serif;font-weight:700;font-size:15px;'
+      +'color:var(--m,#7a3b46);min-width:30px;text-align:right}'
+    +'.fila-score.aguard{font-size:12px;color:var(--t3);font-family:inherit;font-weight:600}'
+    +'.fila-why{font-size:12.5px;color:var(--t2);margin:7px 0 11px;padding-left:37px}'
+    +'.fila-row.cobr .fila-why{padding-left:0}'
+    +'.fila-ctrls{display:flex;flex-wrap:wrap;gap:10px 14px;padding-left:37px}'
+    +'.fila-row.cobr .fila-ctrls{padding-left:0}'
+    +'.fila-ctrls label{display:flex;flex-direction:column;gap:3px;font-size:10.5px;'
+      +'letter-spacing:.03em;text-transform:uppercase;color:var(--t3)}'
+    +'.fila-sel,.fila-data{font:inherit;font-size:12.5px;color:var(--t);background:#fff;'
+      +'border:1px solid var(--bd);border-radius:8px;padding:5px 8px;text-transform:none;letter-spacing:0}'
+    +'.fila-tag{align-self:flex-end;font-size:11px;font-weight:600;color:var(--t2);'
+      +'background:var(--bds,#efe9e2);padding:5px 10px;border-radius:8px}'
+    +'.fila-vazio{font-size:13px;color:var(--t3);padding:10px 2px 4px}'
+    +'.fila-acts{display:flex;gap:6px;flex:0 0 auto}'
+    +'.fila-act{font:inherit;font-size:11.5px;font-weight:600;border:1px solid var(--bd);'
+      +'background:var(--c0);color:var(--t2);padding:5px 10px;border-radius:8px;cursor:pointer;white-space:nowrap}'
+    +'.fila-act:hover{border-color:var(--m,#7a3b46);color:var(--m,#7a3b46)}'
+    +'.fila-act.done:hover{background:#2c7a3f;border-color:#2c7a3f;color:#fff}'
+    +'@media(max-width:640px){.fila-stats{grid-template-columns:1fr 1fr}.fila-why,.fila-ctrls{padding-left:0}.fila-acts{flex-wrap:wrap}}';
+  document.head.appendChild(st);
+  console.log('Fila de trabalho carregada.');
+})();
+</script>
+
+<style id="camada-design-4-distribuicao">
+/* ============================================================
+   CAMADA DE DESIGN 4 — DISTRIBUIÇÃO NO DESKTOP
+   Corrige o corpo (.proj-body) que, sendo item flex com flex:1 +
+   width:auto + margin:auto, encolhia até o conteúdo e deixava os
+   cards numa coluna estreita no meio da tela. Agora cabeçalho,
+   busca e cards compartilham UMA faixa de largura única e
+   centralizada, com a rolagem na borda. Os painéis de reunião do
+   SENGE passam a ficar lado a lado nas telas largas.
+   ============================================================ */
+:root{
+  --pjm-band:1680px;   /* largura máxima da faixa de conteúdo */
+  --pjm-gut:40px;      /* respiro mínimo nas laterais */
+}
+
+/* Faixa única: as três peças da tela (título, barra e corpo)
+   preenchem a largura disponível e alinham o conteúdo no centro,
+   usando padding lateral que cresce conforme a tela. */
+.proj-header,.proj-toolbar,.proj-body{
+  max-width:none!important;
+  width:auto!important;
+  align-self:stretch!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+  padding-left:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
+  padding-right:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
+}
+.proj-header{padding-top:28px!important;padding-bottom:2px!important}
+.proj-toolbar{padding-top:14px!important;padding-bottom:12px!important}
+.proj-body{padding-top:20px!important;padding-bottom:96px!important}
+
+/* Peças internas ocupam toda a faixa, sem cap estreito nem
+   centragem própria que as deslocaria do alinhamento. */
+.proj-body .pc,
+.proj-body .sgrp,
+.proj-body .mtg-panel,
+.proj-body .senge-guide,
+.proj-body .add-row,
+.proj-body .postit-box,
+#mtg-panels-wrap{
+  max-width:none!important;
+  width:auto!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+
+/* SENGE — painéis de reunião lado a lado, aproveitando a largura:
+   1 coluna no notebook estreito, 2 em telas médias, 3 em monitores. */
+#mtg-panels-wrap{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:16px!important;
+  align-items:start!important;
+  margin-bottom:24px!important;
+}
+#mtg-panels-wrap>.mtg-panel{margin-bottom:0!important}
+@media(min-width:1120px){
+  #mtg-panels-wrap{grid-template-columns:1fr 1fr!important}
+}
+@media(min-width:1560px){
+  #mtg-panels-wrap{grid-template-columns:repeat(3,1fr)!important}
+}
+
+/* Mesma faixa nos módulos de bloco simples (Hoje, Revisão, Modelos,
+   Clientes), para as abas alinharem entre si ao trocar de uma para outra. */
+#mod-hoje>div,#mod-revisao>div,#mod-modelos>div,#mod-clientes>div{
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
+  padding-right:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
+}
+
+/* CLIENTES — sem colunas vazias sobrando à direita:
+   auto-fit faz um único cartão preencher a linha inteira. */
+.cl-grid{grid-template-columns:repeat(auto-fit,minmax(420px,1fr))!important}
+/* O balde "sem cliente definido" sempre ocupa a largura toda, e sua lista
+   longa flui em colunas em vez de uma tira estreita e altíssima. */
+.cl-card--todos{grid-column:1/-1!important}
+.cl-card--todos>.cl-body{column-width:440px;column-gap:32px}
+.cl-card--todos>.cl-body>.cl-li{break-inside:avoid;-webkit-column-break-inside:avoid}
+
+/* CLIENTES — botão de resumo, barra de progresso e prazo colorido. */
+.cl-card{position:relative}
+.cl-copy{position:absolute;top:12px;right:12px;z-index:2;
+  border:1px solid var(--bd);background:var(--c0);color:var(--m,#7a3b46);
+  font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.01em;
+  padding:5px 11px;border-radius:8px;cursor:pointer;line-height:1;
+  transition:background .15s,border-color .15s,color .15s}
+.cl-copy:hover{background:var(--m,#7a3b46);color:#fff;border-color:var(--m,#7a3b46)}
+.cl-prog{height:5px;border-radius:4px;background:var(--bds,#ece6df);overflow:hidden;margin:10px 18px 14px}
+.cl-prog>span{display:block;height:100%;background:var(--m,#7a3b46);border-radius:4px}
+.cl-prazo{font-variant-numeric:tabular-nums}
+.cl-prazo--atr{color:var(--red);font-weight:600}
+.cl-prazo--urg{color:var(--amb,#B8860B);font-weight:600}
+
+/* Selo de gravação na nuvem, ao lado do Backup. */
+.save-status{align-self:center;font-size:11px;font-weight:600;letter-spacing:.01em;
+  padding:5px 10px;border-radius:999px;white-space:nowrap;
+  background:rgba(120,160,120,.16);color:#3f7d4f}
+.save-status.saving{background:rgba(184,134,11,.18);color:#8a6100}
+.save-status.erro{background:rgba(180,60,60,.16);color:#b23c3c}
+
+/* Toast de confirmação (ex.: "Resumo copiado"). */
+#cl-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);
+  background:#2b2b2b;color:#fff;font-size:13px;font-weight:500;padding:10px 18px;
+  border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.22);opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;z-index:9999}
+#cl-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* AGENDA — mesma faixa e mesmo início de conteúdo das demais abas. */
+.agenda-page{
+  max-width:none!important;
+  margin-left:0!important;margin-right:0!important;
+  padding-left:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
+  padding-right:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
+}
+.agenda-workspace{max-width:none!important}
+
+/* Gutter proporcional em telas menores. */
+@media(max-width:1000px){:root{--pjm-gut:24px}}
+@media(max-width:760px){:root{--pjm-gut:16px}}
+</style>
 
 </body>
