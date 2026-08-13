@@ -4936,7 +4936,7 @@ var HT = (function() {
     var d=document.createElement('div');
     d.className='module';d.id='mod-clientes';
     d.innerHTML='<div style="padding:32px 40px 8px">'
-      +'<div style="font-family:Outfit,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.02em;color:var(--t)">Clientes</div>'
+      +'<div style="font-family:Outfit,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.02em;color:var(--t)">Condomínios</div>'
       +'<div style="font-size:12.5px;color:var(--t3);margin-top:3px">Tudo o que está pendente de cada condomínio, obra ou processo</div></div>'
       +'<div style="padding:14px 40px 60px" id="p2-clientes-body"></div>';
     host.parentNode.appendChild(d);
@@ -4945,8 +4945,8 @@ var HT = (function() {
   if(ref&&ref.parentNode&&!document.getElementById('ntab-clientes')){
     var b=document.createElement('button');
     b.className='nav-tab';b.id='ntab-clientes';
-    b.innerHTML='<svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="2.6"/>'
-      +'<path d="M2.5 14c0-3 2.4-5.4 5.5-5.4S13.5 11 13.5 14"/></svg>Clientes';
+    b.innerHTML='<svg viewBox="0 0 16 16"><rect x="3" y="2.2" width="10" height="11.6" rx="1"/>'
+      +'<path d="M6 5.2h.8M9.2 5.2h.8M6 8h.8M9.2 8h.8M6.6 13.8v-2.2h2.8v2.2"/></svg>Condomínios';
     b.onclick=function(){switchMod('clientes');};
     ref.parentNode.insertBefore(b,ref.nextSibling);
   }
