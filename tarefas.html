@@ -1167,207 +1167,6 @@ body{background:var(--bg)!important;color:var(--t)!important}
 .exec-title{font-size:11px;font-weight:700;color:#5D514A;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
 @media(max-width:760px){.agenda-exec-panel{grid-template-columns:1fr}}
 
-
-/* ══════════════════════════════════════
-   REDESIGN LEVE — composição final
-   Mais ritmo visual, menos vazio, sem alterar a lógica
-   ══════════════════════════════════════ */
-:root{
-  --bg:#F4F2EF!important;
-  --c0:#FFFDFC!important;
-  --c1:#FAF8F5!important;
-  --c2:#F1EEEA!important;
-  --m:#652D4D!important;
-  --m1:#4C203A!important;
-  --m2:#7A3E60!important;
-  --ml:#F5EDF2!important;
-  --g:#8B7546!important;
-  --g1:#6B5935!important;
-  --gl:#F8F3E9!important;
-  --bd:#E4DED7!important;
-  --bds:#EEE9E3!important;
-  --t:#2B2622!important;
-  --t2:#625850!important;
-  --t3:#91867D!important;
-  --t4:#B5AAA1!important;
-  --r:14px!important;
-  --rs:10px!important;
-  --sh1:0 1px 2px rgba(45,35,29,.035),0 7px 20px rgba(45,35,29,.035)!important;
-  --sh2:0 3px 8px rgba(45,35,29,.055),0 14px 28px rgba(101,45,77,.055)!important;
-  --sh3:0 16px 44px rgba(45,35,29,.16)!important;
-}
-html{background:var(--bg)!important}
-body{
-  background:
-    radial-gradient(circle at 94% 6%,rgba(244,226,235,.42),transparent 28%),
-    linear-gradient(180deg,#F9F7F4 0%,var(--bg) 42%,#F1EEEA 100%)!important;
-  color:var(--t)!important;
-  font-size:13px!important;
-}
-
-/* Barra superior: presença sem pesar */
-.nav{
-  height:58px!important;
-  background:linear-gradient(120deg,#4C203A 0%,#5B2B49 55%,#4A1E37 100%)!important;
-  box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 8px 24px rgba(54,28,43,.13)!important;
-}
-.nav-brand{min-width:220px!important;padding:0 20px!important;gap:10px!important}
-.nav-logo{width:28px!important;height:28px!important;border-radius:9px!important;background:linear-gradient(145deg,#AD9662,#806A42)!important;border:none!important;box-shadow:0 4px 12px rgba(0,0,0,.12)!important}
-.nav-app-name{font-size:13.5px!important;font-weight:600!important;letter-spacing:.01em!important}
-.nav-app-sub{font-size:10px!important;color:rgba(255,255,255,.52)!important}
-.nav-tabs{gap:4px!important;padding:0 8px!important;align-items:center!important}
-.nav-tab{
-  height:40px!important;margin:0!important;padding:0 13px!important;border-radius:11px!important;
-  font-size:12.4px!important;font-weight:450!important;color:rgba(255,255,255,.60)!important;
-}
-.nav-tab::after{display:none!important}
-.nav-tab:hover{background:rgba(255,255,255,.07)!important;color:#fff!important}
-.nav-tab.on{background:rgba(255,255,255,.13)!important;color:#fff!important;font-weight:550!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)!important}
-.nav-tab svg{opacity:.78!important}
-.nav-tab.on svg{opacity:1!important}
-.nav-tab-ct{margin-left:1px!important;border-radius:999px!important;font-weight:550!important;background:rgba(255,255,255,.14)!important}
-.nav-right{gap:7px!important;padding:0 16px!important;border-left:1px solid rgba(255,255,255,.10)!important}
-.nav-btn-add,.nav-btn-foco,.nav-btn-backup,.nav-btn-ghost{
-  min-height:34px!important;border-radius:10px!important;font-size:12px!important;font-weight:500!important;
-  padding:7px 11px!important;box-shadow:none!important;transform:none!important;
-}
-.nav-btn-add{background:#FFFDFC!important;color:var(--m1)!important;border-color:rgba(255,255,255,.9)!important}
-.nav-btn-add:hover{background:#F8F1F5!important;color:var(--m)!important}
-.nav-btn-foco{background:#927B4C!important;color:#fff!important;border:1px solid rgba(255,255,255,.12)!important}
-.nav-btn-foco:hover{background:#A18752!important}
-.nav-btn-backup{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.78)!important;border-color:rgba(255,255,255,.13)!important}
-.nav-btn-backup:hover{background:rgba(255,255,255,.13)!important;color:#fff!important}
-.save-status{font-size:10px!important;color:rgba(255,255,255,.58)!important;margin-right:2px!important}
-
-/* Estrutura: coluna lateral funcional e conteúdo contínuo */
-.shell{padding-top:58px!important}
-.sb{width:220px!important;background:rgba(255,253,251,.90)!important;border-right:1px solid #E8E1DA!important;backdrop-filter:blur(16px)!important}
-.sb-body{padding:17px 12px!important}
-.sb-sec-lbl{font-size:9.5px!important;font-weight:600!important;letter-spacing:.105em!important;color:#AAA097!important;margin:14px 0 7px!important;padding:0 9px!important}
-.ni{padding:8px 10px!important;border-radius:10px!important;font-size:12.6px!important;color:#665B53!important;margin-bottom:3px!important}
-.ni:hover{background:#F8F1F5!important;color:var(--m)!important}
-.ni.on{background:#F5EDF2!important;color:var(--m)!important;border-color:#E9DCE4!important;font-weight:550!important;box-shadow:none!important}
-.ni.on::before{left:3px!important;width:3px!important;top:22%!important;bottom:22%!important;background:var(--m)!important}
-.ni-ct{font-size:10px!important;min-width:20px!important;padding:2px 6px!important;background:#F1ECE7!important;color:#7A6E65!important}
-.ni.on .ni-ct{background:var(--m)!important;color:#fff!important}
-.sb-div{background:#F0EAE4!important;margin:9px 10px!important}
-.sb-foot{padding:14px!important;background:rgba(255,253,251,.70)!important;border-top:1px solid #EEE8E2!important}
-.sb-upd{border-radius:10px!important;background:#FCFAF8!important}
-.main{height:calc(100vh - 58px)!important;background:transparent!important;scrollbar-color:#D6CCC3 transparent!important}
-.main::-webkit-scrollbar,.proj-body::-webkit-scrollbar{width:8px!important}
-.main::-webkit-scrollbar-thumb,.proj-body::-webkit-scrollbar-thumb{background:#D7CEC6!important;border-radius:20px!important;border:2px solid transparent!important;background-clip:padding-box!important}
-
-/* Agenda: painel de entrada + conteúdo com dois ritmos */
-.agenda-page{
-  max-width:1440px!important;width:100%!important;margin:0 auto!important;padding:30px 42px 64px!important;
-}
-.agenda-header{
-  max-width:none!important;margin:0 0 18px!important;padding:19px 22px 18px!important;
-  border:1px solid #E8E0DA!important;border-radius:18px!important;
-  background:linear-gradient(135deg,#FFFDFC 0%,#FBF6F8 100%)!important;
-  box-shadow:var(--sh1)!important;
-}
-.agenda-greet{font-size:24px!important;line-height:1.12!important;font-weight:600!important;color:var(--m1)!important;margin-bottom:5px!important}
-.agenda-date{font-size:12.3px!important;color:#837970!important}
-.agenda-frase{font-size:12px!important;color:#988C83!important;margin-top:8px!important}
-.agenda-week-pill{background:#fff!important;border-color:#E7DCE3!important;color:var(--m)!important;font-weight:550!important}
-.agenda-dash{
-  max-width:none!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:11px!important;margin:0 0 20px!important;
-}
-.dash-card{
-  min-height:92px!important;padding:15px 16px!important;border-radius:14px!important;background:#FFFDFC!important;
-  border:1px solid #E7E0D9!important;box-shadow:var(--sh1)!important;
-}
-.dash-card::before{width:3px!important;opacity:.9!important}
-.dash-card:hover{transform:translateY(-2px)!important;box-shadow:var(--sh2)!important}
-.dash-num{font-size:23px!important;font-weight:600!important;color:#2C2622!important}
-.dash-lbl{font-size:10.2px!important;letter-spacing:.075em!important;font-weight:600!important;color:#766B62!important;margin-top:8px!important}
-.dash-sub{font-size:11.2px!important;color:#A19890!important;margin-top:2px!important}
-.agenda-workspace{
-  max-width:none!important;grid-template-columns:minmax(0,1fr) 300px!important;gap:20px!important;align-items:start!important;
-}
-.agenda-list{min-width:0!important}
-.agenda-aside{top:78px!important;gap:11px!important}
-.aside-card,.quick-card,.use-card,.exec-col{
-  background:rgba(255,253,251,.95)!important;border:1px solid #E7E0D9!important;border-radius:15px!important;
-  box-shadow:var(--sh1)!important;padding:15px 16px!important;
-}
-.aside-title,.quick-title,.use-title{font-size:10.2px!important;letter-spacing:.085em!important;font-weight:650!important;color:var(--g)!important;margin-bottom:9px!important}
-.aside-line{font-size:11.8px!important;padding:6px 0!important;color:#766B62!important;border-bottom-color:#F0EAE5!important}
-.aside-line b{font-weight:600!important;color:#38302B!important}
-.aside-task{padding:6px 0!important;border-bottom-color:#F0EAE5!important}
-.aside-task-n{font-size:11.8px!important;color:#413833!important}
-.aside-task-s{font-size:10.5px!important;color:#A0978F!important}
-.aside-note,.quick-sub,.use-item{font-size:11.7px!important;color:#786D65!important}
-.quick-card{background:linear-gradient(145deg,#FFFDFC,#F9F3F6)!important}
-.quick-title{color:var(--m1)!important}
-.quick-grid{gap:6px!important}
-.quick-grid input,.quick-grid select{padding:8px 9px!important;border-color:#E1D9D1!important;border-radius:9px!important;font-size:12px!important}
-.quick-btn{padding:8px 10px!important;border-radius:9px!important;font-size:12px!important;background:var(--m)!important}
-.use-card{background:#FFFCF7!important}
-.use-title{color:var(--m1)!important}
-.use-list{gap:7px!important}
-.use-item{font-size:11.7px!important;grid-template-columns:23px 1fr!important}
-.use-num{width:21px!important;height:21px!important;background:#F4EAF0!important;color:var(--m)!important;font-size:10.5px!important}
-.agenda-group{margin-bottom:18px!important}
-.agenda-group-hdr{margin-bottom:8px!important}
-.agenda-group-lbl{font-size:10.3px!important;font-weight:650!important;letter-spacing:.08em!important;color:#665A51!important}
-.agenda-group-cnt{font-size:10.6px!important;color:#AAA097!important}
-.pz-card{
-  min-height:64px!important;padding:13px 15px!important;margin-bottom:7px!important;gap:12px!important;
-  border-radius:13px!important;border:1px solid #E6DFD8!important;background:#FFFDFC!important;box-shadow:var(--sh1)!important;
-}
-.pz-card:hover{transform:translateY(-1px)!important;border-color:#D9CEC5!important;box-shadow:var(--sh2)!important}
-.pz-ico{width:31px!important;height:31px!important;border-radius:9px!important;box-shadow:none!important}
-.pz-ico svg{width:14px!important;height:14px!important;opacity:.8!important}
-.pz-name{font-size:13px!important;font-weight:500!important;color:#2C2622!important}
-.pz-sub{font-size:11px!important;color:#91867D!important;margin-top:4px!important}
-.pz-area-tag{font-size:9.8px!important;font-weight:550!important;border-radius:6px!important}
-.pz-right{min-width:92px!important}.pz-date{font-size:10.8px!important;color:#6E635A!important}.pz-badge{font-size:8.8px!important;font-weight:600!important;padding:3px 8px!important}
-.agenda-prog{margin-top:0!important;border-radius:15px!important;padding:15px 16px!important;background:#FFFDFC!important;box-shadow:var(--sh1)!important}
-.agenda-prog-ttl{font-size:12px!important}.agenda-prog-pct{font-size:18px!important}.agenda-prog-sub{font-size:11px!important}.prog-tr{height:5px!important}
-.agenda-empty,.empty,.ok-msg{border-radius:15px!important;padding:38px 22px!important;background:#FFFDFC!important;border:1px dashed #DCD2C9!important;box-shadow:none!important}
-
-/* Tarefas, SENGE e hábitos: mesma linguagem visual */
-.proj-header{padding:26px 42px 8px!important}.proj-title{font-size:20px!important;font-weight:600!important;color:#302924!important}.proj-sub{font-size:12.2px!important;color:#887D74!important;margin-top:4px!important}
-.proj-toolbar{padding:11px 42px 12px!important;gap:10px!important;background:rgba(244,242,239,.82)!important;border-bottom:1px solid #E9E3DD!important;backdrop-filter:blur(14px)!important}
-.proj-search{width:250px!important;padding:8px 11px!important;border-color:#DED6CE!important;border-radius:9px!important;background:#FFFDFC!important;font-size:12px!important}
-.srow{gap:6px!important}.spill{padding:4px 10px!important;border-radius:999px!important;font-size:11.2px!important;font-weight:500!important;background:#FFFDFC!important}
-.proj-add-btn{padding:8px 13px!important;border-radius:9px!important;background:var(--m)!important;font-size:12px!important;font-weight:550!important}
-.proj-body{padding:15px 42px 64px!important}
-.divdr{margin:17px 0 8px!important;font-size:9.5px!important;color:#A59A91!important}
-.pc,.sgrp,.mtg-panel,.hcard,.hstat-card{border-radius:14px!important;border-color:#E6DFD8!important;background:#FFFDFC!important;box-shadow:var(--sh1)!important}
-.pc{margin-bottom:7px!important;border-left-width:3px!important}.pc:hover,.sgrp:hover,.mtg-panel:hover,.hcard:hover{transform:translateY(-1px)!important;box-shadow:var(--sh2)!important}
-.pc-hdr{padding:13px 15px!important}.pc-nm{font-size:13.2px!important;font-weight:500!important}.pc-sub{font-size:11px!important;margin-top:3px!important}.pc-next{font-size:11.5px!important;padding:6px 8px!important;border-radius:8px!important}.pc-body{padding:6px 15px 15px!important}
-.cklbl,.mtg-cklbl{font-size:12.5px!important}.ck-check{padding:4px 6px!important}.ckbox,.mtg-ckbox{width:15px!important;height:15px!important}.ctrl-row{margin-bottom:8px!important}.ctrl-date,.ctrl-sel,.ctrl-obs{border-color:#E0D8D0!important;border-radius:9px!important}.act-btn,.hact-btn{padding:6px 11px!important;border-radius:9px!important;font-size:11.5px!important}
-.postit-box{margin:0 42px 14px!important;padding:13px 15px 11px!important;border-radius:14px!important;background:#FFFBF1!important;border-color:#EADFBF!important;box-shadow:var(--sh1)!important}
-.postit-ttl{font-size:12.5px!important;font-weight:600!important;color:#756127!important}.postit-sub{font-size:11px!important}.postit-add-row input{border-color:#E6D9B9!important;border-radius:9px!important}.postit-add-row button{border-radius:9px!important;background:var(--g)!important;padding:8px 13px!important}
-.hstats-grid{gap:9px!important;margin-bottom:16px!important}.hstat-card{padding:14px 16px!important}.hstat-val{font-size:24px!important;font-weight:600!important}.hstat-lbl{font-size:11px!important}.hcard-main{padding:13px 15px!important}.hcard-nm{font-size:13px!important}.hcard-body{padding:11px 15px 13px!important}
-
-/* Dialogos e portão de acesso */
-#m-add .mbox,#m-upd .mbox,#hmodal .mbox{border-radius:18px!important;background:#FFFDFC!important;box-shadow:var(--sh3)!important;padding:24px!important}
-.mttl{font-size:16px!important;font-weight:600!important;color:var(--m1)!important;margin-bottom:14px!important}.mf{gap:9px!important}.mf input,.mf select,.mf textarea{border-color:#DED6CE!important;border-radius:9px!important;background:#fff!important}
-.mbtn-s{background:var(--m)!important}.mbtn-c{background:#F5F1ED!important;border-color:#E2DAD2!important}
-#cloud-gate{background:radial-gradient(circle at 50% 0%,#70415B 0%,#4B1E39 48%,#35152A 100%)!important}
-#cloud-loading{color:#F7F2EA!important}
-#cloud-login-form{width:360px!important;padding:30px!important;border-radius:20px!important;background:rgba(255,253,250,.97)!important;box-shadow:0 24px 70px rgba(25,10,20,.32)!important}
-#cloud-login-form input{border-color:#E0D7CF!important;border-radius:10px!important;padding:11px 12px!important}
-#cloud-login-form button{border-radius:10px!important;background:var(--m)!important;padding:11px!important}
-
-/* Responsividade: a leveza permanece em telas menores */
-@media(max-width:1240px){
-  .agenda-page{padding-left:30px!important;padding-right:30px!important}
-  .agenda-workspace{grid-template-columns:1fr!important}.agenda-aside{position:static!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .proj-header,.proj-toolbar,.proj-body{padding-left:30px!important;padding-right:30px!important}.postit-box{margin-left:30px!important;margin-right:30px!important}
-}
-@media(max-width:900px){
-  .nav-brand{min-width:188px!important}.nav-tab{padding:0 10px!important}.nav-right{padding:0 8px!important}.nav-btn-backup span,.nav-btn-add span,.nav-btn-foco span{display:none!important}
-  .agenda-dash{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
-@media(max-width:700px){
-  .nav{height:54px!important}.shell{padding-top:54px!important}.main{height:calc(100vh - 54px)!important}.sb{display:none!important}.nav-brand{min-width:auto!important;padding:0 12px!important}.nav-app-sub{display:none!important}.nav-tabs{overflow-x:auto!important;padding:0 4px!important}.nav-tab{height:36px!important;padding:0 9px!important}.nav-right{gap:4px!important}.save-status{display:none!important}
-  .agenda-page{padding:20px 16px 54px!important}.agenda-header{padding:16px!important;border-radius:15px!important}.agenda-greet{font-size:21px!important}.agenda-dash{grid-template-columns:1fr!important;gap:8px!important}.dash-card{min-height:78px!important}.agenda-aside{grid-template-columns:1fr!important}.pz-card{align-items:flex-start!important}.pz-right{min-width:auto!important}.pc-hdr{flex-direction:column!important;align-items:flex-start!important}.pc-rt{width:100%!important;justify-content:space-between!important}.proj-header,.proj-toolbar,.proj-body{padding-left:16px!important;padding-right:16px!important}.proj-toolbar{flex-wrap:wrap!important}.proj-search{width:100%!important}.srow{order:3!important;width:100%!important}.proj-add-btn{margin-left:auto!important}.postit-box{margin-left:16px!important;margin-right:16px!important}.quick-row{grid-template-columns:1fr!important}.agenda-exec-panel{grid-template-columns:1fr!important}
-}
 </style>
 </head>
 <body>
@@ -1749,7 +1548,7 @@ function urgCalc(dt,f){
   if(df<=7)return 'sem';
   return 'ok';
 }
-var UCLS={atr:'r',urg:'r',sem:'a',ok:'g',wait:'p',x:'x'};
+var UCLS={atr:'r',urg:'r',sem:'d',ok:'g',wait:'p',x:'x'};
 var ULBL={atr:'Atrasado',urg:'Urgente',sem:'Esta semana',ok:'Tranquilo',wait:'Aguardando',x:'Sem prazo'};
 var UPRI={atr:0,urg:1,sem:2,ok:3,wait:3,x:4};
 function ucls(u){return UCLS[u]||'x';}
@@ -1980,7 +1779,7 @@ function renderList(projs,showArea,noHist){
   active.sort(function(a,b){return upri(urgCalc(a.date,a.forceUrgency))-upri(urgCalc(b.date,b.forceUrgency));});
   var bk={atr:[],urg:[],sem:[],ok:[],wait:[],x:[]};
   active.forEach(function(p){var u=urgCalc(p.date,p.forceUrgency);(bk[u]||bk.x).push(p);});
-  var SECS=[['atr','Atrasadas','r'],['urg','Urgente','r'],['sem','Esta semana','a'],['ok','Tranquilo','g'],['wait','Aguardando','p'],['x','Sem prazo','x']];
+  var SECS=[['atr','Atrasadas','r'],['urg','Urgente','r'],['sem','Esta semana','d'],['ok','Tranquilo','g'],['wait','Aguardando','p'],['x','Sem prazo','x']];
   var h='';
   SECS.forEach(function(s){if(!bk[s[0]].length)return;h+='<div class="divdr"><span class="ddot '+s[2]+'"></span>'+s[1]+'</div>';bk[s[0]].forEach(function(p){h+=mkCard(p,showArea);});});
   if(!active.length)h='<div class="empty">Nenhuma tarefa ativa.</div>';
@@ -2655,7 +2454,7 @@ document.addEventListener('drop',function(ev){
       var grupos = [
         { key:'atr',  lbl:'Atrasadas',      cls:'red', items:[] },
         { key:'urg',  lbl:'Vence em breve', cls:'amb', items:[] },
-        { key:'sem',  lbl:'Esta semana',    cls:'grn', items:[] },
+        { key:'sem',  lbl:'Esta semana',    cls:'gld', items:[] },
         { key:'wait', lbl:'Aguardando',     cls:'neu', items:[] },
         { key:'ok',   lbl:'Sem urgência',   cls:'grn', items:[] },
         { key:'x',    lbl:'Sem prazo',      cls:'neu', items:[] }
@@ -2681,7 +2480,7 @@ document.addEventListener('drop',function(ev){
       h += '<div class="agenda-dash">'
         + '<div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">exigem decisão</div></div>'
         + '<div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div>'
-        + '<div class="dash-card grn" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
+        + '<div class="dash-card gld" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
         + '<div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">retornos externos</div></div>'
         + '</div>';
       if(totalLista===0){
@@ -2744,8 +2543,8 @@ function _badgeLabel(u, ds){
   if(u === 'wait') return 'AGUARDANDO';
   return 'SEM PRAZO';
 }
-function _badgeCls(u){ return u==='atr'?'red': u==='urg'?'amb': u==='sem'?'grn': u==='wait'?'neu':'neu'; }
-function _icoCls(u){ return u==='atr'?'red': u==='urg'?'amb': u==='sem'?'grn':'neu'; }
+function _badgeCls(u){ return u==='atr'?'red': u==='urg'?'amb': u==='sem'?'gld': u==='wait'?'neu':'neu'; }
+function _icoCls(u){ return u==='atr'?'red': u==='urg'?'amb': u==='sem'?'gld':'neu'; }
 function _icoSvg(u){
   if(u === 'atr') return '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r=".7" fill="currentColor"/></svg>';
   if(u === 'urg') return '<svg viewBox="0 0 16 16"><path d="M13 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="9" y2="9"/></svg>';
@@ -2820,7 +2619,7 @@ function renderAgenda(){
   var grupos = [
     { key:'atr',  lbl:'Atrasadas',       cls:'red', items:[] },
     { key:'urg',  lbl:'Vence em breve',  cls:'amb', items:[] },
-    { key:'sem',  lbl:'Esta semana',     cls:'grn', items:[] },
+    { key:'sem',  lbl:'Esta semana',     cls:'gld', items:[] },
     { key:'wait', lbl:'Aguardando',      cls:'neu', items:[] },
     { key:'ok',   lbl:'Sem urgência',    cls:'grn', items:[] },
     { key:'x',    lbl:'Sem prazo',       cls:'neu', items:[] }
@@ -2851,7 +2650,7 @@ function renderAgenda(){
   h += '<div class="agenda-dash">'
     + '<div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">exigem decisão</div></div>'
     + '<div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div>'
-    + '<div class="dash-card grn" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
+    + '<div class="dash-card gld" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
     + '<div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">retornos externos</div></div>'
     + '</div>';
 
@@ -3298,7 +3097,7 @@ goTo = function(v){ /* no-op — navegação gerenciada por switchMod/agSetFiltr
       var grupos = [
         { key:'atr',  lbl:'Atrasadas',      cls:'red', items:[] },
         { key:'urg',  lbl:'Vence em breve', cls:'amb', items:[] },
-        { key:'sem',  lbl:'Esta semana',    cls:'grn', items:[] },
+        { key:'sem',  lbl:'Esta semana',    cls:'gld', items:[] },
         { key:'wait', lbl:'Aguardando',     cls:'neu', items:[] },
         { key:'ok',   lbl:'Sem urgência',   cls:'grn', items:[] },
         { key:'x',    lbl:'Sem prazo',      cls:'neu', items:[] }
@@ -3324,7 +3123,7 @@ goTo = function(v){ /* no-op — navegação gerenciada por switchMod/agSetFiltr
       h += '<div class="agenda-dash">'
         + '<div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">exigem decisão</div></div>'
         + '<div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div>'
-        + '<div class="dash-card grn" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
+        + '<div class="dash-card gld" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
         + '<div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">retornos externos</div></div>'
         + '</div>';
       if(totalLista===0){
@@ -3809,7 +3608,7 @@ var HT = (function() {
       var grupos = [
         { key:'atr',  lbl:'Atrasadas',      cls:'red', items:[] },
         { key:'urg',  lbl:'Vence em breve', cls:'amb', items:[] },
-        { key:'sem',  lbl:'Esta semana',    cls:'grn', items:[] },
+        { key:'sem',  lbl:'Esta semana',    cls:'gld', items:[] },
         { key:'wait', lbl:'Aguardando',     cls:'neu', items:[] },
         { key:'ok',   lbl:'Sem urgência',   cls:'grn', items:[] },
         { key:'x',    lbl:'Sem prazo',      cls:'neu', items:[] }
@@ -3835,7 +3634,7 @@ var HT = (function() {
       h += '<div class="agenda-dash">'
         + '<div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">exigem decisão</div></div>'
         + '<div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div>'
-        + '<div class="dash-card grn" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
+        + '<div class="dash-card gld" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">para planejar no papel</div></div>'
         + '<div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">retornos externos</div></div>'
         + '</div>';
       if(totalLista===0){
@@ -3962,7 +3761,7 @@ var HT = (function() {
     var semana=atr.concat(urg,sem).slice(0,5);
     var h='<div class="agenda-exec-panel">';
     h+='<div class="exec-col"><div class="exec-title">Ações da semana</div>';
-    if(semana.length){ semana.forEach(function(p){ h+=miniTask(p,statusOf(p)==='atr'?'red':(statusOf(p)==='urg'?'amb':'grn')); }); }
+    if(semana.length){ semana.forEach(function(p){ h+=miniTask(p,statusOf(p)==='atr'?'red':(statusOf(p)==='urg'?'amb':'gld')); }); }
     else h+='<div class="aside-empty">Nenhuma tarefa atrasada ou da semana.</div>';
     h+='</div>';
     h+='<div class="exec-col"><div class="exec-title">Cobrar / aguardar retorno</div>';
@@ -3996,7 +3795,7 @@ var HT = (function() {
       var grupos=[
         {key:'atr',lbl:'Atrasadas',cls:'red',items:[]},
         {key:'urg',lbl:'Vence em breve',cls:'amb',items:[]},
-        {key:'sem',lbl:'Esta semana',cls:'grn',items:[]},
+        {key:'sem',lbl:'Esta semana',cls:'gld',items:[]},
         {key:'wait',lbl:'Aguardando',cls:'neu',items:[]},
         {key:'ok',lbl:'Sem urgência',cls:'grn',items:[]},
         {key:'x',lbl:'Sem prazo',cls:'neu',items:[]}
@@ -4013,7 +3812,7 @@ var HT = (function() {
       h+='<div class="agenda-dash">'
         + '<div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">resolver ou reagendar</div></div>'
         + '<div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div>'
-        + '<div class="dash-card grn" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">planejar no papel</div></div>'
+        + '<div class="dash-card gld" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">planejar no papel</div></div>'
         + '<div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">retornos externos</div></div></div>';
       h+='<div class="agenda-workspace"><section class="agenda-list">';
       if(totalLista===0){
@@ -4211,7 +4010,7 @@ var HT = (function() {
       else if(_agFiltro==='sem') lista=ativos.filter(function(p){return status2(p)==='sem';});
       else if(_agFiltro==='wait') lista=ativos.filter(function(p){return status2(p)==='wait';});
       else lista=ativos;
-      var grupos=[{key:'atr',lbl:'Atrasadas',cls:'red',items:[]},{key:'urg',lbl:'Vence em breve',cls:'amb',items:[]},{key:'sem',lbl:'Esta semana',cls:'grn',items:[]},{key:'wait',lbl:'Aguardando',cls:'neu',items:[]},{key:'ok',lbl:'Sem urgência',cls:'grn',items:[]},{key:'x',lbl:'Sem prazo',cls:'neu',items:[]}];
+      var grupos=[{key:'atr',lbl:'Atrasadas',cls:'red',items:[]},{key:'urg',lbl:'Vence em breve',cls:'amb',items:[]},{key:'sem',lbl:'Esta semana',cls:'gld',items:[]},{key:'wait',lbl:'Aguardando',cls:'neu',items:[]},{key:'ok',lbl:'Sem urgência',cls:'gld',items:[]},{key:'x',lbl:'Sem prazo',cls:'neu',items:[]}];
       lista.forEach(function(p){var u=status2(p); var gr=grupos.find(function(g){return g.key===u;})||grupos[5]; gr.items.push(p);});
       grupos.forEach(function(g){g.items.sort(function(a,b){return upri(status2(a))-upri(status2(b));});});
       var totalLista=grupos.reduce(function(a,g){return a+g.items.length;},0);
@@ -4220,7 +4019,7 @@ var HT = (function() {
       var dStr=today.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
       var semN=Math.ceil((((today-new Date(today.getFullYear(),0,1))/86400000)+new Date(today.getFullYear(),0,1).getDay()+1)/7);
       var h='<div class="agenda-header"><div class="agenda-greet">'+greet+', Jéssica.</div><div class="agenda-date"><span>'+dStr.charAt(0).toUpperCase()+dStr.slice(1)+'</span><span class="agenda-week-pill">Semana '+semN+'</span></div><div class="agenda-frase">A tela inicial serve para escolher o que executar, não para controlar tudo ao mesmo tempo.</div></div>';
-      h+='<div class="agenda-dash"><div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">resolver ou reagendar</div></div><div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div><div class="dash-card grn" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">base da agenda da semana</div></div><div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">cobranças e retornos</div></div></div>';
+      h+='<div class="agenda-dash"><div class="dash-card red" onclick="agSetFiltro(\'atr\')"><div class="dash-num">'+cAtr+'</div><div class="dash-lbl">Atrasadas</div><div class="dash-sub">resolver ou reagendar</div></div><div class="dash-card amb" onclick="agSetFiltro(\'urg\')"><div class="dash-num">'+cUrg+'</div><div class="dash-lbl">Urgentes</div><div class="dash-sub">próximos 2 dias</div></div><div class="dash-card gld" onclick="agSetFiltro(\'sem\')"><div class="dash-num">'+cSem+'</div><div class="dash-lbl">Esta semana</div><div class="dash-sub">base da agenda da semana</div></div><div class="dash-card neu" onclick="agSetFiltro(\'wait\')"><div class="dash-num">'+cWait+'</div><div class="dash-lbl">Aguardando</div><div class="dash-sub">cobranças e retornos</div></div></div>';
       h+='<div class="agenda-workspace"><section class="agenda-list">';
       var totalListaVisivel=grupos.reduce(function(a,g){return a+(g.key!=='x'&&g.key!=='ok'?g.items.length:0);},0);
       if(totalListaVisivel===0){
@@ -5639,6 +5438,20 @@ var HT = (function() {
 })();
 </script>
 
+<script>
+/* Post-it recolhível na Empresa: começa fechado, o cabeçalho abre/fecha. */
+(function(){
+  function initPostit(){
+    var box=document.getElementById('postit-emp'); if(!box) return;
+    if(!box._pitInit){ box._pitInit=true; box.classList.add('collapsed');
+      var hdr=box.querySelector('.postit-hdr');
+      if(hdr) hdr.addEventListener('click',function(){ box.classList.toggle('collapsed'); });
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initPostit); else initPostit();
+})();
+</script>
+
 <style id="camada-design-4-distribuicao">
 /* ============================================================
    CAMADA DE DESIGN 4 — DISTRIBUIÇÃO NO DESKTOP
@@ -5750,14 +5563,40 @@ var HT = (function() {
   transition:opacity .2s,transform .2s;z-index:9999}
 #cl-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* AGENDA — mesma faixa e mesmo início de conteúdo das demais abas. */
-.agenda-page{
-  max-width:none!important;
-  margin-left:0!important;margin-right:0!important;
-  padding-left:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
-  padding-right:max(var(--pjm-gut),calc((100% - var(--pjm-band))/2))!important;
-}
-.agenda-workspace{max-width:none!important}
+/* AGENDA — mantém a largura enxuta que já estava calibrada (sem esticar
+   os cards e criar vão à direita) e dá respiro à saudação no topo. */
+.agenda-page{padding-top:42px!important}
+.agenda-greet{line-height:1.18!important;margin-bottom:7px!important}
+.agenda-header,.agenda-dash,.agenda-workspace{max-width:1360px!important;margin-left:auto!important;margin-right:auto!important}
+
+/* Agenda respira: fora os blocos "Caixa de entrada" e "Semana para escrever"
+   (o aside), e a lista passa a ocupar a largura toda. */
+.agenda-aside{display:none!important}
+.agenda-workspace{grid-template-columns:1fr!important}
+
+/* Empresa: Post-it recolhido numa faixa fina que abre só ao clicar,
+   sem o blocão amarelo ocupando a tela. */
+#postit-emp .postit-hdr{cursor:pointer}
+#postit-emp.collapsed{background:#FCFAF7!important;border:1px dashed #E2DBD2!important;padding:9px 14px!important;box-shadow:none!important;margin-bottom:12px!important}
+#postit-emp.collapsed .postit-sub,#postit-emp.collapsed .postit-add-row,#postit-emp.collapsed #postit-list-emp{display:none!important}
+#postit-emp.collapsed .postit-ttl{font-size:12.5px!important;color:#7E736A!important;font-weight:600!important}
+#postit-emp.collapsed .postit-ttl::after{content:" · abrir";color:#9B9188;font-weight:400;font-size:11px}
+
+/* Uma única aba para o trabalho de cliente: "Empresa". A visão por
+   condomínio deixa de ser aba separada (era o que gerava a confusão de
+   "duas coisas iguais"). O módulo continua no código, apenas não é exibido. */
+#ntab-clientes{display:none!important}
+
+/* Dourado para "Esta semana" — uma cor própria, distinta do verde de
+   "confortável", e uniforme entre o badge e o painel (que antes divergiam:
+   um mostrava âmbar, o outro verde). */
+:root{--gld:#8A6410;--gld-bg:#FBF4D8;--gld-bd:#E9D89E;--gld-bar:#C9A22B}
+.ub.d{background:var(--gld-bg)!important;color:var(--gld)!important;border-color:var(--gld-bd)!important}
+.ddot.d{background:var(--gld-bar)!important}
+.dash-card.gld::before{background:var(--gld-bar)!important}
+.agenda-group-dot.gld{background:var(--gld-bar)!important}
+.pz-badge.gld{background:var(--gld-bg)!important;color:var(--gld)!important;border:1px solid var(--gld-bd)!important}
+.aside-bullet.gld{background:var(--gld-bar)!important}
 
 /* Barra de navegação: abas roláveis quando não cabem, e os botões da
    direita (Backup, Importar, Vincular) sempre visíveis — nada mais fica
@@ -5779,15 +5618,6 @@ var HT = (function() {
 /* Gutter proporcional em telas menores. */
 @media(max-width:1000px){:root{--pjm-gut:24px}}
 @media(max-width:760px){:root{--pjm-gut:16px}}
-
-/* Patch final de encaixe: impede que conteúdos laterais imponham largura mínima. */
-@media(min-width:1181px){
-  .agenda-workspace{grid-template-columns:minmax(0,1fr) minmax(0,320px)!important;gap:20px!important;}
-}
-.agenda-list,.agenda-aside,.agenda-aside>*{min-width:0!important;}
-.agenda-aside>*{width:100%!important;box-sizing:border-box!important;overflow:hidden!important;}
-.agenda-aside input,.agenda-aside select,.agenda-aside textarea{max-width:100%!important;min-width:0!important;box-sizing:border-box!important;}
-.agenda-empty,.empty,.ok-msg{min-height:0!important;padding:28px 22px!important;}
-@media(max-width:1180px){.agenda-aside>*{overflow:visible!important;}}
 </style>
+
 </body>
