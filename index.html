@@ -10324,6 +10324,23 @@ firebase.auth().onAuthStateChanged(function(user){
   }
 });
 
+
+/* Reaplica as importações locais (fatura de agosto/setembro e extrato jul-set)
+   depois que os dados da nuvem chegam — sem isso, a sincronização com a nuvem
+   sobrescreve o que acabou de ser importado no carregamento da página, porque
+   ela roda antes do login terminar e a nuvem ainda não tem esses lançamentos. */
+(function(){
+  var _cloudRefreshOriginal = cloudRefreshRuntime;
+  cloudRefreshRuntime = function(data){
+    _cloudRefreshOriginal(data);
+    var reaplicou = false;
+    try{ if(typeof importarFaturaAgosto2026==='function'){importarFaturaAgosto2026();reaplicou=true;} }catch(e){}
+    try{ if(typeof importarFaturaSetembro2026==='function'){importarFaturaSetembro2026();reaplicou=true;} }catch(e){}
+    try{ if(typeof importarExtratoContaCorrenteJulAgoSet==='function'){importarExtratoContaCorrenteJulAgoSet();reaplicou=true;} }catch(e){}
+    if(reaplicou && typeof render==='function')render();
+  };
+})();
+
 el('cloud-login-btn').addEventListener('click', cloudTentarLogin);
 el('cloud-pass').addEventListener('keydown', function(ev){ if(ev.key==='Enter') cloudTentarLogin(); });
 function cloudTentarLogin(){
