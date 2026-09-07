@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Finanças 2026 — versão móvel corrigida</title>
-<!-- v27: evita recarregamento infinito da nuvem em visualizadores iOS e libera modo local com segurança. -->
+<!-- v28: importação da fatura de agosto/2026 (fechada), da fatura de setembro/2026 (em aberto) e do extrato da conta corrente jul-set/2026. -->
 <!-- v20: modulo de planejamento (orcamento por categoria, projecao de fluxo, despesas fixas, pendencias, aviso de virada de ano) e correcao dos separadores no filtro da fatura. -->
 <!-- v19: listas do cartao e da conta corrente ordenadas da data mais recente para a mais antiga. -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
@@ -3780,6 +3780,3396 @@ function importarFaturaMaioPDF(){
 }
 importarFaturaMaioPDF();
 
+/* Lançamentos da fatura de agosto/2026 (fechada, cartões final 0061 e 7734) — importado a partir do PDF da fatura Itaú. */
+var FATURA_AGOSTO_2026_IMPORT=[
+  {
+    "mes": 8,
+    "nome": "CENTRAL GAUCHA DE",
+    "valor": 68.39,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "3/3",
+    "data": "2026-06-19",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZZRSV RS BARRA SUL",
+    "valor": 116.67,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "2/4",
+    "data": "2026-06-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "30017 IGUATEMI PO",
+    "valor": 139.98,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-06-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZZRSV RS BARRA SUL",
+    "valor": -0.03,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-06-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "H&M - Praia de Bel",
+    "valor": 98.91,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "2/6",
+    "data": "2026-06-29",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "YOUCOM FL 400079",
+    "valor": 89.95,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-04",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "LINDT SPRUNGLI BR",
+    "valor": 100.26,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-04",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "LINDT SPRUNGLI BRAZIL",
+    "valor": -0.01,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-04",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 99.9,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ADIQPLU*DR CARLOS",
+    "valor": 58.25,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "2/4",
+    "data": "2026-07-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 15.87,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 15.49,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "POSTO JOCKEY",
+    "valor": 100.0,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FOMERIA",
+    "valor": 43.1,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "F R BAR E RESTAURANTE",
+    "valor": 195.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADOLIVRE*MERCA",
+    "valor": 50.63,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 28.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 33.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "CAPPTA *VIGA BAR E RES",
+    "valor": 78.1,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PANVEL FILIAL 483",
+    "valor": 67.99,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "CE COM CASA PRADO",
+    "valor": 50.0,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "OKIDOKI",
+    "valor": 28.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ELAIZE SILVA PEZZI CIA",
+    "valor": 47.41,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MP *UNICOMPECAS",
+    "valor": 35.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MP *UNICOMPECAS",
+    "valor": 76.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA DROGASIL SA",
+    "valor": 52.57,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 117.8,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "APPLE.COM/BILL",
+    "valor": 59.9,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ApcMiami",
+    "valor": 19.96,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "EC *SHELLBOX",
+    "valor": 258.41,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 15.88,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 34.88,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "AUTO PECAS BELLOLI",
+    "valor": 24.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 10.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BOURBON CANOAS",
+    "valor": 66.51,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAMS COMERCIO DE ALIME",
+    "valor": 12.74,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI PARK CANOAS",
+    "valor": 100.02,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "YOUCOM FL 400079",
+    "valor": 40.46,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "APPLE.COM/BILL",
+    "valor": 34.9,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PANVEL FARMACIAS FILIA",
+    "valor": 53.98,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 6.89,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ApcMiami",
+    "valor": 30.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MP *GEFERSONMACHA",
+    "valor": 10.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "CREEARE ARTIGOS DE PA",
+    "valor": 19.9,
+    "cat": "Estudos",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SUSHI DE CARLI LTDA",
+    "valor": 254.07,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 15.88,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BOURBON CANOAS",
+    "valor": 262.27,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "HORTIFRUTIGRANJEIRO KA",
+    "valor": 42.0,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TENDA HARMONIA",
+    "valor": 21.6,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MOCELLIN COMERCIO DE B",
+    "valor": 19.99,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SUPERLEGAL COMERCI",
+    "valor": 94.99,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "DRIVE AEROPORTO",
+    "valor": 177.5,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TagItau*JESSICAMORAES",
+    "valor": 50.0,
+    "cat": "Trabalho / Empresa",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ALLPARK EMPREENDIMENTO",
+    "valor": 25.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ELAIZE SILVA PEZZI CIA",
+    "valor": 122.39,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MP *PLAYCAMPOS",
+    "valor": 20.0,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "DL*UberRides",
+    "valor": 39.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "DL*UberRides",
+    "valor": 37.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 119.67,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 19.97,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 82.82,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SUPERLEGAL",
+    "valor": 57.5,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 6.89,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADO ITALIANO",
+    "valor": 30.98,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "POSTO JOCKEY",
+    "valor": 50.0,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BISTEK SUPERMERCADOS",
+    "valor": 242.75,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-29",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "CASA DO PAPEL",
+    "valor": 47.96,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-29",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI PARK CANOAS",
+    "valor": 187.65,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 92.81,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PANVEL FILIAL 184",
+    "valor": 29.99,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "DWJ COMERCIO DE AR",
+    "valor": 93.33,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "HOSPITAL SAO LUCAS DA",
+    "valor": 20.32,
+    "cat": "Saúde",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PucCampusHospital",
+    "valor": 35.5,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BacioDiLatte",
+    "valor": 110.8,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Estapar Reserva 29R2K9",
+    "valor": 62.99,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 13.78,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FINODOCE",
+    "valor": 36.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RG CASA DE CARNES E AS",
+    "valor": 103.74,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FARMACIA SAO JOAO",
+    "valor": 22.36,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA DROGASIL SA",
+    "valor": 90.98,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "EC *SHELLBOX",
+    "valor": 264.4,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BOURBON CANOAS",
+    "valor": 55.58,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-01",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA1939",
+    "valor": 141.62,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-08-01",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 14.96,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-01",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FOMERIA",
+    "valor": 16.0,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-01",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "HORTIFRUTIGRANJEIRO KA",
+    "valor": 15.1,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-02",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "UNISUPER BARCELOS II",
+    "valor": 13.6,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-02",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA1530",
+    "valor": 30.46,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-02",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "AH CASA EVENTOS",
+    "valor": 39.5,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-02",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ELAIZE SILVA PEZZI CIA",
+    "valor": 12.08,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-02",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "NAPLES",
+    "valor": 95.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-02",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 70.78,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-03",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 122.3,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-03",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "CEA MODAS 0317 RIO",
+    "valor": 80.0,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-08-04",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PRATOMIL RESTAURANTES",
+    "valor": 308.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-04",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "LYON PARK ESTAC",
+    "valor": 30.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-04",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BOURBON CANOAS",
+    "valor": 142.42,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ApcMiami",
+    "valor": 18.97,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RG CASA DE CARNES E AS",
+    "valor": 143.19,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RG CASA DE CARNES E AS",
+    "valor": 89.41,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "EC *SHELLBOX",
+    "valor": 267.52,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 6.89,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PECANHA ANTONIO CIA LT",
+    "valor": 84.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADO MONEGAT LTDA",
+    "valor": 6.49,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MO KITCHEN MENINO DEUS",
+    "valor": 44.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SAN DIEGO CAFE E BISTR",
+    "valor": 8.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "LINDT SPRUNGLI BRAZIL",
+    "valor": 147.44,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FOMERIA",
+    "valor": 23.77,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "LYON PARK ESTAC",
+    "valor": 30.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BOURBON CANOAS",
+    "valor": 110.0,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "UNISUPER BARCELOS II",
+    "valor": 5.99,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI",
+    "valor": 94.56,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "APPLE.COM/BILL",
+    "valor": 5.9,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 15.78,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PucCampusHospital",
+    "valor": 70.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-09",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "JOCKEY CLUB DO RIO GRA",
+    "valor": 50.0,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-09",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 25.27,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-09",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 6.89,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-09",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 75.02,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "IFD*CARBONI E DIER COM",
+    "valor": 49.46,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ELAIZE SILVA PEZZI CIA",
+    "valor": 36.89,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "O MERCADINHO",
+    "valor": 11.0,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PADARIA DU CHICO",
+    "valor": 45.0,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 18.67,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 14.08,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 22.97,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SABOR DE LUNA PADARIA",
+    "valor": 9.0,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SABOR DE LUNA PADARIA",
+    "valor": 40.0,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "GRAN ARMAZEM",
+    "valor": 125.5,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-12",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FARMACIA SAO JOAO",
+    "valor": 105.88,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-12",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 6.89,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-12",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SUPER BOM CAMPOS VEL",
+    "valor": 15.85,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-12",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FOMERIA",
+    "valor": 39.83,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-12",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BISTEK SUPERMERCADOS",
+    "valor": 369.0,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ADIQPLU*DR CARLOS OSOR",
+    "valor": 41.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 112.66,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA314",
+    "valor": 52.47,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BOURBON CANOAS",
+    "valor": 82.34,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "FAMA PIZZARIA",
+    "valor": 142.0,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "EC *SHELLBOX",
+    "valor": 303.55,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 13.78,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 15.49,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 17.36,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-14",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "APPLE.COM/BILL",
+    "valor": 29.9,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TENDA HARMONIA",
+    "valor": 26.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ScheferEOliveira",
+    "valor": 10.44,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MP *JESSICA",
+    "valor": 51.0,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADO GRISA",
+    "valor": 17.09,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MdCarnesLtda",
+    "valor": 154.91,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 11.97,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 8.98,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-16",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 17.28,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-16",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 30.26,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-16",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BREWFEL",
+    "valor": 39.99,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-17",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "APPLE.COM/BILL",
+    "valor": 8.5,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-17",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BOURBON CANOAS",
+    "valor": 116.66,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-17",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 10.49,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-17",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 8.98,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-17",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI O. NMEYER",
+    "valor": 134.5,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "O MERCADINHO",
+    "valor": 25.7,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 20.67,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PANVEL FARMACIAS 748",
+    "valor": 79.99,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SANTO ANTONIO EVENTOS",
+    "valor": 135.6,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA1939",
+    "valor": 135.54,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-08-19",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MP *SHELLBOX",
+    "valor": 141.54,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-19",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Uber UBER *TRIP HELP.U",
+    "valor": 28.92,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-19",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SEPHORA PORTO ALEGRE",
+    "valor": 30.0,
+    "cat": "Cuidados pessoais",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-19",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ELAIZE SILVA PEZZI CIA",
+    "valor": 68.98,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RG CASA DE CARNES E AS",
+    "valor": 93.83,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "ZAFFARI PARK CANOAS",
+    "valor": 28.88,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA DROGASIL SA",
+    "valor": 68.0,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RAIA438",
+    "valor": 30.43,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "POSTO UNIVERSITARIO",
+    "valor": 115.5,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "COMERCIO VEF",
+    "valor": 45.66,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PANVEL*DIGITAL",
+    "valor": 73.33,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "2/3",
+    "data": "2026-06-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PANVEL*DIGITAL",
+    "valor": -0.02,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-06-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "HMBRASIL *HMBRASIL",
+    "valor": -58.15,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-09",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "AUT*TICPAYBIKEINCA",
+    "valor": 88.57,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "2/4",
+    "data": "2026-07-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "AUT*TICPAYBIKEINCASA",
+    "valor": -0.03,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "WDDRONES E WDAGRO",
+    "valor": 737.5,
+    "cat": "Trabalho / Empresa",
+    "tipo": "cartao",
+    "parcela": "2/12",
+    "data": "2026-07-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Lojas Renner",
+    "valor": 7.87,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Azul Seguros",
+    "valor": 266.45,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "1/10",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "EC *MELIMAIS",
+    "valor": 19.9,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-23",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "IFD*CARBONI E DIER COM",
+    "valor": 47.42,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADO*OUTLETODONTO",
+    "valor": 42.5,
+    "cat": "Saúde",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "IFD *KERO LTDA",
+    "valor": 65.03,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADOLIVRE*MERCADOL",
+    "valor": 388.03,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADOLIVRE*MARINESH",
+    "valor": 206.89,
+    "cat": "Saúde",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Ingresse",
+    "valor": 180.0,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Ingresse",
+    "valor": 90.0,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "APPLE.COM/BILL",
+    "valor": 19.9,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "IFD*MELLO COMERCIO DE",
+    "valor": 40.23,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADO*MERCADOLIV",
+    "valor": 114.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-07-29",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Farmacias Sao Joao sjd",
+    "valor": 109.56,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-29",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "QUERO QUERO FL 109",
+    "valor": 107.4,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-03",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "MERCADOLIVRE*FRUTYDEL",
+    "valor": 127.6,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "BEAUTY HUB VAREJO",
+    "valor": 66.17,
+    "cat": "Cuidados pessoais",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SHOPEE *ISABELATOP",
+    "valor": 19.09,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "AMAZON BR *Amazo",
+    "valor": 67.16,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "1/2",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "RD SAUDE ONLINE",
+    "valor": 101.1,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SENGE R*Sind. dos Eng",
+    "valor": 804.84,
+    "cat": "SENGE",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-16",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Google YouTubePremium",
+    "valor": 269.0,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-18",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "DL*UberRides",
+    "valor": 40.99,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "DL*UberRides",
+    "valor": 40.99,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Google YouTubePremium",
+    "valor": -269.0,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Google YouTubePremium",
+    "valor": 53.9,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "qcymall",
+    "valor": 85.09,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-15",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Anthropic",
+    "valor": 241.65,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Anthropic",
+    "valor": 81.0,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-04",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Anthropic* Claude Sub",
+    "valor": 116.37,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-05",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Anthropic",
+    "valor": 107.8,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Anthropic",
+    "valor": 247.05,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-13",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "OpenAI*ChatGPT Subscr",
+    "valor": 105.85,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-17",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Repasse de IOF (compras internacionais 0061)",
+    "valor": 2.99,
+    "cat": "Taxas / Impostos",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "Repasse de IOF (compras internacionais 7734)",
+    "valor": 31.54,
+    "cat": "Taxas / Impostos",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  }
+];
+function importarFaturaAgosto2026(){
+  if(!DB.items)DB.items=[];
+  function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+  function key(i){return [i.mes,i.tipo,i.data,norm(i.nome),Number(i.valor||0).toFixed(2),i.parcela||''].join('|');}
+  var estoque={};
+  DB.items.forEach(function(i){var k=key(i);estoque[k]=(estoque[k]||0)+1;});
+  var adicionados=0;
+  FATURA_AGOSTO_2026_IMPORT.forEach(function(src){
+    var k=key(src);
+    if(estoque[k]>0){estoque[k]--;return;}
+    var item={id:mkId(),mes:src.mes,nome:src.nome,valor:src.valor,cat:src.cat,tipo:src.tipo,parcela:src.parcela,data:src.data,obs:src.obs,_src:'Agosto2026.pdf'};
+    DB.items.push(item);adicionados++;
+  });
+  if(adicionados>0){DB._faturaAgosto2026ImportadaEm='2026-08-22';dbSave();}
+}
+importarFaturaAgosto2026();
+
+/* Lançamentos da fatura de setembro/2026 (em aberto até 06/09/2026, cartão final 0061 — inclui final 7734) — importado a partir do relatório "Fatura Aberta" do Itaú. Como a fatura ainda não fechou, novas importações futuras vão apenas completar o que faltar (itens repetidos não duplicam). */
+var FATURA_SETEMBRO_2026_IMPORT=[
+  {
+    "mes": 9,
+    "nome": "Iof Compra Internaciona",
+    "valor": 4.07,
+    "cat": "Taxas / Impostos",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-06",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*comercio De Medica",
+    "valor": 150.32,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 8.89,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Tudo Em Make",
+    "valor": 30.0,
+    "cat": "Cuidados pessoais",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "China Center Historico",
+    "valor": 42.9,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Asaas *Senge",
+    "valor": 59.68,
+    "cat": "SENGE",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 19.38,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Anthropic* Claude Sub",
+    "valor": 116.48,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Vonny Cosmeticos",
+    "valor": 36.3,
+    "cat": "Cuidados pessoais",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Humapadariae",
+    "valor": 100.0,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Hotel Scala",
+    "valor": 43.0,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Stb*ladycomerciodearti",
+    "valor": 85.0,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-05",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 8.98,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 20.45,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Apolo Filial 4",
+    "valor": 150.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mp *Aloasushidelivery",
+    "valor": 244.1,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Bourbon Canoas",
+    "valor": 119.85,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Spazio Naturale",
+    "valor": 88.0,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*delivery Alliance",
+    "valor": 29.97,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*afm Comercio De Al",
+    "valor": 43.91,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercadolivre*livraria",
+    "valor": 82.89,
+    "cat": "Estudos",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 10.39,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Casa De Carnes Moacir",
+    "valor": 19.18,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Htm*fabio Lopes Cardos",
+    "valor": 14.99,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Unisuper Barcelos Ii",
+    "valor": 48.26,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercadolivre*mercadol",
+    "valor": 132.3,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Marcelo Somacal",
+    "valor": 103.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 8.98,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia Drogasil Sa",
+    "valor": 47.37,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia Drogasil Sa",
+    "valor": 186.58,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Estrelat Industria E C",
+    "valor": 70.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-02",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Pucpoactnbrp",
+    "valor": 70.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-01",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Posto Garybaldi",
+    "valor": 325.28,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-01",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ferragem Interluz",
+    "valor": 15.0,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-01",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Fomeria",
+    "valor": 36.2,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-09-01",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercado*ghairofici",
+    "valor": 31.94,
+    "cat": "Cuidados pessoais",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Dl*uberrides",
+    "valor": 40.97,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Amazon Digital Br",
+    "valor": 6.99,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Carrefour Cristal",
+    "valor": 48.22,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercadolivre*ghair",
+    "valor": 24.83,
+    "cat": "Cuidados pessoais",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*delivery Alliance",
+    "valor": 38.96,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Sams Club Poa Cristal",
+    "valor": 273.96,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mp *Centralcopias",
+    "valor": 41.4,
+    "cat": "Trabalho / Empresa",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mdcarnesltda",
+    "valor": 105.43,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-30",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 12.38,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-30",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 16.99,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-30",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia Drogasil Sa",
+    "valor": 115.59,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-30",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Viniciuscarvalho",
+    "valor": 21.75,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-30",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Unisuper Barcelos Ii",
+    "valor": 26.07,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-30",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Schefereoliveira",
+    "valor": 31.52,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ec *Shellbox",
+    "valor": 49.19,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Apple.com/bill",
+    "valor": 50.48,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*fomeria Comercio D",
+    "valor": 56.07,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Unisuper Barcelos Ii",
+    "valor": 55.76,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Apcmiami",
+    "valor": 50.0,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Uber Uber *Trip Help.u",
+    "valor": 42.2,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Uber Uber *Trip Help.u",
+    "valor": 37.79,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Fomeria",
+    "valor": 16.52,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "H&m - Iguatemi Por",
+    "valor": 103.55,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "1/4",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Unisuper Barcelos Ii",
+    "valor": 128.4,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Pgz*palmeiras",
+    "valor": 107.1,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "1/5",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Apple.com/bill",
+    "valor": 19.9,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia1939",
+    "valor": 74.94,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-27",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Baterias Freitas",
+    "valor": 165.34,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "1/3",
+    "data": "2026-08-27",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Vpscomerciode",
+    "valor": 50.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-27",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Dl*uberrides",
+    "valor": 26.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-26",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "O Mercadinho",
+    "valor": 24.9,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-26",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Dl*uberrides",
+    "valor": 25.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Bistek Supermercados",
+    "valor": 137.66,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Pdv*agroc Vida",
+    "valor": 134.9,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*carboni E Dier Com",
+    "valor": 85.35,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Lindt Sprungli Brazil",
+    "valor": 89.99,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Shopee *Isabelatop",
+    "valor": -19.09,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Dl*uberrides",
+    "valor": 31.98,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia1939",
+    "valor": 108.7,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Zaffari O. Nmeyer",
+    "valor": 88.23,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-24",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Comercio Vef",
+    "valor": 8.38,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-24",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Unisuper Barcelos Ii",
+    "valor": 28.33,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-23",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ec *Shellbox",
+    "valor": 298.75,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-23",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*biazetto Comercio",
+    "valor": 25.74,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-23",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Apple.com/bill",
+    "valor": 5.5,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-23",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Fomeria",
+    "valor": 28.98,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ec *Melimais",
+    "valor": 19.9,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Comercio Vef",
+    "valor": 8.98,
+    "cat": "Mercadinho",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Bourbon Canoas",
+    "valor": 157.15,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ifd*fomeria Comercio D",
+    "valor": 22.22,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Zaffari O. Nmeyer",
+    "valor": 95.34,
+    "cat": "Supermercado",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Amazon Digital Br",
+    "valor": 19.52,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Amazon Digital Br",
+    "valor": 34.99,
+    "cat": "Assinaturas / Apps",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Fomeria",
+    "valor": 78.3,
+    "cat": "Delivery",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ec *Shellbox",
+    "valor": 49.17,
+    "cat": "Combustível",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-21",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia1939",
+    "valor": 135.54,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-08-19",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Amazon Br *Amazo",
+    "valor": 67.16,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-08-08",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Beauty Hub Varejo",
+    "valor": 66.17,
+    "cat": "Cuidados pessoais",
+    "tipo": "cartao",
+    "parcela": "2/3",
+    "data": "2026-08-06",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Cea Modas 0317 Rio Gra",
+    "valor": -0.01,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Cea Modas 0317 Rio",
+    "valor": 80.0,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-08-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia1939",
+    "valor": -0.01,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-08-01",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Raia1939",
+    "valor": 141.62,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-08-01",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Dwj Comercio De Ar",
+    "valor": 93.33,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "2/3",
+    "data": "2026-07-30",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercado*mercadolivre",
+    "valor": -0.01,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercado*mercadoliv",
+    "valor": 114.0,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Superlegal",
+    "valor": -0.01,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Superlegal",
+    "valor": 57.5,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-28",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ingresse",
+    "valor": 180.0,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Ingresse",
+    "valor": 90.0,
+    "cat": "Lazer",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Superlegal Comerci",
+    "valor": 94.99,
+    "cat": "Casa",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-26",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Youcom Fl 400079",
+    "valor": -0.01,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Youcom Fl 400079",
+    "valor": 40.46,
+    "cat": "Vestuário",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-24",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Panvel Filial 483",
+    "valor": 67.99,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "2/2",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercadolivre*merca",
+    "valor": 50.63,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "2/3",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Azul Seguros",
+    "valor": -0.54,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Panvel Filial 483",
+    "valor": -0.01,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Azul Seguros",
+    "valor": 266.45,
+    "cat": "Carro / Transporte",
+    "tipo": "cartao",
+    "parcela": "2/10",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Mercadolivre*mercadol",
+    "valor": -0.04,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "",
+    "data": "2026-07-22",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Wddrones E Wdagro",
+    "valor": 737.5,
+    "cat": "Trabalho / Empresa",
+    "tipo": "cartao",
+    "parcela": "3/12",
+    "data": "2026-07-20",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Aut*ticpaybikeinca",
+    "valor": 88.57,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "3/4",
+    "data": "2026-07-18",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Adiqplu*dr Carlos",
+    "valor": 58.25,
+    "cat": "Revisar categoria",
+    "tipo": "cartao",
+    "parcela": "3/4",
+    "data": "2026-07-10",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "H&m - Praia De Bel",
+    "valor": 98.91,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "3/6",
+    "data": "2026-06-29",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Zzrsv Rs Barra Sul",
+    "valor": 116.67,
+    "cat": "Restaurante",
+    "tipo": "cartao",
+    "parcela": "3/4",
+    "data": "2026-06-25",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "Panvel*digital",
+    "valor": 73.33,
+    "cat": "Farmácia",
+    "tipo": "cartao",
+    "parcela": "3/3",
+    "data": "2026-06-21",
+    "obs": ""
+  }
+];
+function importarFaturaSetembro2026(){
+  if(!DB.items)DB.items=[];
+  function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+  function key(i){return [i.mes,i.tipo,i.data,norm(i.nome),Number(i.valor||0).toFixed(2),i.parcela||''].join('|');}
+  var estoque={};
+  DB.items.forEach(function(i){var k=key(i);estoque[k]=(estoque[k]||0)+1;});
+  var adicionados=0;
+  FATURA_SETEMBRO_2026_IMPORT.forEach(function(src){
+    var k=key(src);
+    if(estoque[k]>0){estoque[k]--;return;}
+    var item={id:mkId(),mes:src.mes,nome:src.nome,valor:src.valor,cat:src.cat,tipo:src.tipo,parcela:src.parcela,data:src.data,obs:src.obs,_src:'Setembro2026.pdf'};
+    DB.items.push(item);adicionados++;
+  });
+  if(adicionados>0){DB._faturaSetembro2026ImportadaEm='2026-09-07';dbSave();}
+}
+importarFaturaSetembro2026();
+
 /* Lançamentos do extrato Itaú conta corrente — Maio, Junho e 01/Julho/2026. */
 var EXTRATO_CC_MAI_JUN_JUL_IMPORT=[
   {
@@ -4738,6 +8128,447 @@ function importarExtratoContaCorrenteMaiJunJul(){
 }
 
 importarExtratoContaCorrenteMaiJunJul();
+
+/* Lançamentos do extrato Itaú conta corrente — Julho (a partir de 13/07), Agosto e Setembro/2026 (até 08/09).
+   Atenção: neste extrato simplificado do Itaú, todos os lançamentos aparecem na mesma cor (verde), incluindo
+   valores que podem ser saída de caixa — não dá para diferenciar entrada/saída/reembolso só pela cor do PDF.
+   Classifiquei usando o padrão já existente na sua base (SISPAG PIX JESSICA BANDEIRA = Salário/entrada,
+   PIX TRANSF <pessoa> = Reembolso, TED SENGERS = Reembolso SENGE) mas o TED SIND. E E R (R$ 5.286,70,
+   31/07 e 31/08) e alguns PIX TRANSF ficaram como palpite — revise e corrija na tela de lançamentos. */
+var EXTRATO_CC_JUL_AGO_SET_IMPORT=[
+  {
+    "mes": 7,
+    "nome": "REND PAGO APLIC AUT MAIS",
+    "valor": 0.01,
+    "cat": "Movimentação financeira",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-07-13",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "PIX TRANSF ROGERIO15/07",
+    "valor": 185.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-07-15",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "REND PAGO APLIC AUT MAIS",
+    "valor": 0.01,
+    "cat": "Movimentação financeira",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-07-17",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "PIX TRANSF CEZAR H20/07",
+    "valor": 41.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-07-20",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "PIX TRANSF ROBERTO20/07",
+    "valor": 737.5,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-07-20",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "REND PAGO APLIC AUT MAIS",
+    "valor": 0.05,
+    "cat": "Movimentação financeira",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-07-27",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 9495.85,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-07-29",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "TED 041.0100.SIND. E E R",
+    "valor": 5286.7,
+    "cat": "Revisar categoria",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-07-31",
+    "obs": ""
+  },
+  {
+    "mes": 7,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 1225.04,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-07-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PIX TRANSF ROGERIO03/08",
+    "valor": 110.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-03",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PIX TRANSF ROGERIO03/08",
+    "valor": 50.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-03",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TED 041.0030.SENGERS S D",
+    "valor": 338.0,
+    "cat": "Reembolso SENGE",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-07",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TED 041.0030.SENGERS S D",
+    "valor": 257.96,
+    "cat": "Reembolso SENGE",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TED 041.0030.SENGERS S D",
+    "valor": 318.87,
+    "cat": "Reembolso SENGE",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TED 041.0030.SENGERS S D",
+    "valor": 57.0,
+    "cat": "Reembolso SENGE",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-10",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PIX TRANSF DANIEL 11/08",
+    "valor": 3081.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-11",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "REND PAGO APLIC AUT MAIS",
+    "valor": 0.01,
+    "cat": "Movimentação financeira",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-12",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 500.0,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-17",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 1050.0,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 2216.49,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-20",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 1900.0,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PIX TRANSF JESSICA25/08",
+    "valor": 925.0,
+    "cat": "Movimentação financeira",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-25",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "REND PAGO APLIC AUT MAIS",
+    "valor": 0.01,
+    "cat": "Movimentação financeira",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-27",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 415.0,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PIX TRANSF ROGERIO28/08",
+    "valor": 50.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-28",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 1490.0,
+    "cat": "Salário",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "TED 041.0100.SIND. E E R",
+    "valor": 5286.7,
+    "cat": "Revisar categoria",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 8,
+    "nome": "PIX TRANSF PATRICI31/08",
+    "valor": 833.33,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-08-31",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF Casa Do03/09",
+    "valor": 200.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF ANA CRI03/09",
+    "valor": 100.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF Viniciu03/09",
+    "valor": 100.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF MARIA C03/09",
+    "valor": 100.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF ROSANE 03/09",
+    "valor": 100.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "SISPAG PIX JESSICA BANDEIRA",
+    "valor": 16774.34,
+    "cat": "Movimentação financeira",
+    "tipo": "entrada",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF LUIZ FE03/09",
+    "valor": 100.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-03",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF EDUARDO04/09",
+    "valor": 1000.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF GRAZIEL04/09",
+    "valor": 43.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF DANIEL 04/09",
+    "valor": 2000.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-04",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "TBI 0516.08424-1YOU T",
+    "valor": 28.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-08",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "TBI 0516.08424-1TELEF",
+    "valor": 110.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-08",
+    "obs": ""
+  },
+  {
+    "mes": 9,
+    "nome": "PIX TRANSF ROGERIO05/09",
+    "valor": 160.0,
+    "cat": "Reembolso",
+    "tipo": "reembolso",
+    "parcela": "",
+    "data": "2026-09-08",
+    "obs": ""
+  }
+];
+function importarExtratoContaCorrenteJulAgoSet(){
+  if(!DB.items)DB.items=[];
+  function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+  function key(i){return [i.mes,i.tipo,i.data,norm(i.nome),Number(i.valor||0).toFixed(2),i.cat||''].join('|');}
+  var estoque={};
+  DB.items.forEach(function(i){var k=key(i);estoque[k]=(estoque[k]||0)+1;});
+  var adicionados=0;
+  EXTRATO_CC_JUL_AGO_SET_IMPORT.forEach(function(src){
+    var k=key(src);
+    if(estoque[k]>0){estoque[k]--;return;}
+    DB.items.push({id:mkId(),mes:src.mes,nome:src.nome,valor:src.valor,cat:src.cat,tipo:src.tipo,parcela:src.parcela||'',data:src.data,obs:src.obs||'',_src:'extrato-lancamentos.pdf'});
+    adicionados++;
+  });
+  try{
+    var saldoKey='saldo26v1';
+    var saldos=JSON.parse(localStorage.getItem(saldoKey)||'{}');
+    if(saldos[8]===undefined)saldos[8]=295.37;
+    localStorage.setItem(saldoKey,JSON.stringify(saldos));
+  }catch(e){}
+  if(adicionados>0){DB._extratoCcJulAgoSetImportadoEm='2026-09-07';dbSave();}
+}
+importarExtratoContaCorrenteJulAgoSet();
 
 /* v37 — Remover a fatura do cartão de junho/2026 e limpar avisos visuais da renegociação de junho. */
 function removerFaturaCartaoJunhoV37(){
