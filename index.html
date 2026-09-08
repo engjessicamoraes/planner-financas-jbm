@@ -10002,6 +10002,8 @@ document.addEventListener('click',function(ev){
     el('f-nome').value=item.nome;el('f-valor').value=item.valor;el('f-cat').value=item.cat;
     el('f-parcela').value=item.parcela||'';el('f-data').value=item.data||'';el('f-obs').value=item.obs||'';
     tipoSel=item.tipo||'cartao';document.querySelectorAll('.tp[data-t]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===tipoSel);});
+    atualizarVisibCat();
+    el('f-cat').value=item.cat;
     atualizarAvisoData();
     el('modal').classList.add('open');return;
   }
