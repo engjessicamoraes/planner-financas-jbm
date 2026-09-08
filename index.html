@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Finanças 2026 — versão móvel corrigida</title>
-<!-- v28: fatura de agosto/2026 (fechada), fatura de setembro/2026 (em aberto), extrato jul-set, correção Elaize/Verisure=Dani, e correções de sincronização/duplicidade. -->
+<!-- v28: fatura de agosto/2026, fatura de setembro/2026 (em aberto), extrato jul-set (TED SENGE = Salário), Elaize/Verisure = Dani, correções de sincronização/duplicidade. -->
 <!-- v20: modulo de planejamento (orcamento por categoria, projecao de fluxo, despesas fixas, pendencias, aviso de virada de ano) e correcao dos separadores no filtro da fatura. -->
 <!-- v19: listas do cartao e da conta corrente ordenadas da data mais recente para a mais antiga. -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
@@ -1345,10 +1345,10 @@ function mesNumParc(p){
 }
 function refGrupoParc(p){var mn=mesNumParc(p);return mn>=1&&mn<=12?refMesLabel(mn):(p&&p.ref?p.ref:'Sem data definida');}
 
-var CATS_CARTAO=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Casa", "Saúde", "Farmácia", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Revisar categoria"];
-var CATS_TODOS=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Casa", "Saúde", "Farmácia", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Revisar categoria"];
+var CATS_CARTAO=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Combustível", "Casa", "Saúde", "Farmácia", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Revisar categoria"];
+var CATS_TODOS=["Supermercado", "Mercadinho", "Restaurante", "Delivery", "Carro / Transporte", "Combustível", "Casa", "Saúde", "Farmácia", "Cuidados pessoais", "Vestuário", "Assinaturas / Apps", "Lazer", "Trabalho / Empresa", "Estudos", "SENGE", "Dani", "Presentes", "Taxas / Impostos", "Financiamentos", "Movimentação financeira", "Salário", "Reembolso", "Reembolso SENGE", "Reembolso Dani", "Revisar categoria"];
 var METAS={"Supermercado": 2300, "Mercadinho": 200, "Restaurante": 300, "Delivery": 150, "Carro / Transporte": 800, "Casa": 300, "Saúde": 400, "Farmácia": 470, "Cuidados pessoais": 400, "Vestuário": 500, "Assinaturas / Apps": 300, "Lazer": 300, "Trabalho / Empresa": 500, "Estudos": 300, "SENGE": 0, "Dani": 0, "Presentes": 400, "Taxas / Impostos": 200, "Financiamentos": 0, "Movimentação financeira": 0, "Revisar categoria": 0};
-var CORES={"Supermercado": "#5C2444", "Mercadinho": "#7a3560", "Restaurante": "#c0622a", "Delivery": "#d4823a", "Carro / Transporte": "#1a4a6a", "Casa": "#3a5a1a", "Saúde": "#2a5a10", "Farmácia": "#4a8a2a", "Cuidados pessoais": "#8B1A1A", "Vestuário": "#4a1a6a", "Assinaturas / Apps": "#6a2a6a", "Lazer": "#1a6a4a", "Trabalho / Empresa": "#1a3a6a", "Estudos": "#5a4a1a", "SENGE": "#3a1a6a", "Dani": "#9e8e7a", "Presentes": "#6a1a3a", "Taxas / Impostos": "#8a5a00", "Financiamentos": "#465a69", "Movimentação financeira": "#777777", "Revisar categoria": "#5a5a5a"};
+var CORES={"Supermercado": "#5C2444", "Mercadinho": "#7a3560", "Restaurante": "#c0622a", "Delivery": "#d4823a", "Carro / Transporte": "#1a4a6a", "Combustível": "#8a4a12", "Casa": "#3a5a1a", "Saúde": "#2a5a10", "Farmácia": "#4a8a2a", "Cuidados pessoais": "#8B1A1A", "Vestuário": "#4a1a6a", "Assinaturas / Apps": "#6a2a6a", "Lazer": "#1a6a4a", "Trabalho / Empresa": "#1a3a6a", "Estudos": "#5a4a1a", "SENGE": "#3a1a6a", "Dani": "#9e8e7a", "Presentes": "#6a1a3a", "Taxas / Impostos": "#8a5a00", "Financiamentos": "#465a69", "Movimentação financeira": "#777777", "Salário": "#1a6a3a", "Reembolso": "#2a6a6a", "Reembolso SENGE": "#4a2a7a", "Reembolso Dani": "#b0a08c", "Revisar categoria": "#5a5a5a"};
 
 /* Estrutura definitiva de análise: sem "Outros"; "Revisar categoria" é pendência temporária.
    Categorias de foco são as que indicam maior potencial de redução de gastos. */
@@ -8152,11 +8152,7 @@ function importarExtratoContaCorrenteMaiJunJul(){
 importarExtratoContaCorrenteMaiJunJul();
 
 /* Lançamentos do extrato Itaú conta corrente — Julho (a partir de 13/07), Agosto e Setembro/2026 (até 08/09).
-   Atenção: neste extrato simplificado do Itaú, todos os lançamentos aparecem na mesma cor (verde), incluindo
-   valores que podem ser saída de caixa — não dá para diferenciar entrada/saída/reembolso só pela cor do PDF.
-   Classifiquei usando o padrão já existente na sua base (SISPAG PIX JESSICA BANDEIRA = Salário/entrada,
-   PIX TRANSF <pessoa> = Reembolso, TED SENGERS = Reembolso SENGE) mas o TED SIND. E E R (R$ 5.286,70,
-   31/07 e 31/08) e alguns PIX TRANSF ficaram como palpite — revise e corrija na tela de lançamentos. */
+   TED 041.0100.SIND. E E R = repasse/salário do SENGE-RS (confirmado). */
 var EXTRATO_CC_JUL_AGO_SET_IMPORT=[
   {
     "mes": 7,
@@ -8232,7 +8228,7 @@ var EXTRATO_CC_JUL_AGO_SET_IMPORT=[
     "mes": 7,
     "nome": "TED 041.0100.SIND. E E R",
     "valor": 5286.7,
-    "cat": "Revisar categoria",
+    "cat": "Salário",
     "tipo": "entrada",
     "parcela": "",
     "data": "2026-07-31",
@@ -8422,7 +8418,7 @@ var EXTRATO_CC_JUL_AGO_SET_IMPORT=[
     "mes": 8,
     "nome": "TED 041.0100.SIND. E E R",
     "valor": 5286.7,
-    "cat": "Revisar categoria",
+    "cat": "Salário",
     "tipo": "entrada",
     "parcela": "",
     "data": "2026-08-31",
@@ -9706,12 +9702,12 @@ document.querySelectorAll('.tp[data-t]').forEach(function(b){b.addEventListener(
 function atualizarVisibCat(){
   var wrap=el('f-cat-wrap');
   var fparcWrap=el('f-parcela')&&el('f-parcela').parentElement;
-  var showCat=(tipoSel==='cartao'||tipoSel==='saida'||tipoSel==='dani');
+  var showCat=(tipoSel==='cartao'||tipoSel==='saida'||tipoSel==='dani'||tipoSel==='entrada'||tipoSel==='reembolso'||tipoSel==='outros');
   if(wrap)wrap.style.display=showCat?'':'none';
   if(fparcWrap)fparcWrap.style.display=(tipoSel==='cartao')?'':'none';
   var s=el('f-cat');if(!s)return;
   if(tipoSel==='saida'){
-    var CATS_CONTA=['Supermercado','Mercadinho','Restaurante','Delivery','Carro / Transporte','Casa','Saúde','Farmácia','Cuidados pessoais','Vestuário','Assinaturas / Apps','Lazer','Trabalho / Empresa','Estudos','SENGE','Dani','Presentes','Taxas / Impostos','Financiamentos','Movimentação financeira','Revisar categoria'];
+    var CATS_CONTA=['Supermercado','Mercadinho','Restaurante','Delivery','Carro / Transporte','Combustível','Casa','Saúde','Farmácia','Cuidados pessoais','Vestuário','Assinaturas / Apps','Lazer','Trabalho / Empresa','Estudos','SENGE','Dani','Presentes','Taxas / Impostos','Financiamentos','Movimentação financeira','Revisar categoria'];
     s.innerHTML=CATS_CONTA.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
   } else {
     popularCats('f-cat');
@@ -9721,7 +9717,7 @@ el('btn-modal-save').addEventListener('click',function(){
   var nome=el('f-nome').value.trim();
   var valor=parseFloat((el('f-valor').value||'').replace(',','.'));
   var cat=el('f-cat').value;
-  var parc=el('f-parcela').value.trim();
+  var parc=(tipoSel==='cartao')?el('f-parcela').value.trim():'';
   var data=el('f-data').value||new Date(2026,mesAtual-1,1).toISOString().slice(0,10);
   var obs=el('f-obs').value.trim();
   if(!nome){toast('Informe o nome.');return;}
