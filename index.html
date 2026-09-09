@@ -9712,6 +9712,8 @@ function atualizarVisibCat(){
   } else {
     popularCats('f-cat');
   }
+  if(tipoSel==='entrada')s.value='Salário';
+  else if(tipoSel==='reembolso')s.value='Reembolso';
 }
 el('btn-modal-save').addEventListener('click',function(){
   var nome=el('f-nome').value.trim();
@@ -15148,56 +15150,6 @@ try{
       if(b)b.onclick=window.abrirImportFatura;
     },400);
   }
-})();
-</script>
-<script>
-/* Botão de diagnóstico temporário — mostra um resumo em alerta, sem precisar abrir o Console. */
-(function(){
-  var b=document.createElement('button');
-  b.textContent='Diagnóstico';
-  b.style.cssText='position:fixed;bottom:14px;right:14px;z-index:99999;background:#5C2444;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)';
-  b.addEventListener('click', function(){
-    try{
-      var totalAgo = DB.items.filter(function(i){return i.mes===8&&i.tipo==='cartao';}).reduce(function(s,i){return s+Number(i.valor||0);},0);
-      var totalSet = DB.items.filter(function(i){return i.mes===9&&i.tipo==='cartao';}).reduce(function(s,i){return s+Number(i.valor||0);},0);
-      var porSrc={};
-      DB.items.forEach(function(i){var s=i._src||'(sem _src)';porSrc[s]=(porSrc[s]||0)+1;});
-      var srcTxt=Object.keys(porSrc).map(function(k){return k+': '+porSrc[k];}).join(' | ');
-      var agoItens=DB.items.filter(function(i){return i.mes===8&&i.tipo==='cartao';});
-      var amostra=agoItens.slice(0,6).map(function(i){return i.nome+' R$'+i.valor+' ('+i._src+')';}).join('\n');
-      var msg =
-        'Itens no DB: '+DB.items.length+'\n'+
-        'FATURA_AGOSTO_2026_IMPORT existe: '+(typeof FATURA_AGOSTO_2026_IMPORT!=='undefined'?FATURA_AGOSTO_2026_IMPORT.length+' itens':'NÃO EXISTE')+'\n'+
-        'Total cartão Agosto (mes=8): R$ '+totalAgo.toFixed(2)+'\n'+
-        'Total cartão Setembro (mes=9): R$ '+totalSet.toFixed(2)+'\n'+
-        'Itens por _src: '+srcTxt+'\n'+
-        'Itens mes=8 cartao (amostra até 6):\n'+amostra+'\n'+
-        'Usuário logado na nuvem: '+(typeof _cloudUser!=='undefined'&&_cloudUser?_cloudUser.email||_cloudUser.uid:'NÃO LOGADO');
-      alert(msg);
-    }catch(e){
-      alert('Erro ao rodar diagnóstico: '+e.message+'\n'+e.stack);
-    }
-  });
-  document.body.appendChild(b);
-
-  var b2=document.createElement('button');
-  b2.textContent='Reimportar agosto (teste)';
-  b2.style.cssText='position:fixed;bottom:14px;right:150px;z-index:99999;background:#1a4a6a;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)';
-  b2.addEventListener('click', function(){
-    try{
-      var antes=DB.items.filter(function(i){return i.mes===8&&i.tipo==='cartao';}).length;
-      var antesTotal=DB.items.length;
-      importarFaturaAgosto2026();
-      var depois=DB.items.filter(function(i){return i.mes===8&&i.tipo==='cartao';}).length;
-      var depoisTotal=DB.items.length;
-      var totalAgo=DB.items.filter(function(i){return i.mes===8&&i.tipo==='cartao';}).reduce(function(s,i){return s+Number(i.valor||0);},0);
-      alert('Itens mes=8 cartão ANTES: '+antes+' | DEPOIS: '+depois+'\nTotal DB itens ANTES: '+antesTotal+' | DEPOIS: '+depoisTotal+'\nNovo total Agosto: R$ '+totalAgo.toFixed(2)+'\nrender() chamado agora — confira a tela.');
-      if(typeof render==='function')render();
-    }catch(e){
-      alert('ERRO ao reimportar: '+e.message+'\n'+e.stack);
-    }
-  });
-  document.body.appendChild(b2);
 })();
 </script>
 </body>
