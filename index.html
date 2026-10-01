@@ -15720,7 +15720,6 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
 .pl-btn.mini{padding:5px 11px!important;font-size:11.5px!important}
 
 /* ---------- v31: tela do mês ---------- */
-.sec-dani.m31-vazio{display:none!important}
 .m31-fim{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start;margin-top:8px}
 .m31-fim>*{margin-top:0!important;min-width:0}
 .pend31{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--ml,#F7EEF3);border:1px solid rgba(141,95,120,.22);border-radius:14px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--t2,#5A6470)}
@@ -16446,9 +16445,9 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
     var old=$('#c31-mescard');if(old)old.remove();
     if(grid)grid.insertAdjacentHTML('afterend',cardContasMes(mesAtual));
     var fp=$('#fat-progress');if(fp)fp.style.display='none';
-    var dani=$('.sec-dani',v);var topc=$$('.sec',v).filter(function(s){return /Despesas por categoria/.test(s.textContent);})[0];
-    if(dani&&topc&&dani.compareDocumentPosition(topc)&Node.DOCUMENT_POSITION_FOLLOWING)topc.insertAdjacentElement('afterend',dani);
-    if(dani){var vazio=!DB.items.some(function(i){return i.mes===mesAtual&&i.tipo==='dani';});dani.classList.toggle('m31-vazio',vazio);}
+    /* Gastos Dani: sempre visível, logo abaixo das contas do mês, para baixar e enviar a ele */
+    var dani=$('.sec-dani',v),cm=$('#c31-mescard',v);
+    if(dani){dani.classList.remove('m31-vazio');dani.style.display='';if(cm&&cm.nextElementSibling!==dani)cm.insertAdjacentElement('afterend',dani);}
     var cof=$('.sec-cofre',v);if(cof){var temCof=DB.items.some(function(i){return i.mes===mesAtual&&i.tipo==='cofre';});cof.style.display=temCof?'':'none';var dvc=$('.dv-cofre',v);if(dvc&&!temCof)dvc.style.display='none';}
     var diag=$('#diagnostico-mes'),fe=$('#fechamento-mes');
     if(diag&&fe&&!$('#m31-fim')){var w=document.createElement('div');w.id='m31-fim';w.className='m31-fim';diag.parentNode.insertBefore(w,diag);w.appendChild(fe);w.appendChild(diag);}
