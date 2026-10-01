@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Finanças 2026 — versão móvel corrigida</title>
+<!-- v30: extrato até 30/09/2026 (B&M 4.477,64 e 3.483,53; SENGE 5.286,70 e 132,30; CREA 108,39; Patrícia 833,33; IOF 02/10); fatura de setembro paga em 28/09; saldo inicial de outubro −1.673,48. -->
+<!-- v29: fatura de setembro/2026 fechada e extrato 28/07–26/09 conciliados; transferências da B&M como renda. -->
 <!-- v28: fatura de agosto/2026, fatura de setembro/2026 (em aberto), extrato jul-set (TED SENGE = Salário), Elaize/Verisure = Dani, correções de sincronização/duplicidade. -->
 <!-- v20: modulo de planejamento (orcamento por categoria, projecao de fluxo, despesas fixas, pendencias, aviso de virada de ano) e correcao dos separadores no filtro da fatura. -->
 <!-- v19: listas do cartao e da conta corrente ordenadas da data mais recente para a mais antiga. -->
@@ -5948,7 +5950,7 @@ function importarFaturaAgosto2026(){
   });
   if(adicionados>0){DB._faturaAgosto2026ImportadaEm='2026-08-22';dbSave();}
 }
-importarFaturaAgosto2026();
+/* v26: substituída pela sincronização por ciclo (script sync-v26) */
 
 /* Lançamentos da fatura de setembro/2026 (em aberto até 06/09/2026, cartão final 0061 — inclui final 7734) — importado a partir do relatório "Fatura Aberta" do Itaú. Como a fatura ainda não fechou, novas importações futuras vão apenas completar o que faltar (itens repetidos não duplicam). */
 var FATURA_SETEMBRO_2026_IMPORT=[
@@ -7168,7 +7170,7 @@ function importarFaturaSetembro2026(){
   });
   if(adicionados>0){DB._faturaSetembro2026ImportadaEm='2026-09-07';dbSave();}
 }
-importarFaturaSetembro2026();
+/* v26: substituída pela fatura de setembro fechada (script sync-v26) */
 
 /* Limpeza: a fatura de julho tinha compras parceladas (Wddrones, Aut*TicPayBikeInca,
    Adiqplu*Dr Carlos, Zaffari, Youcom, Lindt, H&M, ZZRSV, Panvel*Digital) que, ao
@@ -12672,7 +12674,7 @@ try{
 
   function despesasMes(m){
     return DB.items.filter(function(i){
-      return i.mes===m && TIPOS_DESPESA.indexOf(i.tipo)>=0;
+      return i.mes===m && TIPOS_DESPESA.indexOf(i.tipo)>=0 && i.cat!=='Movimentação financeira';
     });
   }
   function gastoPorCat(m){
@@ -13065,7 +13067,7 @@ try{
   function val(i){return parseFloat(i.valor||0)||0;}
   function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
   function ehFixo(i){return i.fixo===true||!!i._fixa;}
-  function despesasDoMes(m){return DB.items.filter(function(i){return i.mes===m&&DESP.indexOf(i.tipo)>=0;});}
+  function despesasDoMes(m){return DB.items.filter(function(i){return i.mes===m&&DESP.indexOf(i.tipo)>=0&&i.cat!=='Movimentação financeira';});}
   function receitaDoMes(m){
     return DB.items.filter(function(i){return i.mes===m&&RECEITA.indexOf(i.tipo)>=0;})
       .reduce(function(a,i){return a+val(i);},0);
@@ -15150,6 +15152,451 @@ try{
       if(b)b.onclick=window.abrirImportFatura;
     },400);
   }
+})();
+</script>
+<script id="sync-v26">
+var V26_FATURAS={"7":[["2026-07-20","Wddrones E Wdagro",737.5,"Trabalho / Empresa","1/12"],["2026-07-20","Otto Car Pecas E Aces",14.9,"Carro / Transporte",""],["2026-07-20","Zaffari O. Nmeyer",153.37,"Supermercado",""],["2026-07-20","Posto Jockey",100,"Combustível",""],["2026-07-20","Ifd*mi Restaurante Rep",41.99,"Delivery",""],["2026-07-20","Raia3031",149.99,"Farmácia",""],["2026-07-20","Ifd*delivery Alliance",40.96,"Delivery",""],["2026-07-20","Raia3031",221.57,"Farmácia",""],["2026-07-19","Drive Aeroporto",15.9,"Carro / Transporte",""],["2026-07-19","Bourbon Canoas",191.83,"Supermercado",""],["2026-07-19","Dagostini Alimentos",51.21,"Supermercado",""],["2026-07-19","30022 Barra Sul Camic",104.99,"Vestuário",""],["2026-07-19","Sams Club Poa Cristal",230.36,"Supermercado",""],["2026-07-18","Zaffari O. Nmeyer",96.33,"Supermercado",""],["2026-07-18","Iof Compra Internaciona",3.69,"Taxas / Impostos",""],["2026-07-18","Hortifrutigranjeiro Ka",16.67,"Mercadinho",""],["2026-07-18","Aut*ticpaybikeinca",88.57,"Revisar categoria","1/4"],["2026-07-18","Sushi De Carli Ltda",134,"Restaurante",""],["2026-07-18","Ifd*fomeria Comercio D",30.9,"Delivery",""],["2026-07-18","Cappta *Top Chik Prese",56,"Delivery",""],["2026-07-18","Ifd *Kero Ltda",96.61,"Delivery",""],["2026-07-18","B12 Armazem De Produto",12.93,"Mercadinho",""],["2026-07-17","Sim Poa Av Assis Brasi",59.9,"Combustível",""],["2026-07-17","Comercio Vef",11.49,"Mercadinho",""],["2026-07-17","Mcdonalds",119.7,"Restaurante",""],["2026-07-17","Openai *Chatgpt Subscr",105.91,"Assinaturas / Apps",""],["2026-07-17","Pandorga Livros E Brin",44.8,"Estudos",""],["2026-07-16","Casa Do Mato",95,"Mercadinho",""],["2026-07-16","Fomeria",191.83,"Delivery",""],["2026-07-16","Rd Saude Online",36.3,"Farmácia",""],["2026-07-16","Comercio Vef",15.49,"Mercadinho",""],["2026-07-16","Via Napole Restaurante",41.9,"Restaurante",""],["2026-07-16","Raia1530",13.99,"Farmácia",""],["2026-07-16","Elaize Silva Pezzi Cia",45.12,"Dani",""],["2026-07-16","O Mercadinho",7,"Mercadinho",""],["2026-07-15","Unisuper Barcelos Ii",17.07,"Supermercado",""],["2026-07-15","Lhamastche",14,"Restaurante",""],["2026-07-15","Ec *Shellbox",251.93,"Combustível",""],["2026-07-14","Elaize Silva Pezzi Cia",51.31,"Dani",""],["2026-07-14","Mmc Alimentacao Ltda",44,"Restaurante",""],["2026-07-14","O Mercadinho",16.94,"Mercadinho",""],["2026-07-14","Raia Drogasil Sa",86.42,"Farmácia",""],["2026-07-14","Posto Universitario",112.93,"Combustível",""],["2026-07-14","Raia1909",134.91,"Farmácia",""],["2026-07-14","Posto Universitario",100,"Combustível",""],["2026-07-14","Dl*uberrides",33.98,"Carro / Transporte",""],["2026-07-14","Fomeria",28.92,"Delivery",""],["2026-07-14","Dl*uberrides",31.97,"Carro / Transporte",""],["2026-07-13","Lhamastche",185,"Restaurante",""],["2026-07-13","Comercio Vef",10.47,"Mercadinho",""],["2026-07-13","Comercio Vef",10.78,"Mercadinho",""],["2026-07-13","Brandes E Brandes Ferr",10,"Casa",""],["2026-07-12","Rd Saude Online",108.87,"Farmácia",""],["2026-07-12","Bourbon Canoas",154.5,"Supermercado",""],["2026-07-12","Comercio Vef",5.89,"Mercadinho",""],["2026-07-12","Comercio Vef",77.13,"Mercadinho",""],["2026-07-11","Fomeria",60.41,"Delivery",""],["2026-07-11","Ifd*dimed Sa Distribui",49.12,"Farmácia",""],["2026-07-11","Posto Jockey",150,"Combustível",""],["2026-07-11","Ifd*fama004 Pizzaria L",94.04,"Delivery",""],["2026-07-11","Raia1530",81.27,"Farmácia",""],["2026-07-11","Hortifrutigranjeiro Ka",42.91,"Mercadinho",""],["2026-07-11","Fomeria",36.77,"Delivery",""],["2026-07-10","Momentus",44.8,"Lazer",""],["2026-07-10","Dl*uberrides",12.98,"Carro / Transporte",""],["2026-07-10","Fomeria",42.64,"Delivery",""],["2026-07-10","Adiqplu*dr Carlos",58.25,"Saúde","1/4"],["2026-07-10","Pecanha Antonio Cia Lt",54,"Restaurante",""],["2026-07-10","Bistek Supermercados",274.59,"Supermercado",""],["2026-07-10","Pdv*panificio Partenon",48.95,"Mercadinho",""],["2026-07-10","Wow Park Barra Sul",160,"Lazer",""],["2026-07-10","Tagitau*jessicamoraes",50,"Carro / Transporte",""],["2026-07-09","Hmbrasil *Hmbrasil",58.15,"Revisar categoria",""],["2026-07-09","Pecanha Antonio Cia Lt",90,"Restaurante",""],["2026-07-09","Mercadolivre*mercadoli",203.62,"Mercadinho",""],["2026-07-09","Sorveteria Troppo Buo",95.5,"Restaurante",""],["2026-07-08","Ifd*carboni E Dier Com",40.42,"Delivery",""],["2026-07-08","Comercio Vef",6.89,"Mercadinho",""],["2026-07-08","99*",16.1,"Carro / Transporte",""],["2026-07-08","Zaffari O. Nmeyer",99.9,"Supermercado","1/2"],["2026-07-08","Zaffari O. Nmeyer",171.07,"Supermercado",""],["2026-07-07","Fomeria",32.92,"Delivery",""],["2026-07-07","Bistek Supermercados L",31.37,"Supermercado",""],["2026-07-07","Comercio Vef",15.49,"Mercadinho",""],["2026-07-07","Tagitau*jessicamoraes",50,"Carro / Transporte",""],["2026-07-07","Posto Universitario",99.41,"Combustível",""],["2026-07-07","Mania Games",50,"Lazer",""],["2026-07-07","Raia1896",9.98,"Farmácia",""],["2026-07-06","Okidoki*nook",9,"Restaurante",""],["2026-07-06","Iof Compra Internaciona",4.07,"Taxas / Impostos",""],["2026-07-06","Pdv*agroc Vida",134.9,"Combustível",""],["2026-07-06","Posto Universitario",30,"Combustível",""],["2026-07-06","Comercial Mattos Ltda",44.98,"Revisar categoria",""],["2026-07-06","Abastecedora De Combus",100,"Combustível",""],["2026-07-05","Anthropic* Claude Sub",116.49,"Assinaturas / Apps",""],["2026-07-05","Apple.com/bill",5.5,"Assinaturas / Apps",""],["2026-07-05","Dl *Uberrides",13.98,"Carro / Transporte",""],["2026-07-05","Unisuper Barcelos Ii",142.95,"Supermercado",""],["2026-07-05","Allpark Empreendimento",25,"Carro / Transporte",""],["2026-07-05","D Galeto E Gato",60,"Restaurante",""],["2026-07-05","D Galeto E Gato",20,"Restaurante",""],["2026-07-04","Youcom Fl 400079",89.95,"Vestuário","1/2"],["2026-07-04","Iof Compra Internaciona",3.85,"Taxas / Impostos",""],["2026-07-04","Zaffari Park Canoas",185.71,"Supermercado",""],["2026-07-04","Ifd*pontin Restaurante",103.68,"Delivery",""],["2026-07-04","Lindt Sprungli Br",100.26,"Restaurante","1/2"],["2026-07-04","Kalunga Shopping Canoa",37.5,"Estudos",""],["2026-07-03","Anthropic",110,"Assinaturas / Apps",""],["2026-07-03","Unisuper Barcelos I",29.55,"Supermercado",""],["2026-07-02","Otto Car Pecas E Aces",24.9,"Carro / Transporte",""],["2026-07-02","Bourbon Canoas",167.39,"Supermercado",""],["2026-07-02","Panvel Farmacias",20.97,"Farmácia",""],["2026-07-02","Comercio Vef",6.89,"Mercadinho",""],["2026-07-02","Panvel*digital",61.99,"Farmácia",""],["2026-07-01","Fomeria",41.28,"Delivery",""],["2026-07-01","Zaffari O. Nmeyer",73.53,"Supermercado",""],["2026-07-01","Hna*qdb",140.98,"Farmácia",""],["2026-07-01","Carrefour Cns 42",12.95,"Supermercado",""],["2026-06-30","Ifd*carboni E Dier Com",37.32,"Delivery",""],["2026-06-30","Sam S Porto Alegre 494",475.49,"Supermercado",""],["2026-06-30","Apple.com/bill",10.99,"Assinaturas / Apps",""],["2026-06-29","H&m - Praia De Bel",98.91,"Farmácia","1/6"],["2026-06-29","Raia Drogasil Sa",132.25,"Farmácia",""],["2026-06-29","Posto Jockey",50,"Combustível",""],["2026-06-29","Burger King",52.8,"Restaurante",""],["2026-06-29","Ec *Shellbox",272.49,"Combustível",""],["2026-06-29","Unisuper Barcelos Ii",11.67,"Supermercado",""],["2026-06-29","Tagitau*jessicamoraes",50,"Carro / Transporte",""],["2026-06-28","Ah Casa Eventos",47,"Lazer",""],["2026-06-28","Rd Saude Online",34.22,"Farmácia",""],["2026-06-28","Bourbon Canoas",94.01,"Supermercado",""],["2026-06-28","Apple.com/bill",19.9,"Assinaturas / Apps",""],["2026-06-28","Carrefour Cns 42",55.17,"Supermercado",""],["2026-06-27","Elaize Silva Pezzi Cia",70.81,"Dani",""],["2026-06-27","Bourbon Canoas",183.29,"Supermercado",""],["2026-06-27","Fomeria",59.48,"Delivery",""],["2026-06-27","Comercio Vef",16.99,"Mercadinho",""],["2026-06-27","Comercio Vef",10.88,"Mercadinho",""],["2026-06-26","Fomeria",50.3,"Delivery",""],["2026-06-26","Zaffari O. Nmeyer",155.76,"Supermercado",""],["2026-06-26","Bourbon Canoas",95.48,"Supermercado",""],["2026-06-25","Tagitau*jessicamoraes",50,"Carro / Transporte",""],["2026-06-25","Unisuper Barcelos Ii",15.78,"Supermercado",""],["2026-06-25","30017 Iguatemi Po",139.98,"Vestuário","1/2"],["2026-06-25","Bistek Supermercados",302.35,"Supermercado",""],["2026-06-25","Zzrsv Rs Barra Sul",116.67,"Vestuário","1/4"],["2026-06-25","Amazon Br *Amazon Br",45.5,"Revisar categoria",""],["2026-06-25","Sim Poa Ceara",10.78,"Combustível",""],["2026-06-25","Tenda Harmonia",87.16,"Mercadinho",""],["2026-06-24","Comercio Vef",22.77,"Mercadinho",""],["2026-06-24","Nutripao",20.56,"Mercadinho",""],["2026-06-24","Iof Compra Internaciona",1.92,"Taxas / Impostos",""],["2026-06-24","Sim Poa Ipiranga Puc",269.2,"Combustível",""],["2026-06-23","Ec *Melimais",10.33,"Assinaturas / Apps",""],["2026-06-23","Fomeria",33.86,"Delivery",""],["2026-06-23","Ifd*carboni E Dier Com",44.41,"Delivery",""],["2026-06-23","Ec *Shellbox",49.26,"Combustível",""],["2026-06-23","Anthropic",54.8,"Assinaturas / Apps",""],["2026-06-23","Mester Cafe",50,"Restaurante",""],["2026-06-23","Elaize Silva Pezzi Cia",47.16,"Dani",""],["2026-06-23","Anuar Pezzi Supermerca",35.96,"Supermercado",""],["2026-06-22","Verisure Brasil Mo",66.5,"Dani","5/6"],["2026-06-22","Raia1939",51.39,"Farmácia",""],["2026-06-22","Zaffari O. Nmeyer",248.75,"Supermercado",""],["2026-06-22","Verisure Brasil Mo",66.5,"Dani","4/6"],["2026-06-22","Ec *Melimais",9.9,"Assinaturas / Apps",""],["2026-06-22","Comercio Vef",23.78,"Mercadinho",""],["2026-06-22","Verisure Brasil Mo",66.5,"Dani","3/6"],["2026-06-22","Via Napole Restaurante",41.9,"Restaurante",""],["2026-06-22","Verisure Brasil Mo",66.5,"Dani","2/6"],["2026-06-22","Verisure Brasil Mo",66.5,"Dani","6/6"],["2026-06-22","Verisure Brasil Mo",66.5,"Dani","1/6"],["2026-06-21","Panvel Filial 845",51.95,"Farmácia",""],["2026-06-21","Bourbon Canoas",131.43,"Supermercado",""],["2026-06-21","Panvel*digital",73.33,"Farmácia","1/3"],["2026-06-19","Central Gaucha De",68.39,"Taxas / Impostos","2/3"]],"8":[["2026-06-19","CENTRAL GAUCHA DE",68.39,"Taxas / Impostos","3/3"],["2026-06-25","ZZRSV RS BARRA SUL",116.67,"Vestuário","2/4"],["2026-06-25","30017 IGUATEMI PO",139.98,"Vestuário","2/2"],["2026-06-25","ZZRSV RS BARRA SUL",-0.03,"Vestuário",""],["2026-06-29","H&M - Praia de Bel",98.91,"Farmácia","2/6"],["2026-07-04","YOUCOM FL 400079",89.95,"Vestuário","2/2"],["2026-07-04","LINDT SPRUNGLI BR",100.26,"Restaurante","2/2"],["2026-07-04","LINDT SPRUNGLI BRAZIL",-0.01,"Restaurante",""],["2026-07-08","ZAFFARI O. NMEYER",99.9,"Supermercado","2/2"],["2026-07-10","ADIQPLU*DR CARLOS",58.25,"Saúde","2/4"],["2026-07-21","COMERCIO VEF",15.87,"Mercadinho",""],["2026-07-21","COMERCIO VEF",15.49,"Mercadinho",""],["2026-07-21","POSTO JOCKEY",100.0,"Combustível",""],["2026-07-21","FOMERIA",43.1,"Delivery",""],["2026-07-22","F R BAR E RESTAURANTE",195.0,"Restaurante",""],["2026-07-22","MERCADOLIVRE*MERCA",50.63,"Revisar categoria","1/3"],["2026-07-22","Uber UBER *TRIP HELP.U",28.98,"Carro / Transporte",""],["2026-07-22","Uber UBER *TRIP HELP.U",33.98,"Carro / Transporte",""],["2026-07-22","CAPPTA *VIGA BAR E RES",78.1,"Restaurante",""],["2026-07-22","PANVEL FILIAL 483",67.99,"Farmácia","1/2"],["2026-07-22","CE COM CASA PRADO",50.0,"Carro / Transporte",""],["2026-07-22","OKIDOKI",28.0,"Restaurante",""],["2026-07-23","ELAIZE SILVA PEZZI CIA",47.41,"Dani",""],["2026-07-23","MP *UNICOMPECAS",35.0,"Carro / Transporte",""],["2026-07-23","MP *UNICOMPECAS",76.0,"Carro / Transporte",""],["2026-07-23","RAIA DROGASIL SA",52.57,"Farmácia",""],["2026-07-23","ZAFFARI O. NMEYER",117.8,"Supermercado",""],["2026-07-23","APPLE.COM/BILL",59.9,"Assinaturas / Apps",""],["2026-07-23","ApcMiami",19.96,"Carro / Transporte",""],["2026-07-23","EC *SHELLBOX",258.41,"Combustível",""],["2026-07-23","COMERCIO VEF",15.88,"Mercadinho",""],["2026-07-23","COMERCIO VEF",34.88,"Mercadinho",""],["2026-07-23","AUTO PECAS BELLOLI",24.0,"Carro / Transporte",""],["2026-07-24","Uber UBER *TRIP HELP.U",10.98,"Carro / Transporte",""],["2026-07-24","BOURBON CANOAS",66.51,"Supermercado",""],["2026-07-24","RAMS COMERCIO DE ALIME",12.74,"Mercadinho",""],["2026-07-24","ZAFFARI PARK CANOAS",100.02,"Supermercado",""],["2026-07-24","YOUCOM FL 400079",40.46,"Vestuário","1/2"],["2026-07-24","APPLE.COM/BILL",34.9,"Assinaturas / Apps",""],["2026-07-24","PANVEL FARMACIAS FILIA",53.98,"Farmácia",""],["2026-07-24","COMERCIO VEF",6.89,"Mercadinho",""],["2026-07-25","ApcMiami",30.0,"Carro / Transporte",""],["2026-07-25","MP *GEFERSONMACHA",10.0,"Revisar categoria",""],["2026-07-25","CREEARE ARTIGOS DE PA",19.9,"Estudos",""],["2026-07-25","SUSHI DE CARLI LTDA",254.07,"Restaurante",""],["2026-07-25","COMERCIO VEF",15.88,"Mercadinho",""],["2026-07-26","BOURBON CANOAS",262.27,"Supermercado",""],["2026-07-26","HORTIFRUTIGRANJEIRO KA",42.0,"Mercadinho",""],["2026-07-26","TENDA HARMONIA",21.6,"Mercadinho",""],["2026-07-26","MOCELLIN COMERCIO DE B",19.99,"Revisar categoria",""],["2026-07-26","SUPERLEGAL COMERCI",94.99,"Casa","1/2"],["2026-07-26","DRIVE AEROPORTO",177.5,"Carro / Transporte",""],["2026-07-26","TagItau*JESSICAMORAES",50.0,"Carro / Transporte",""],["2026-07-26","ALLPARK EMPREENDIMENTO",25.0,"Carro / Transporte",""],["2026-07-27","ELAIZE SILVA PEZZI CIA",122.39,"Dani",""],["2026-07-27","MP *PLAYCAMPOS",20.0,"Vestuário",""],["2026-07-27","DL*UberRides",39.98,"Carro / Transporte",""],["2026-07-27","DL*UberRides",37.98,"Carro / Transporte",""],["2026-07-27","ZAFFARI O. NMEYER",119.67,"Supermercado",""],["2026-07-27","Uber UBER *TRIP HELP.U",19.97,"Carro / Transporte",""],["2026-07-28","ZAFFARI O. NMEYER",82.82,"Supermercado",""],["2026-07-28","SUPERLEGAL",57.5,"Casa","1/2"],["2026-07-28","COMERCIO VEF",6.89,"Mercadinho",""],["2026-07-28","MERCADO ITALIANO",30.98,"Mercadinho",""],["2026-07-28","POSTO JOCKEY",50.0,"Combustível",""],["2026-07-29","BISTEK SUPERMERCADOS",242.75,"Supermercado",""],["2026-07-29","CASA DO PAPEL",47.96,"Estudos",""],["2026-07-30","ZAFFARI PARK CANOAS",187.65,"Supermercado",""],["2026-07-30","ZAFFARI O. NMEYER",92.81,"Supermercado",""],["2026-07-30","PANVEL FILIAL 184",29.99,"Farmácia",""],["2026-07-30","DWJ COMERCIO DE AR",93.33,"Lazer","1/3"],["2026-07-30","HOSPITAL SAO LUCAS DA",20.32,"Saúde",""],["2026-07-30","PucCampusHospital",35.5,"Carro / Transporte",""],["2026-07-30","BacioDiLatte",110.8,"Restaurante",""],["2026-07-30","Estapar Reserva 29R2K9",62.99,"Carro / Transporte",""],["2026-07-30","COMERCIO VEF",13.78,"Mercadinho",""],["2026-07-31","FINODOCE",36.0,"Restaurante",""],["2026-07-31","RG CASA DE CARNES E AS",103.74,"Mercadinho",""],["2026-07-31","FARMACIA SAO JOAO",22.36,"Farmácia",""],["2026-07-31","RAIA DROGASIL SA",90.98,"Farmácia",""],["2026-07-31","EC *SHELLBOX",264.4,"Combustível",""],["2026-08-01","BOURBON CANOAS",55.58,"Supermercado",""],["2026-08-01","RAIA1939",141.62,"Farmácia","1/2"],["2026-08-01","COMERCIO VEF",14.96,"Mercadinho",""],["2026-08-01","FOMERIA",16.0,"Delivery",""],["2026-08-02","HORTIFRUTIGRANJEIRO KA",15.1,"Mercadinho",""],["2026-08-02","UNISUPER BARCELOS II",13.6,"Supermercado",""],["2026-08-02","RAIA1530",30.46,"Farmácia",""],["2026-08-02","AH CASA EVENTOS",39.5,"Lazer",""],["2026-08-02","ELAIZE SILVA PEZZI CIA",12.08,"Dani",""],["2026-08-02","NAPLES",95.0,"Restaurante",""],["2026-08-03","ZAFFARI O. NMEYER",70.78,"Supermercado",""],["2026-08-03","ZAFFARI O. NMEYER",122.3,"Supermercado",""],["2026-08-04","CEA MODAS 0317 RIO",80.0,"Vestuário","1/2"],["2026-08-04","PRATOMIL RESTAURANTES",308.0,"Restaurante",""],["2026-08-04","LYON PARK ESTAC",30.0,"Carro / Transporte",""],["2026-08-05","BOURBON CANOAS",142.42,"Supermercado",""],["2026-08-05","ApcMiami",18.97,"Carro / Transporte",""],["2026-08-05","RG CASA DE CARNES E AS",143.19,"Mercadinho",""],["2026-08-05","RG CASA DE CARNES E AS",89.41,"Mercadinho",""],["2026-08-05","EC *SHELLBOX",267.52,"Combustível",""],["2026-08-05","COMERCIO VEF",6.89,"Mercadinho",""],["2026-08-05","PECANHA ANTONIO CIA LT",84.0,"Restaurante",""],["2026-08-06","MERCADO MONEGAT LTDA",6.49,"Mercadinho",""],["2026-08-06","MO KITCHEN MENINO DEUS",44.0,"Restaurante",""],["2026-08-06","SAN DIEGO CAFE E BISTR",8.0,"Restaurante",""],["2026-08-06","LINDT SPRUNGLI BRAZIL",147.44,"Restaurante",""],["2026-08-06","FOMERIA",23.77,"Delivery",""],["2026-08-06","LYON PARK ESTAC",30.0,"Carro / Transporte",""],["2026-08-08","BOURBON CANOAS",110.0,"Supermercado",""],["2026-08-08","UNISUPER BARCELOS II",5.99,"Supermercado",""],["2026-08-08","ZAFFARI",94.56,"Supermercado",""],["2026-08-08","APPLE.COM/BILL",5.9,"Assinaturas / Apps",""],["2026-08-08","COMERCIO VEF",15.78,"Mercadinho",""],["2026-08-09","PucCampusHospital",70.0,"Carro / Transporte",""],["2026-08-09","JOCKEY CLUB DO RIO GRA",50.0,"Lazer",""],["2026-08-09","COMERCIO VEF",25.27,"Mercadinho",""],["2026-08-09","COMERCIO VEF",6.89,"Mercadinho",""],["2026-08-10","ZAFFARI O. NMEYER",75.02,"Supermercado",""],["2026-08-10","IFD*CARBONI E DIER COM",49.46,"Delivery",""],["2026-08-10","ELAIZE SILVA PEZZI CIA",36.89,"Dani",""],["2026-08-11","O MERCADINHO",11.0,"Mercadinho",""],["2026-08-11","PADARIA DU CHICO",45.0,"Mercadinho",""],["2026-08-11","Uber UBER *TRIP HELP.U",18.67,"Carro / Transporte",""],["2026-08-11","Uber UBER *TRIP HELP.U",14.08,"Carro / Transporte",""],["2026-08-11","Uber UBER *TRIP HELP.U",22.97,"Carro / Transporte",""],["2026-08-11","SABOR DE LUNA PADARIA",9.0,"Mercadinho",""],["2026-08-11","SABOR DE LUNA PADARIA",40.0,"Mercadinho",""],["2026-08-12","GRAN ARMAZEM",125.5,"Mercadinho",""],["2026-08-12","FARMACIA SAO JOAO",105.88,"Farmácia",""],["2026-08-12","COMERCIO VEF",6.89,"Mercadinho",""],["2026-08-12","SUPER BOM CAMPOS VEL",15.85,"Supermercado",""],["2026-08-12","FOMERIA",39.83,"Delivery",""],["2026-08-13","BISTEK SUPERMERCADOS",369.0,"Supermercado",""],["2026-08-13","ADIQPLU*DR CARLOS OSOR",41.0,"Saúde",""],["2026-08-13","ZAFFARI O. NMEYER",112.66,"Supermercado",""],["2026-08-13","RAIA314",52.47,"Farmácia",""],["2026-08-13","BOURBON CANOAS",82.34,"Supermercado",""],["2026-08-13","FAMA PIZZARIA",142.0,"Restaurante",""],["2026-08-13","EC *SHELLBOX",303.55,"Combustível",""],["2026-08-13","COMERCIO VEF",13.78,"Mercadinho",""],["2026-08-13","COMERCIO VEF",15.49,"Mercadinho",""],["2026-08-14","COMERCIO VEF",17.36,"Mercadinho",""],["2026-08-15","APPLE.COM/BILL",29.9,"Assinaturas / Apps",""],["2026-08-15","TENDA HARMONIA",26.0,"Mercadinho",""],["2026-08-15","ScheferEOliveira",10.44,"Mercadinho",""],["2026-08-15","MP *JESSICA",51.0,"Lazer",""],["2026-08-15","MERCADO GRISA",17.09,"Mercadinho",""],["2026-08-15","MdCarnesLtda",154.91,"Mercadinho",""],["2026-08-15","COMERCIO VEF",11.97,"Mercadinho",""],["2026-08-16","COMERCIO VEF",8.98,"Mercadinho",""],["2026-08-16","COMERCIO VEF",17.28,"Mercadinho",""],["2026-08-16","COMERCIO VEF",30.26,"Mercadinho",""],["2026-08-17","BREWFEL",39.99,"Restaurante",""],["2026-08-17","APPLE.COM/BILL",8.5,"Assinaturas / Apps",""],["2026-08-17","BOURBON CANOAS",116.66,"Supermercado",""],["2026-08-17","COMERCIO VEF",10.49,"Mercadinho",""],["2026-08-17","COMERCIO VEF",8.98,"Mercadinho",""],["2026-08-18","ZAFFARI O. NMEYER",134.5,"Supermercado",""],["2026-08-18","O MERCADINHO",25.7,"Mercadinho",""],["2026-08-18","Uber UBER *TRIP HELP.U",20.67,"Carro / Transporte",""],["2026-08-18","PANVEL FARMACIAS 748",79.99,"Farmácia",""],["2026-08-18","SANTO ANTONIO EVENTOS",135.6,"Lazer",""],["2026-08-19","RAIA1939",135.54,"Farmácia","1/2"],["2026-08-19","MP *SHELLBOX",141.54,"Combustível",""],["2026-08-19","Uber UBER *TRIP HELP.U",28.92,"Carro / Transporte",""],["2026-08-19","SEPHORA PORTO ALEGRE",30.0,"Cuidados pessoais",""],["2026-08-20","ELAIZE SILVA PEZZI CIA",68.98,"Dani",""],["2026-08-20","RG CASA DE CARNES E AS",93.83,"Mercadinho",""],["2026-08-20","ZAFFARI PARK CANOAS",28.88,"Supermercado",""],["2026-08-20","RAIA DROGASIL SA",68.0,"Farmácia",""],["2026-08-20","RAIA438",30.43,"Farmácia",""],["2026-08-20","POSTO UNIVERSITARIO",115.5,"Combustível",""],["2026-08-20","COMERCIO VEF",45.66,"Mercadinho",""],["2026-06-21","PANVEL*DIGITAL",73.33,"Farmácia","2/3"],["2026-06-21","PANVEL*DIGITAL",-0.02,"Farmácia",""],["2026-07-09","HMBRASIL *HMBRASIL",-58.15,"Revisar categoria",""],["2026-07-18","AUT*TICPAYBIKEINCA",88.57,"Revisar categoria","2/4"],["2026-07-18","AUT*TICPAYBIKEINCASA",-0.03,"Revisar categoria",""],["2026-07-20","WDDRONES E WDAGRO",737.5,"Trabalho / Empresa","2/12"],["2026-07-21","Lojas Renner",7.87,"Vestuário",""],["2026-07-22","Azul Seguros",266.45,"Carro / Transporte","1/10"],["2026-07-23","EC *MELIMAIS",19.9,"Assinaturas / Apps",""],["2026-07-24","IFD*CARBONI E DIER COM",47.42,"Delivery",""],["2026-07-24","MERCADO*OUTLETODONTO",42.5,"Saúde",""],["2026-07-25","IFD *KERO LTDA",65.03,"Delivery",""],["2026-07-26","MERCADOLIVRE*MERCADOL",388.03,"Revisar categoria",""],["2026-07-26","MERCADOLIVRE*MARINESH",206.89,"Saúde",""],["2026-07-27","Ingresse",180.0,"Lazer","1/2"],["2026-07-27","Ingresse",90.0,"Lazer","1/2"],["2026-07-28","APPLE.COM/BILL",19.9,"Assinaturas / Apps",""],["2026-07-28","IFD*MELLO COMERCIO DE",40.23,"Delivery",""],["2026-07-29","MERCADO*MERCADOLIV",114.0,"Revisar categoria","1/2"],["2026-07-29","Farmacias Sao Joao sjd",109.56,"Farmácia",""],["2026-08-03","QUERO QUERO FL 109",107.4,"Casa",""],["2026-08-05","MERCADOLIVRE*FRUTYDEL",127.6,"Vestuário",""],["2026-08-06","BEAUTY HUB VAREJO",66.17,"Cuidados pessoais","1/3"],["2026-08-08","SHOPEE *ISABELATOP",19.09,"Vestuário",""],["2026-08-08","AMAZON BR *Amazo",67.16,"Revisar categoria","1/2"],["2026-08-13","RD SAUDE ONLINE",101.1,"Farmácia",""],["2026-08-16","SENGE R*Sind. dos Eng",804.84,"SENGE",""],["2026-08-18","Google YouTubePremium",269.0,"Assinaturas / Apps",""],["2026-08-20","DL*UberRides",40.99,"Carro / Transporte",""],["2026-08-20","DL*UberRides",40.99,"Carro / Transporte",""],["2026-08-20","Google YouTubePremium",-269.0,"Assinaturas / Apps",""],["2026-08-20","Google YouTubePremium",53.9,"Assinaturas / Apps",""],["2026-08-15","qcymall",85.09,"Revisar categoria",""],["2026-07-25","Anthropic",241.65,"Assinaturas / Apps",""],["2026-08-04","Anthropic",81.0,"Assinaturas / Apps",""],["2026-08-05","Anthropic* Claude Sub",116.37,"Assinaturas / Apps",""],["2026-08-10","Anthropic",107.8,"Assinaturas / Apps",""],["2026-08-13","Anthropic",247.05,"Assinaturas / Apps",""],["2026-08-17","OpenAI*ChatGPT Subscr",105.85,"Assinaturas / Apps",""],["2026-08-21","Repasse de IOF (compras internacionais 0061)",2.99,"Taxas / Impostos",""],["2026-08-21","Repasse de IOF (compras internacionais 7734)",31.54,"Taxas / Impostos",""]],"9":[["2026-06-25","ZZRSV RS BARRA SUL",116.67,"Vestuário","3/4"],["2026-06-29","H&M - Praia de Bel",98.91,"Farmácia","3/6"],["2026-07-10","ADIQPLU*DR CARLOS",58.25,"Saúde","3/4"],["2026-07-22","MERCADOLIVRE*MERCA",50.63,"Revisar categoria","2/3"],["2026-07-22","PANVEL FILIAL 483",67.99,"Farmácia","2/2"],["2026-07-22","MERCADOLIVRE*MERCADOL",-0.04,"Revisar categoria",""],["2026-07-22","PANVEL FILIAL 483",-0.01,"Farmácia",""],["2026-07-24","YOUCOM FL 400079",40.46,"Vestuário","2/2"],["2026-07-24","YOUCOM FL 400079",-0.01,"Vestuário",""],["2026-07-26","SUPERLEGAL COMERCI",94.99,"Casa","2/2"],["2026-07-28","SUPERLEGAL",57.5,"Casa","2/2"],["2026-07-28","SUPERLEGAL",-0.01,"Casa",""],["2026-07-30","DWJ COMERCIO DE AR",93.33,"Lazer","2/3"],["2026-08-01","RAIA1939",141.62,"Farmácia","2/2"],["2026-08-01","RAIA1939",-0.01,"Farmácia",""],["2026-08-04","CEA MODAS 0317 RIO",80.0,"Vestuário","2/2"],["2026-08-04","CEA MODAS 0317 RIO GRA",-0.01,"Vestuário",""],["2026-08-19","RAIA1939",135.54,"Farmácia","2/2"],["2026-08-19","RAIA1939",-0.01,"Farmácia",""],["2026-08-21","ZAFFARI O. NMEYER",95.34,"Supermercado",""],["2026-08-21","EC *SHELLBOX",49.17,"Combustível",""],["2026-08-21","FOMERIA",78.3,"Delivery",""],["2026-08-22","BOURBON CANOAS",157.15,"Supermercado",""],["2026-08-22","COMERCIO VEF",8.98,"Mercadinho",""],["2026-08-22","FOMERIA",28.98,"Delivery",""],["2026-08-23","UNISUPER BARCELOS II",28.33,"Supermercado",""],["2026-08-23","APPLE.COM/BILL",5.5,"Assinaturas / Apps",""],["2026-08-23","EC *SHELLBOX",298.75,"Combustível",""],["2026-08-24","ZAFFARI O. NMEYER",88.23,"Supermercado",""],["2026-08-24","COMERCIO VEF",8.38,"Mercadinho",""],["2026-08-25","RAIA1939",108.7,"Farmácia",""],["2026-08-25","BISTEK SUPERMERCADOS",137.66,"Supermercado",""],["2026-08-25","LINDT SPRUNGLI BRAZIL",89.99,"Restaurante",""],["2026-08-25","PDV*AGROC VIDA",134.9,"Combustível",""],["2026-08-26","O MERCADINHO",24.9,"Mercadinho",""],["2026-08-27","VpsComercioDe",50.0,"Carro / Transporte",""],["2026-08-27","RAIA1939",74.94,"Farmácia",""],["2026-08-27","BATERIAS FREITAS",165.34,"Carro / Transporte","1/3"],["2026-08-28","UNISUPER BARCELOS II",128.4,"Supermercado",""],["2026-08-28","pgz*PALMEIRAS",107.1,"Revisar categoria","1/5"],["2026-08-28","H&M - Iguatemi Por",103.55,"Vestuário","1/4"],["2026-08-28","FOMERIA",16.52,"Delivery",""],["2026-08-28","Uber UBER *TRIP HELP.U",37.79,"Carro / Transporte",""],["2026-08-28","Uber UBER *TRIP HELP.U",42.2,"Carro / Transporte",""],["2026-08-29","UNISUPER BARCELOS II",55.76,"Supermercado",""],["2026-08-29","ScheferEOliveira",31.52,"Mercadinho",""],["2026-08-29","ApcMiami",50.0,"Carro / Transporte",""],["2026-08-29","APPLE.COM/BILL",50.48,"Assinaturas / Apps",""],["2026-08-29","EC *SHELLBOX",49.19,"Combustível",""],["2026-08-30","UNISUPER BARCELOS II",26.07,"Supermercado",""],["2026-08-30","ViniciusCarvalho",16.99,"Mercadinho",""],["2026-08-30","ViniciusCarvalho",12.38,"Mercadinho",""],["2026-08-30","MdCarnesLtda",105.43,"Mercadinho",""],["2026-08-30","RAIA DROGASIL SA",115.59,"Farmácia",""],["2026-08-30","ViniciusCarvalho",21.75,"Mercadinho",""],["2026-08-31","SAMS CLUB POA CRISTAL",273.96,"Supermercado",""],["2026-08-31","CARREFOUR CRISTAL",48.22,"Supermercado",""],["2026-09-01","POSTO GARYBALDI",325.28,"Combustível",""],["2026-09-01","PucPoaCtnBrP",70.0,"Carro / Transporte",""],["2026-09-01","FERRAGEM INTERLUZ",15.0,"Casa",""],["2026-09-01","FOMERIA",36.2,"Delivery",""],["2026-09-02","RAIA DROGASIL SA",47.37,"Farmácia",""],["2026-09-02","ESTRELAT INDUSTRIA E C",70.0,"Revisar categoria",""],["2026-09-02","MARCELO SOMACAL",103.0,"Vestuário",""],["2026-09-02","HTM*FABIO LOPES CARDOS",14.99,"Revisar categoria",""],["2026-09-02","UNISUPER BARCELOS II",48.26,"Supermercado",""],["2026-09-02","ViniciusCarvalho",8.98,"Mercadinho",""],["2026-09-03","CASA DE CARNES MOACIR",19.18,"Mercadinho",""],["2026-09-03","ViniciusCarvalho",10.39,"Mercadinho",""],["2026-09-04","BOURBON CANOAS",119.85,"Supermercado",""],["2026-09-04","SPAZIO NATURALE",88.0,"Mercadinho",""],["2026-09-04","ViniciusCarvalho",20.45,"Mercadinho",""],["2026-09-04","ViniciusCarvalho",8.98,"Mercadinho",""],["2026-09-04","APOLO FILIAL 4",150.0,"Carro / Transporte",""],["2026-09-05","CHINA CENTER HISTORICO",42.9,"Restaurante",""],["2026-09-05","HumaPadariaE",100.0,"Mercadinho",""],["2026-09-05","STB*LADYCOMERCIODEARTI",85.0,"Revisar categoria",""],["2026-09-05","ViniciusCarvalho",19.38,"Mercadinho",""],["2026-09-05","ViniciusCarvalho",8.89,"Mercadinho",""],["2026-09-05","TUDO EM MAKE",30.0,"Cuidados pessoais",""],["2026-09-05","VONNY COSMETICOS",36.3,"Cuidados pessoais",""],["2026-09-05","HOTEL SCALA",43.0,"Lazer",""],["2026-09-06","BOURBON CANOAS",216.62,"Supermercado",""],["2026-09-06","BacioDiLatte-lj0099",77.9,"Restaurante",""],["2026-09-06","TagItau*JESSICAMORAES",50.0,"Carro / Transporte",""],["2026-09-06","EC *SHELLBOX",253.48,"Combustível",""],["2026-09-06","SAM S PORTO ALEGRE 494",700.31,"Supermercado",""],["2026-09-07","ScheferEOliveira",25.99,"Mercadinho",""],["2026-09-07","ZAFFARI O. NMEYER",49.64,"Supermercado",""],["2026-09-07","CARREFOUR CNS 42",73.05,"Supermercado",""],["2026-09-07","FOMERIA",9.18,"Delivery",""],["2026-09-08","MERCADO MONEGAT LTDA",13.62,"Mercadinho",""],["2026-09-08","SAN DIEGO CAFE E BISTR",8.0,"Restaurante",""],["2026-09-08","CASA DO PAPEL",32.94,"Estudos",""],["2026-09-08","LYON PARK",12.0,"Carro / Transporte",""],["2026-09-08","PARC*SAMSPORTOALEG",253.13,"Supermercado","1/3"],["2026-09-08","CREDITO SAM S PORTO ALE",-700.31,"Supermercado",""],["2026-09-09","SIM POA AEROPORTO",21.97,"Combustível",""],["2026-09-09","CesarHenrique",8.0,"Carro / Transporte",""],["2026-09-09","UNISUPER BARCELOS II",37.44,"Supermercado",""],["2026-09-09","ZAFFARI O. NMEYER",89.62,"Supermercado",""],["2026-09-10","LEROY MERLIN",117.76,"Casa",""],["2026-09-10","SHOPPING IGUATEMI ALPH",36.9,"Restaurante",""],["2026-09-10","KAL COMERCIO VAREJISTA",59.98,"Revisar categoria",""],["2026-09-10","ME.LINDA ALPHAVILL",69.84,"Revisar categoria","1/3"],["2026-09-10","ViniciusCarvalho",22.99,"Mercadinho",""],["2026-09-10","Uber UBER *TRIP HELP.U",118.02,"Carro / Transporte",""],["2026-09-10","CENTRO AUTOMOTIVO REDE",17.8,"Carro / Transporte",""],["2026-09-10","ZAFFARI O. NMEYER",53.45,"Supermercado",""],["2026-09-10","DROGARIA IGUATEMI LTDA",24.14,"Farmácia",""],["2026-09-10","POA 3T AERO LTDA",76.61,"Restaurante",""],["2026-09-11","ME.LINDA ALPHAVILLE",66.6,"Revisar categoria",""],["2026-09-11","CASA DAS TINTAS",14.67,"Casa",""],["2026-09-11","Uber UBER *TRIP HELP.U",40.74,"Carro / Transporte",""],["2026-09-11","LEROY MERLIN",106.33,"Casa","1/2"],["2026-09-11","ELAIZE SILVA PEZZI CIA",85.17,"Dani",""],["2026-09-11","Uber UBER *TRIP HELP.U",12.16,"Carro / Transporte",""],["2026-09-11","99*",29.8,"Carro / Transporte",""],["2026-09-11","OTTO CAR PECAS",99.0,"Carro / Transporte",""],["2026-09-11","POSTO COMB CONV CAMI",100.0,"Combustível",""],["2026-09-11","EMPORIO TAMBORE",87.78,"Restaurante",""],["2026-09-12","GARCIA PILCHAS E ARTI",179.9,"Vestuário",""],["2026-09-13","LEROY MERLIN",127.66,"Casa",""],["2026-09-13","JoelAndreNeis",27.0,"Restaurante",""],["2026-09-13","GRUPO MADERO",91.0,"Restaurante",""],["2026-09-14","BOURBON IPIRANGA",56.91,"Supermercado",""],["2026-09-14","ZAFFARI O. NMEYER",81.39,"Supermercado",""],["2026-09-14","APPLE.COM/BILL",5.5,"Assinaturas / Apps",""],["2026-09-14","ViniciusCarvalho",8.49,"Mercadinho",""],["2026-09-14","Uber UBER *TRIP HELP.U",10.9,"Carro / Transporte",""],["2026-09-15","MULTIPLAN ADMINISTRADO",20.0,"Carro / Transporte",""],["2026-09-15","PANVEL FILIAL 456",20.98,"Farmácia",""],["2026-09-15","ZAFFARI CABRAL",40.09,"Supermercado",""],["2026-09-15","POSTO UNIVERSITARIO",100.0,"Combustível",""],["2026-09-15","COMERCIO VEF",7.49,"Mercadinho",""],["2026-09-15","PECANHA ANTONIO CIA LT",66.0,"Restaurante",""],["2026-09-15","FOMERIA",42.2,"Delivery",""],["2026-09-15","FOMERIA",15.98,"Delivery",""],["2026-09-16","JONAS*PNEUS",306.7,"Carro / Transporte","1/6"],["2026-09-16","RAIA DROGASIL SA",90.48,"Farmácia",""],["2026-09-16","ViniciusCarvalho",6.98,"Mercadinho",""],["2026-09-16","PucCampusHospital",26.0,"Carro / Transporte",""],["2026-09-16","EC *SHELLBOX",243.24,"Combustível",""],["2026-09-16","CARREFOUR CNS 42",49.3,"Supermercado",""],["2026-09-17","CibeleMacedoCosta",60.0,"Restaurante",""],["2026-09-17","CLARO PARKING LTDA",40.0,"Carro / Transporte",""],["2026-09-17","MP *PLAYCAMPOS",25.0,"Vestuário",""],["2026-09-18","ZAFFARI O. NMEYER",172.41,"Supermercado",""],["2026-09-18","SIM ECOPOSTO",30.94,"Combustível",""],["2026-09-18","SIM ECOPOSTO",215.4,"Combustível",""],["2026-09-18","RG CASA DE CARNES E AS",278.84,"Mercadinho",""],["2026-09-18","UNIDASUL DISTRIBUIDOR",169.92,"Supermercado",""],["2026-09-18","GOKEI SUSHI",126.3,"Restaurante",""],["2026-09-18","CLARO PARKING LTDA",50.0,"Carro / Transporte",""],["2026-09-18","68684593Andressa",95.0,"Restaurante",""],["2026-09-19","TENDA HARMONIA",38.72,"Mercadinho",""],["2026-09-19","ScheferEOliveira",38.49,"Mercadinho",""],["2026-09-19","PANVEL FILIAL 845",33.98,"Farmácia",""],["2026-09-19","RAIA3031",128.22,"Farmácia","1/2"],["2026-09-19","RG CASA DE CARNES E AS",121.26,"Mercadinho",""],["2026-09-19","FOMERIA",49.5,"Delivery",""],["2026-09-20","ViniciusCarvalho",28.07,"Mercadinho",""],["2026-09-20","METROPOLITANA MINIMAR",21.88,"Mercadinho",""],["2026-09-20","APPLE.COM/BILL",36.5,"Assinaturas / Apps",""],["2026-09-20","APPLE.COM/BILL",43.98,"Assinaturas / Apps",""],["2026-09-20","UNISUPER BARCELOS I",6.98,"Supermercado",""],["2026-06-21","PANVEL*DIGITAL",73.33,"Farmácia","3/3"],["2026-07-18","AUT*TICPAYBIKEINCA",88.57,"Revisar categoria","3/4"],["2026-07-20","WDDRONES E WDAGRO",737.5,"Trabalho / Empresa","3/12"],["2026-07-22","Azul Seguros",266.45,"Carro / Transporte","2/10"],["2026-07-22","Azul Seguros",-0.54,"Carro / Transporte",""],["2026-07-27","Ingresse",180.0,"Lazer","2/2"],["2026-07-27","Ingresse",90.0,"Lazer","2/2"],["2026-07-29","MERCADO*MERCADOLIV",114.0,"Revisar categoria","2/2"],["2026-07-29","MERCADO*MERCADOLIVRE",-0.01,"Revisar categoria",""],["2026-08-06","BEAUTY HUB VAREJO",66.17,"Cuidados pessoais","2/3"],["2026-08-08","AMAZON BR *Amazo",67.16,"Revisar categoria","2/2"],["2026-08-08","AMAZON BR *Amazon BR",-0.01,"Revisar categoria",""],["2026-08-21","Amazon Digital BR",19.52,"Assinaturas / Apps",""],["2026-08-21","Amazon Digital BR",34.99,"Assinaturas / Apps",""],["2026-08-21","IFD*FOMERIA COMERCIO D",22.22,"Delivery",""],["2026-08-22","EC *MELIMAIS",19.9,"Assinaturas / Apps",""],["2026-08-23","IFD*BIAZETTO COMERCIO",25.74,"Delivery",""],["2026-08-25","SHOPEE *ISABELATOP",-19.09,"Vestuário",""],["2026-08-25","DL*UberRides",31.98,"Carro / Transporte",""],["2026-08-25","DL*UberRides",25.98,"Carro / Transporte",""],["2026-08-25","IFD*CARBONI E DIER COM",85.35,"Delivery",""],["2026-08-26","DL*UberRides",26.98,"Carro / Transporte",""],["2026-08-28","APPLE.COM/BILL",19.9,"Assinaturas / Apps",""],["2026-08-29","IFD*FOMERIA COMERCIO D",56.07,"Delivery",""],["2026-08-31","DL*UberRides",40.97,"Carro / Transporte",""],["2026-08-31","MERCADOLIVRE*GHAIR",24.83,"Cuidados pessoais","1/3"],["2026-08-31","MP *CENTRALCOPIAS",41.4,"Estudos",""],["2026-08-31","IFD*DELIVERY ALLIANCE",38.96,"Delivery",""],["2026-08-31","Amazon Digital BR",6.99,"Assinaturas / Apps",""],["2026-08-31","MERCADO*GHAIROFICI",31.94,"Cuidados pessoais","1/3"],["2026-09-02","RAIA DROGASIL SA",186.58,"Farmácia","1/3"],["2026-09-02","MERCADOLIVRE*MERCADOL",132.3,"Revisar categoria",""],["2026-09-03","MERCADOLIVRE*LIVRARIA",82.89,"Estudos",""],["2026-09-03","IFD*DELIVERY ALLIANCE",29.97,"Delivery",""],["2026-09-03","IFD*AFM COMERCIO DE AL",43.91,"Delivery",""],["2026-09-04","MP *ALOASUSHIDELIVERY",244.1,"Delivery",""],["2026-09-05","ASAAS *SENGE",59.68,"SENGE","1/3"],["2026-09-05","IFD*COMERCIO DE MEDICA",150.32,"Farmácia",""],["2026-09-06","MERCADOLIVRE*MERCADOLI",69.21,"Revisar categoria",""],["2026-09-06","MERCADO*MERCADOLIV",55.17,"Revisar categoria","1/2"],["2026-09-06","MERCADO*MERCADOLIVRE",-50.92,"Revisar categoria",""],["2026-09-07","MERCADOLIVRE*MERCADOLI",-69.21,"Revisar categoria",""],["2026-09-09","DL*UberRides",191.4,"Carro / Transporte",""],["2026-09-10","IFD*GPCA FOODS ALIMENT",27.89,"Delivery",""],["2026-09-11","IFD*RAIA DROGASIL SA",89.24,"Farmácia",""],["2026-09-11","IFD*47121537 TALITA DE",60.22,"Delivery",""],["2026-09-14","IFD*DELIVERY ALLIANCE",38.96,"Delivery",""],["2026-09-16","DL*UberRides",36.98,"Carro / Transporte",""],["2026-09-16","MERCADOLIVRE*YAMAT",67.47,"Revisar categoria","1/4"],["2026-09-16","MERCADOLIVRE*MERCADOL",192.06,"Revisar categoria",""],["2026-09-16","SHOPEE *SHPSTECNOL",51.07,"Revisar categoria","1/3"],["2026-09-17","DL*UberRides",40.97,"Carro / Transporte",""],["2026-09-17","DL*UberRides",33.98,"Carro / Transporte",""],["2026-09-17","SHOPEE *SHPSTECNOLOGIA",-153.21,"Revisar categoria",""],["2026-09-17","IFD*LINDT SPRUNGLI BRA",73.72,"Delivery",""],["2026-09-17","IFD*ALEXIA BENEMANN BR",69.26,"Delivery",""],["2026-09-18","Google G1SK003A",499.9,"Revisar categoria",""],["2026-09-20","Google YouTubePremium",53.9,"Assinaturas / Apps",""],["2026-09-20","PARC*GoogleG1SK003",74.48,"Revisar categoria","1/8"],["2026-09-20","CREDITO Google G1SK003A",-499.9,"Revisar categoria",""],["2026-09-05","ANTHROPIC* CLAUDE SUB",116.48,"Assinaturas / Apps",""],["2026-09-17","OPENAI *CHATGPT SUBSCR",106.06,"Assinaturas / Apps",""],["2026-09-17","OPENAI* CHATGPT CREDIT",116.78,"Assinaturas / Apps",""],["2026-09-20","Repasse de IOF (compras internacionais)",11.89,"Taxas / Impostos",""]]};
+var V26_EXTRATO=[["2026-07-28","ITAU BLACK 3112-8880",13309.85,"out","Movimentação financeira","saida","Pagamento da fatura do cartão",0],["2026-07-29","PIX TRANSF GILCO A29/07",100.0,"out","Revisar categoria","saida","",0],["2026-07-29","SISPAG PIX JESSICA BANDEIRA ...",9495.85,"in","Salário","entrada","",0],["2026-07-31","TED 041.0100.SIND. E E R",5286.7,"in","Salário","entrada","",0],["2026-07-31","PAG TIT INT 041",117.42,"out","Trabalho / Empresa","saida","CREA",0],["2026-07-31","PIX QRS ZAMIN CIA 31/07",8.3,"out","Revisar categoria","saida","",0],["2026-07-31","SISPAG PIX JESSICA BANDEIRA ...",1225.04,"in","Salário","entrada","",0],["2026-07-31","DA REC FED 02394417",217.39,"out","Taxas / Impostos","saida","",0],["2026-08-03","PIX TRANSF ROGERIO03/08",50.0,"in","Reembolso","reembolso","",0],["2026-08-03","PIX TRANSF ROGERIO03/08",110.0,"in","Reembolso","reembolso","",0],["2026-08-03","PAG BOLETO MUTUA DE ASSISTENCIA DOS PRO",744.28,"out","Financiamentos","saida","Empréstimo Mútua",0],["2026-08-04","IOF",60.39,"out","Taxas / Impostos","saida","Encargos do limite da conta",0],["2026-08-05","PIX QRS CONSELHO RE05/08",87.87,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS CONSELHO RE05/08",90.28,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS CONSELHO RE05/08",87.87,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS CONSELHO RE05/08",90.28,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS CONSELHO RE05/08",90.28,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS CONSELHO RE05/08",81.84,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS CONSELHO RE05/08",87.87,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS CONSELHO RE05/08",81.84,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-05","PIX QRS PJBANK05/08",780.13,"out","Casa","saida","Condomínio",0],["2026-08-07","TED 041.0030.SENGERS S D",338.0,"in","Reembolso SENGE","reembolso","",0],["2026-08-10","TED 041.0030.SENGERS S D",318.87,"in","Reembolso SENGE","reembolso","",0],["2026-08-10","TED 041.0030.SENGERS S D",257.96,"in","Reembolso SENGE","reembolso","",0],["2026-08-10","TED 041.0030.SENGERS S D",57.0,"in","Reembolso SENGE","reembolso","",0],["2026-08-11","PIX TRANSF B&M SOL11/08",43.0,"out","Movimentação financeira","saida","Transferência para a B&M",0],["2026-08-11","PIX TRANSF B&M SOL11/08",230.0,"out","Movimentação financeira","saida","Transferência para a B&M",0],["2026-08-11","PIX TRANSF DANIEL 11/08",3081.0,"in","Reembolso Dani","reembolso","",0],["2026-08-12","PIX QRS CONSELHO RE12/08",148.65,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-12","PAGTO A VISTA SALDO DEV 88646606879026224",1616.44,"out","Financiamentos","saida","Quitação à vista de saldo devedor — conferir contrato",0],["2026-08-12","PAG BOLETO CONSELHO REGIONAL DE ENG ARQ",117.42,"out","Trabalho / Empresa","saida","CREA",0],["2026-08-12","REND PAGO APLIC AUT MAIS",0.01,"in","Movimentação financeira","entrada","",0],["2026-08-17","PIX TRANSF LUIZA C17/08",20.0,"out","Revisar categoria","saida","",0],["2026-08-17","PIX TRANSF CEZAR H17/08",90.02,"out","Revisar categoria","saida","",0],["2026-08-17","SISPAG PIX JESSICA BANDEIRA ...",500.0,"in","Salário","entrada","",0],["2026-08-18","PIX TRANSF LISIANE18/08",100.0,"out","Revisar categoria","saida","",0],["2026-08-18","PIX TRANSF B&M SOL18/08",31.0,"out","Movimentação financeira","saida","Transferência para a B&M",0],["2026-08-20","PIX QRS RECEITA FED20/08",178.31,"out","Taxas / Impostos","saida","",0],["2026-08-20","PIX QRS RECEITA FED20/08",394.26,"out","Taxas / Impostos","saida","",0],["2026-08-20","SISPAG PIX JESSICA BANDEIRA ...",2216.49,"in","Salário","entrada","",0],["2026-08-20","SISPAG PIX JESSICA BANDEIRA ...",1050.0,"in","Salário","entrada","",0],["2026-08-20","RENEGOCIACAO ITAU 02/20",2912.01,"out","Financiamentos","saida","Renegociação Itaú — cartão de crédito",0],["2026-08-25","PIX TRANSF João Le25/08",180.0,"out","Revisar categoria","saida","",0],["2026-08-25","PIX TRANSF JESSICA25/08",925.0,"in","Movimentação financeira","entrada","",0],["2026-08-25","SISPAG PIX JESSICA BANDEIRA ...",1900.0,"in","Salário","entrada","",0],["2026-08-25","PAGTO FINANC VEIC 25/60",1979.91,"out","Financiamentos","saida","Financiamento Jeep",0],["2026-08-26","PIX WHATS QRCODE CLARO26/08",127.79,"out","Casa","saida","Telefonia / internet",0],["2026-08-27","FATURA PAGA PERSONNALITE",16435.35,"out","Movimentação financeira","saida","Pagamento da fatura do cartão",0],["2026-08-27","REND PAGO APLIC AUT MAIS",0.01,"in","Movimentação financeira","entrada","",0],["2026-08-28","PIX TRANSF ROGERIO28/08",50.0,"in","Reembolso","reembolso","",0],["2026-08-28","SISPAG PIX JESSICA BANDEIRA ...",415.0,"in","Salário","entrada","",0],["2026-08-31","TED 041.0100.SIND. E E R",5286.7,"in","Salário","entrada","",0],["2026-08-31","PIX QRS PJBANK30/08",899.58,"out","Casa","saida","Condomínio",0],["2026-08-31","PIX TRANSF PATRICI31/08",833.33,"in","Reembolso","reembolso","",0],["2026-08-31","SISPAG PIX JESSICA BANDEIRA ...",1490.0,"in","Salário","entrada","",0],["2026-08-31","PAG BOLETO MUTUA DE ASSISTENCIA DOS PRO",721.6,"out","Financiamentos","saida","Empréstimo Mútua",0],["2026-08-31","DA REC FED 02394417",219.99,"out","Taxas / Impostos","saida","",0],["2026-09-01","JUROS LIMITE DA CONTA",180.15,"out","Taxas / Impostos","saida","Encargos do limite da conta",0],["2026-09-02","PIX WHATS QRCODE CONSELHO RE02/09",108.39,"out","Trabalho / Empresa","saida","CREA",0],["2026-09-02","PIX WHATS QRCODE CLARO02/09",260.94,"out","Casa","saida","Telefonia / internet",0],["2026-09-02","IOF",73.56,"out","Taxas / Impostos","saida","Encargos do limite da conta",0],["2026-09-03","PIX TRANSF Viniciu03/09",100.0,"in","Reembolso","reembolso","",0],["2026-09-03","PIX TRANSF MARIA C03/09",100.0,"in","Reembolso","reembolso","",0],["2026-09-03","PIX TRANSF ANA CRI03/09",100.0,"in","Reembolso","reembolso","",0],["2026-09-03","PIX TRANSF Casa Do03/09",200.0,"in","Reembolso","reembolso","",0],["2026-09-03","PIX TRANSF LUIZ FE03/09",100.0,"in","Reembolso","reembolso","",0],["2026-09-03","PIX TRANSF ROSANE 03/09",100.0,"in","Reembolso","reembolso","",0],["2026-09-03","SISPAG PIX JESSICA BANDEIRA ...",16774.34,"in","Salário","entrada","",0],["2026-09-03","PAGTO A VISTA SALDO DEV 88647940575726246",5369.51,"out","Financiamentos","saida","Quitação à vista de saldo devedor — conferir contrato",0],["2026-09-04","PIX TRANSF DANIEL 04/09",2000.0,"in","Reembolso Dani","reembolso","",0],["2026-09-04","PIX TRANSF EDUARDO04/09",1000.0,"in","Reembolso","reembolso","",0],["2026-09-04","PIX TRANSF GRAZIEL04/09",43.0,"in","Reembolso","reembolso","",0],["2026-09-04","PAGTO A VISTA SALDO DEV 88648041929226247",492.3,"out","Financiamentos","saida","Quitação à vista de saldo devedor — conferir contrato",0],["2026-09-04","PAG BOLETO MUTUA DE ASSISTENCIA DOS PRO",736.97,"out","Financiamentos","saida","Pago em duplicidade — devolvido pela Mútua em 22/09",0],["2026-09-04","PAG BOLETO PJBANK PAGAMENTOS S A",834.12,"out","Casa","saida","Condomínio",0],["2026-09-04","PAG BOLETO SINDICATO DOS ENGENHEIROS NO",733.58,"out","SENGE","saida","",0],["2026-09-08","PIX QRS ITAU UNIBAN07/09",877.83,"out","Financiamentos","saida","Pagamento ao Itaú — conferir contrato",0],["2026-09-08","PIX TRANSF ROGERIO05/09",160.0,"in","Reembolso","reembolso","",0],["2026-09-08","SISPAG PIX JESSICA BANDEIRA ...",435.0,"in","Salário","entrada","",0],["2026-09-08","PAG BOLETO ITAU-UNIBANCO HOLDING S/A",1959.34,"out","Financiamentos","saida","Pagamento ao Itaú — conferir contrato",0],["2026-09-08","TBI 0516.08424-1YOU T",28.0,"in","Reembolso","reembolso","",0],["2026-09-08","TBI 0516.08424-1TELEF",110.0,"in","Reembolso","reembolso","",0],["2026-09-08","REND PAGO APLIC AUT MAIS",0.01,"in","Movimentação financeira","entrada","",0],["2026-09-09","PIX TRANSF AIRTON 09/09",232.0,"in","Reembolso","reembolso","",0],["2026-09-09","PIX TRANSF ROGERIO09/09",140.0,"in","Reembolso","reembolso","",0],["2026-09-09","PAY JOSE 09/09",231.57,"out","Revisar categoria","saida","",0],["2026-09-10","PIX TRANSF DARCI A10/09",200.0,"out","Revisar categoria","saida","",0],["2026-09-10","PIX TRANSF DANIEL 10/09",956.0,"in","Reembolso Dani","reembolso","",0],["2026-09-11","PIX TRANSF AUGUSTO11/09",1000.0,"in","Reembolso","reembolso","",0],["2026-09-11","PAGTO A VISTA SALDO DEV 88648456825026254",1612.31,"out","Financiamentos","saida","Quitação à vista de saldo devedor — conferir contrato",0],["2026-09-21","PIX WHATS QRCODE CLARO21/09",262.13,"out","Casa","saida","Telefonia / internet",0],["2026-09-21","PIX WHATS QRCODE CLARO NXT T21/09",127.75,"out","Casa","saida","Telefonia / internet",0],["2026-09-21","REND PAGO APLIC AUT MAIS",0.01,"in","Movimentação financeira","entrada","",0],["2026-09-22","TED 001.0367.MUTUA D A D",736.97,"in","Movimentação financeira","entrada","Devolução do boleto da Mútua pago em duplicidade em 04/09",0],["2026-09-24","SISPAG PIX TROIKA TRANSPORTE...",190.79,"in","Outros recebimentos","outros","Recebimento de terceiros",0],["2026-09-25","PIX TRANSF CASA DO25/09",108.39,"in","Reembolso","reembolso","",0],["2026-09-25","PIX TRANSF PATRICI25/09",108.39,"in","Reembolso","reembolso","",0],["2026-09-25","PAG BOLETO MUTUA DE ASSISTENCIA DOS PRO",714.45,"out","Financiamentos","saida","Empréstimo Mútua",0],["2026-09-25","PAG BOLETO CONSELHO REGIONAL DE ENG ARQ",108.39,"out","Trabalho / Empresa","saida","CREA",0],["2026-09-25","REND PAGO APLIC AUT APR",0.01,"in","Movimentação financeira","entrada","",0],["2026-09-28","SISPAG PIX JESSICA BANDEIRA ...",4477.64,"in","Salário","entrada","",0],["2026-09-28","TED 041.0030.SENGERS S D",132.3,"in","Reembolso SENGE","reembolso","",0],["2026-09-28","PIX QRS CONSELHO RE28/09",108.39,"out","Trabalho / Empresa","saida","CREA",0],["2026-09-28","ITAU BLACK 3112-8880",15842.38,"out","Movimentação financeira","saida","Pagamento da fatura do cartão",0],["2026-09-29","SISPAG PIX JESSICA BANDEIRA ...",3483.53,"in","Salário","entrada","",0],["2026-09-29","PIX TRANSF PATRICI29/09",833.33,"in","Reembolso","reembolso","",0],["2026-09-30","TED 041.0100.SIND. E E R",5286.7,"in","Salário","entrada","",0],["2026-09-30","DA REC FED 02394417021",222.31,"out","Taxas / Impostos","saida","Agendado no banco",1],["2026-10-02","IOF",47.6,"out","Taxas / Impostos","saida","IOF do uso do limite em setembro · Agendado no banco",1],["2026-10-09","Agendado",1724.52,"out","Financiamentos","saida","Débito agendado no banco — provável financiamento do apartamento · Agendado no banco",1]];
+var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Restaurante","99*|Revisar categoria","abastecedora de combus|CombustÃ­vel","abastecedora de combus|Combustível","adiqplu*dr carlos osor|Revisar categoria","adiqplu*dr carlos osor|Saúde","adiqplu*dr carlos|Revisar categoria","ah casa eventos|Revisar categoria","allpark empreendimento|Revisar categoria","amazon br *amazon br|Revisar categoria","amazon br *amazo|Revisar categoria","amazon digital br|Assinaturas / Apps","anthropic* claude sub|Assinaturas / Apps","anthropic|Assinaturas / Apps","anuar pezzi supermerca|Revisar categoria","apcmiami|Carro / Transporte","apolo filial 4|Revisar categoria","apple.com/bill|Assinaturas / Apps","asaas *senge|SENGE","aut*ticpaybikeincasa|Revisar categoria","aut*ticpaybikeinca|Revisar categoria","auto pecas belloli|Carro / Transporte","azul seguros|Carro / Transporte","b12 armazem de produto|Mercadinho","baciodilatte|Restaurante","baterias freitas|Carro / Transporte","beauty hub varejo|Cuidados pessoais","bistek supermercados l|Mercadinho","bistek supermercados|Mercadinho","bistek supermercados|Supermercado","bourbon canoas|Restaurante","bourbon canoas|Supermercado","brandes e brandes ferr|Revisar categoria","brewfel|Restaurante","burger king|Restaurante","cappta *top chik prese|Delivery","cappta *viga bar e res|Delivery","cappta *viga bar e res|Restaurante","carrefour cns 42|Supermercado","carrefour cristal|Supermercado","casa de carnes moacir|Mercadinho","casa do mato|Mercadinho","casa do papel|Estudos","casa do papel|Mercadinho","ce com casa prado|Carro / Transporte","ce com casa prado|Casa","cea modas 0317 rio gra|Vestuário","cea modas 0317 rio|Vestuário","central gaucha de|Revisar categoria","china center historico|Restaurante","comercial mattos ltda|Revisar categoria","comercio vef|Mercadinho","creeare artigos de pa|Estudos","d galeto e gato|Revisar categoria","dagostini alimentos|Supermercado","dl *uberrides|Carro / Transporte","dl*uberrides|Carro / Transporte","drive aeroporto|Carro / Transporte","dwj comercio de ar|Lazer","dwj comercio de ar|Revisar categoria","ec *melimais|Revisar categoria","ec *shellbox|CombustÃ­vel","ec *shellbox|Combustível","elaize silva pezzi cia|Dani","elaize silva pezzi cia|Revisar categoria","estapar reserva 29r2k9|Carro / Transporte","estrelat industria e c|Revisar categoria","f r bar e restaurante|Restaurante","fama pizzaria|Restaurante","farmacia sao joao|Farmácia","farmacias sao joao sjd|Farmácia","ferragem interluz|Casa","finodoce|Restaurante","fomeria|Delivery","google youtubepremium|Assinaturas / Apps","gran armazem|Mercadinho","h&m - iguatemi por|Farmácia","h&m - praia de bel|FarmÃ¡cia","h&m - praia de bel|Farmácia","hmbrasil *hmbrasil|Revisar categoria","hna*qdb|FarmÃ¡cia","hna*qdb|Farmácia","hortifrutigranjeiro ka|Mercadinho","hospital sao lucas da|Saúde","hotel scala|Lazer","htm*fabio lopes cardos|Revisar categoria","humapadariae|Mercadinho","ifd *kero ltda|Delivery","ifd*afm comercio de al|Delivery","ifd*biazetto comercio|Delivery","ifd*carboni e dier com|Delivery","ifd*comercio de medica|Delivery","ifd*delivery alliance|Delivery","ifd*dimed sa distribui|Delivery","ifd*fama004 pizzaria l|Restaurante","ifd*fomeria comercio d|Delivery","ifd*mello comercio de|Delivery","ifd*mi restaurante rep|Restaurante","ifd*pontin restaurante|Restaurante","ingresse|Lazer","iof compra internaciona|Taxas / Impostos","jockey club do rio gra|Lazer","kalunga shopping canoa|Revisar categoria","lhamastche|Restaurante","lindt sprungli brazil|Restaurante","lindt sprungli br|Restaurante","lojas renner|Vestuário","lyon park estac|Carro / Transporte","mania games|Revisar categoria","marcelo somacal|Revisar categoria","mcdonalds|Restaurante","mdcarnesltda|Mercadinho","mercado grisa|Mercadinho","mercado italiano|Mercadinho","mercado monegat ltda|Mercadinho","mercado*ghairofici|Cuidados pessoais","mercado*mercadolivre|Revisar categoria","mercado*mercadoliv|Revisar categoria","mercado*outletodonto|Saúde","mercadolivre*frutydel|Vestuário","mercadolivre*ghair|Cuidados pessoais","mercadolivre*livraria|Estudos","mercadolivre*marinesh|Saúde","mercadolivre*mercadoli|Mercadinho","mercadolivre*mercadol|Revisar categoria","mercadolivre*merca|Revisar categoria","mester cafe|Revisar categoria","mmc alimentacao ltda|Revisar categoria","mo kitchen menino deus|Restaurante","mocellin comercio de b|Revisar categoria","momentus|Revisar categoria","mp *aloasushidelivery|Delivery","mp *centralcopias|Trabalho / Empresa","mp *gefersonmacha|Revisar categoria","mp *jessica|Lazer","mp *jessica|Revisar categoria","mp *playcampos|Revisar categoria","mp *playcampos|Vestuário","mp *shellbox|Combustível","mp *unicompecas|Carro / Transporte","naples|Restaurante","nutripao|Revisar categoria","o mercadinho|Mercadinho","okidoki*nook|Revisar categoria","okidoki|Restaurante","openai *chatgpt subscr|Assinaturas / Apps","openai*chatgpt subscr|Assinaturas / Apps","otto car pecas e aces|Carro / Transporte","padaria du chico|Mercadinho","padaria du chico|Restaurante","pandorga livros e brin|Revisar categoria","panvel farmacias 748|Farmácia","panvel farmacias filia|Farmácia","panvel farmacias|FarmÃ¡cia","panvel farmacias|Farmácia","panvel filial 184|Farmácia","panvel filial 483|Farmácia","panvel filial 845|FarmÃ¡cia","panvel filial 845|Farmácia","panvel*digital|FarmÃ¡cia","panvel*digital|Farmácia","pdv*agroc vida|CombustÃ­vel","pdv*agroc vida|Combustível","pdv*panificio partenon|Revisar categoria","pecanha antonio cia lt|Restaurante","pgz*palmeiras|Revisar categoria","posto garybaldi|Combustível","posto jockey|CombustÃ­vel","posto jockey|Combustível","posto universitario|CombustÃ­vel","posto universitario|Combustível","pratomil restaurantes|Restaurante","puccampushospital|Carro / Transporte","pucpoactnbrp|Carro / Transporte","qcymall|Revisar categoria","quero quero fl 109|Casa","raia drogasil sa|FarmÃ¡cia","raia drogasil sa|Farmácia","raia1530|FarmÃ¡cia","raia1530|Farmácia","raia1896|FarmÃ¡cia","raia1896|Farmácia","raia1909|FarmÃ¡cia","raia1909|Farmácia","raia1939|FarmÃ¡cia","raia1939|Farmácia","raia3031|FarmÃ¡cia","raia3031|Farmácia","raia314|Farmácia","raia438|Farmácia","rams comercio de alime|Mercadinho","rd saude online|FarmÃ¡cia","rd saude online|Farmácia","repasse de iof (compras internacionais 0061)|Taxas / Impostos","repasse de iof (compras internacionais 7734)|Taxas / Impostos","rg casa de carnes e as|Mercadinho","sabor de luna padaria|Mercadinho","sabor de luna padaria|Restaurante","sam s porto alegre 494|Supermercado","sams club poa cristal|Supermercado","san diego cafe e bistr|Restaurante","santo antonio eventos|Lazer","santo antonio eventos|Revisar categoria","schefereoliveira|Revisar categoria","scheferoliveira|Mercadinho","senge r*sind. dos eng|SENGE","sephora porto alegre|Cuidados pessoais","shopee *isabelatop|Revisar categoria","shopee *isabelatop|Vestuário","sim poa av assis brasi|Carro / Transporte","sim poa ceara|Carro / Transporte","sim poa ipiranga puc|CombustÃ­vel","sim poa ipiranga puc|Combustível","sorveteria troppo buo|Restaurante","spazio naturale|Supermercado","stb*ladycomerciodearti|Vestuário","super bom campos vel|Mercadinho","super bom campos vel|Supermercado","superlegal comerci|Casa","superlegal comerci|Revisar categoria","superlegal|Casa","superlegal|Revisar categoria","sushi de carli ltda|Restaurante","tagitau*jessicamoraes|Trabalho / Empresa","tenda harmonia|Revisar categoria","tudo em make|Cuidados pessoais","uber uber *trip help.u|Carro / Transporte","unisuper barcelos ii|Supermercado","unisuper barcelos i|Supermercado","verisure brasil mo|Dani","verisure brasil mo|Revisar categoria","via napole restaurante|Restaurante","viniciuscarvalho|Mercadinho","vonny cosmeticos|Cuidados pessoais","vpscomerciode|Revisar categoria","wddrones e wdagro|Trabalho / Empresa","wow park barra sul|Restaurante","youcom fl 400079|VestuÃ¡rio","youcom fl 400079|Vestuário","zaffari o. nmeyer|Supermercado","zaffari park canoas|Supermercado","zaffari|Supermercado","zzrsv rs barra sul|Restaurante"];
+/* ============================================================
+   V26 — SINCRONIZAÇÃO COM O BANCO (fatura de setembro fechada e
+   extrato de 28/07 a 26/09/2026)
+   Rotina idempotente: roda ao abrir o app e depois de cada
+   sincronização com a nuvem. Faturas por ciclo (22 a 21):
+     julho R$ 13.709,00 · agosto R$ 16.435,35 · setembro R$ 15.842,38
+   Parcelas em aberto da fatura de setembro projetadas até dezembro.
+   Lançamentos digitados à mão são preservados; categorias ajustadas
+   por você são mantidas.
+   ============================================================ */
+(function(){
+  if(typeof DB==='undefined'){console.error('v26: DB indisponível');return;}
+  var IMPORT_SRCS={'fatura-import':1,'Agosto2026.pdf':1,'Setembro2026.pdf':1,'fatura-v26':1};
+  var ORIG=new Set(V26_ORIG_CATS);
+  var BANCO={7:{d:'2026-07-31',s:295.37},8:{d:'2026-08-31',s:-9553.52},9:{d:'2026-09-29',s:-6737.87}};
+  window.V26_BANCO=BANCO;
+  function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+  function sv(x){return (Math.round((parseFloat(x)||0)*100)/100).toFixed(2);}
+  function v2(x){return (Math.round(Math.abs(parseFloat(x)||0)*100)/100).toFixed(2);}
+  function pn(p){var m=String(p||'').match(/(\d+)\s*\/\s*(\d+)/);return m?(parseInt(m[1],10)+'/'+parseInt(m[2],10)):'';}
+  var seq=0;function nid(){seq++;return 'v26_'+Date.now().toString(36)+'_'+seq.toString(36);}
+  function dias(a,b){return Math.round((new Date(a+'T12:00:00')-new Date(b+'T12:00:00'))/86400000);}
+  function ultimoDia(ano,mes){return new Date(ano,mes,0).getDate();}
+
+  function canonCartao(){
+    var out=[];
+    [7,8,9].forEach(function(m){
+      (V26_FATURAS[m]||[]).forEach(function(r){
+        out.push({mes:m,data:r[0],nome:r[1],valor:r[2],cat:r[3],parcela:r[4]||''});
+      });
+    });
+    /* Parcelas futuras a partir da fatura de setembro, mantendo a data original da compra */
+    (V26_FATURAS[9]||[]).forEach(function(r){
+      var p=pn(r[4]);if(!p)return;
+      var a=p.split('/'),pi=+a[0],pt=+a[1];
+      for(var k=1;pi+k<=pt;k++){
+        var mm=9+k;if(mm>12)break;
+        out.push({mes:mm,data:r[0],nome:r[1],valor:r[2],cat:r[3],parcela:(pi+k)+'/'+pt,proj:1});
+      }
+    });
+    return out;
+  }
+
+  function sincCartao(rel){
+    var canon=canonCartao();
+    var pool=DB.items.filter(function(i){return (i.tipo==='cartao'||i.tipo==='dani')&&i.mes>=6&&i.mes<=12;});
+    var claimed=new Set();
+    var idx={};
+    pool.forEach(function(i){var k=(i.data||'')+'|'+sv(i.valor)+'|'+pn(i.parcela);(idx[k]=idx[k]||[]).push(i);});
+    var semMatch=[];
+    canon.forEach(function(c){
+      var k=c.data+'|'+sv(c.valor)+'|'+pn(c.parcela);
+      var cands=(idx[k]||[]).filter(function(i){return !claimed.has(i)&&(c.parcela?true:Math.abs(i.mes-c.mes)<=1);});
+      if(!cands.length&&c.parcela){
+        cands=(idx[c.data+'|'+sv(c.valor)+'|']||[]).filter(function(i){return !claimed.has(i)&&!i._src&&Math.abs(i.mes-c.mes)<=1;});
+      }
+      if(!cands.length){semMatch.push(c);return;}
+      cands.sort(function(a,b){return ((a._src?1:0)-(b._src?1:0))||(Math.abs(a.mes-c.mes)-Math.abs(b.mes-c.mes));});
+      var it=cands[0];claimed.add(it);
+      var importado=!!IMPORT_SRCS[it._src];
+      var mudou=false;
+      function set(f,v){if(it[f]!==v){it[f]=v;mudou=true;}}
+      if(it.tipo==='dani'){set('tipo','cartao');set('cat','Dani');}
+      set('mes',c.mes);
+      if(importado||!it.parcela)set('parcela',c.parcela);
+      if(importado){set('nome',c.nome);set('data',c.data);set('_src','fatura-v26');}
+      var catAtual=it.cat||'Revisar categoria';
+      var catDaImportacao=ORIG.has(norm(it.nome)+'|'+catAtual)||ORIG.has(norm(c.nome)+'|'+catAtual);
+      if(catAtual==='Revisar categoria'||(importado&&catDaImportacao))set('cat',c.cat);
+      if(mudou)rel.cartaoAtualizados++;
+    });
+    semMatch.forEach(function(c){
+      var novo={id:nid(),mes:c.mes,nome:c.nome,valor:c.valor,cat:c.cat,tipo:'cartao',parcela:c.parcela,data:c.data,obs:'',_src:'fatura-v26'};
+      DB.items.push(novo);claimed.add(novo);
+      rel.cartaoNovos++;
+    });
+    var antes=DB.items.length;
+    DB.items=DB.items.filter(function(i){
+      if(!(i.tipo==='cartao'||i.tipo==='dani'))return true;
+      if(i.mes<6||i.mes>12)return true;
+      if(claimed.has(i))return true;
+      if(!IMPORT_SRCS[i._src])return true;
+      if(i._src==='Agosto2026.pdf'&&i.mes<8)return true;
+      return false;
+    });
+    rel.cartaoRemovidos+=antes-DB.items.length;
+    /* Compras digitadas à mão depois do fechamento de 20/09 pertencem à fatura de outubro */
+    DB.items.forEach(function(i){
+      if(i.tipo==='cartao'&&i.mes===9&&!i._src&&!claimed.has(i)&&i.data&&i.data>='2026-09-21'){i.mes=10;rel.movidasOutubro++;}
+    });
+  }
+
+  function sincConta(rel){
+    var CT={entrada:1,reembolso:1,outros:1,saida:1};
+    var pool=DB.items.filter(function(i){return CT[i.tipo]&&i.data&&i.data>='2026-07-20'&&i.data<='2026-10-20';});
+    function dir(i){return i.tipo==='saida'?'out':'in';}
+    var claimed=new Set();
+    var faltantes=[];
+    V26_EXTRATO.forEach(function(r){
+      var c={data:r[0],nome:r[1],valor:r[2],dir:r[3],cat:r[4],tipo:r[5],obs:r[6],ag:r[7]};
+      function base(i){return !claimed.has(i)&&v2(i.valor)===v2(c.valor)&&dir(i)===c.dir;}
+      var cands=pool.filter(function(i){return base(i)&&!i._src&&i.data===c.data;});
+      if(!cands.length&&c.valor>=50)cands=pool.filter(function(i){return base(i)&&!i._src&&Math.abs(dias(i.data,c.data))<=3;});
+      if(!cands.length)cands=pool.filter(function(i){return base(i)&&i.data===c.data;});
+      if(!cands.length){faltantes.push(c);return;}
+      var it=cands[0];claimed.add(it);
+      var m=parseInt(c.data.slice(5,7),10);
+      if(it.data!==c.data){it.data=c.data;rel.contaAtualizados++;}
+      if(it.mes!==m){it.mes=m;rel.contaAtualizados++;}
+      if((!it.cat||it.cat==='Revisar categoria')&&c.cat!=='Revisar categoria'){it.cat=c.cat;rel.contaAtualizados++;}
+      /* Transferências da B&M (SISPAG PIX JESSICA) são renda da empresa, não movimentação entre contas */
+      if(/SISPAG PIX JESSICA/i.test(c.nome)&&it.cat==='Movimentação financeira'){it.cat='Salário';it.tipo='entrada';rel.contaAtualizados++;}
+      if(!it.obs&&c.obs){it.obs=c.obs;}
+      /* Débito agendado que já foi processado pelo banco deixa de aparecer como agendado */
+      if(it._agendado&&!c.ag){it._agendado=0;if(/Agendado no banco/.test(it.obs||''))it.obs=c.obs;rel.contaAtualizados++;}
+      if(!it._agendado&&c.ag&&it._src==='extrato-v26'){it._agendado=1;}
+    });
+    faltantes.forEach(function(c){
+      DB.items.push({id:nid(),mes:parseInt(c.data.slice(5,7),10),nome:c.nome,valor:c.valor,cat:c.cat,tipo:c.tipo,parcela:'',data:c.data,obs:c.obs,_src:'extrato-v26',_agendado:c.ag?1:0});
+      rel.contaNovos++;
+    });
+    var antes=DB.items.length;
+    DB.items=DB.items.filter(function(i){return !(i._src==='extrato-v26'&&!claimed.has(i)&&CT[i.tipo]&&pool.indexOf(i)>=0);});
+    rel.contaRemovidos=antes-DB.items.length;
+  }
+
+  function saldosEFinanciamentos(){
+    try{
+      var s=JSON.parse(localStorage.getItem('saldo26v1')||'{}');
+      if(!s._v26){s[8]=295.37;s[9]=-9553.52;s._v26=1;localStorage.setItem('saldo26v1',JSON.stringify(s));}
+      if(!s._v30){if(s[10]===undefined||s[10]===null)s[10]=-1673.48;s._v30=1;localStorage.setItem('saldo26v1',JSON.stringify(s));} /* saldo de 30/09 após o DARF */
+    }catch(e){}
+    try{
+      if(typeof FINANC!=='undefined'&&!FINANC._v26){
+        function add(k,n){if(!FINANC[k])FINANC[k]=[];if(FINANC[k].indexOf(n)<0)FINANC[k].push(n);}
+        add('jeep_extras',25);                       /* PAGTO FINANC VEIC 25/60 em 25/08 */
+        add('cartao_ren_1_extras',2);                /* RENEGOCIACAO ITAU 02/20 em 20/08 */
+        [12,13,14].forEach(function(n){add('mutua_extras',n);}); /* boletos de 03/08, 31/08 e 25/09 */
+        FINANC._v26=1;
+        if(typeof financSave==='function')financSave();
+      }
+    }catch(e){console.error(e);}
+  }
+
+  /* Identificadores únicos: as importações antigas geravam ids pelo relógio e às vezes repetiam,
+     o que fazia editar/excluir um lançamento atingir outro. */
+  var _seqId=0;
+  mkId=function(){_seqId++;return Date.now().toString(36)+'_'+_seqId.toString(36)+'_'+Math.floor(Math.random()*1e6).toString(36);};
+  window.mkId=mkId;
+  function idsUnicos(){
+    var vistos={},n=0;
+    (DB.items||[]).forEach(function(i){if(!i.id||vistos[i.id]){i.id=mkId();n++;}vistos[i.id]=1;});
+    (DB.parcs||[]).forEach(function(i){if(!i.id||vistos[i.id]){i.id=mkId();n++;}vistos[i.id]=1;});
+    return n;
+  }
+  window.sincronizarV26=function(){
+    var idsCorrigidos=idsUnicos();
+    var rel={cartaoNovos:0,cartaoAtualizados:0,cartaoRemovidos:0,movidasOutubro:0,contaNovos:0,contaAtualizados:0,contaRemovidos:0};
+    try{sincCartao(rel);}catch(e){console.error('v26 cartão',e);}
+    try{sincConta(rel);}catch(e){console.error('v26 conta',e);}
+    saldosEFinanciamentos();
+    var houve=idsCorrigidos||rel.cartaoNovos||rel.cartaoAtualizados||rel.cartaoRemovidos||rel.movidasOutubro||rel.contaNovos||rel.contaAtualizados||rel.contaRemovidos;
+    if(houve){DB._v26SyncEm=new Date().toISOString();try{dbSave();}catch(e){}}
+    window.__v26rel=rel;
+    return rel;
+  };
+
+  /* A importação parcial da fatura de setembro (até 06/09) foi substituída pela fatura fechada */
+  try{importarFaturaSetembro2026=function(){};importarFaturaAgosto2026=function(){};}catch(e){}
+
+  sincronizarV26();
+
+  if(typeof cloudRefreshRuntime==='function'){
+    var _cr=cloudRefreshRuntime;
+    cloudRefreshRuntime=function(data){
+      _cr.apply(this,arguments);
+      try{sincronizarV26();if(typeof render==='function')render();}catch(e){console.error(e);}
+    };
+  }
+
+  /* Mês de referência do painel: último mês já encerrado (antes do dia 28, o mês anterior) */
+  try{
+    var hoje=new Date();
+    if(hoje.getFullYear()===ANO_PLANILHA){
+      var ref=hoje.getMonth()+1-(hoje.getDate()>=28?0:1);
+      MES_REFERENCIA=Math.max(1,Math.min(12,ref));
+    }else if(hoje.getFullYear()>ANO_PLANILHA){MES_REFERENCIA=12;}
+  }catch(e){}
+
+  /* Conferência do saldo da conta com o extrato do banco */
+  function conferencia(m){
+    var b=BANCO[m];var host=document.getElementById('saldo-inicial-display');
+    if(!host)return;
+    var old=document.getElementById('v26-conf');if(old)old.remove();
+    if(!b)return;
+    var si=(typeof getSaldoInicial==='function'?getSaldoInicial(m):0)||0;
+    var s=si;
+    DB.items.forEach(function(i){
+      if(i.mes!==m||!i.data||i.data>b.d)return;
+      var v=Math.abs(parseFloat(i.valor||0)||0);
+      if(i.tipo==='entrada'||i.tipo==='reembolso'||i.tipo==='outros')s+=v;
+      else if(i.tipo==='saida'||i.tipo==='cofre')s-=v;
+    });
+    (ENTRADAS_BASE[m]||[]).forEach(function(e){s+=e.v;});
+    var dif=Math.round((s-b.s)*100)/100;
+    var ok=Math.abs(dif)<0.01;
+    var d=b.d.slice(8)+'/'+b.d.slice(5,7);
+    var box=document.createElement('div');box.id='v26-conf';
+    box.className='v26-conf '+(ok?'ok':'bad');
+    box.innerHTML='<span class="dot"></span><span>Extrato em '+d+': <strong>'+RK(b.s)+'</strong></span>'
+      +(ok?'<span class="tag">app confere com o banco</span>':'<span class="tag">app com '+RK(Math.abs(dif))+(dif>0?' a mais — faltam saídas':' a menos — faltam entradas')+'</span>');
+    host.appendChild(box);
+  }
+  var _rcl=renderContaLista;
+  renderContaLista=function(m){var r=_rcl.apply(this,arguments);try{conferencia(m);}catch(e){}return r;};
+  window.renderContaLista=renderContaLista;
+})();
+</script>
+<style id="layout-v26">
+/* ---------- Mês: busca, navegação e filtros numa única faixa ---------- */
+#v-mes .mes-control-row{grid-template-columns:minmax(260px,340px) minmax(220px,1fr) auto!important;align-items:center!important;margin-bottom:14px!important}
+#v-mes .mes-control-row .mes-filter-bar{margin:0!important;padding:5px 8px!important;border-radius:10px!important;box-shadow:none!important;flex-wrap:nowrap!important}
+#v-mes .mes-control-row .mes-filter-bar .lbl{display:none}
+#v-mes .mes-control-row .mes-filter-bar select{max-width:190px}
+.btn-import-fat{display:none!important}
+#v-mes .mes-primary-grid>.sec:first-child .sec-t{white-space:nowrap}
+
+/* ---------- Resumo da fatura: indicadores do ciclo ---------- */
+.rf-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:14px;border:1px solid var(--bds,#ECEFF2);border-radius:12px;overflow:hidden;background:var(--bg,#F6F7F9)}
+.rf-kpi{padding:11px 14px;border-right:1px solid var(--bds,#ECEFF2);min-width:0}
+.rf-kpi:last-child{border-right:none}
+.rf-kpi .l{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3,#8A949F);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rf-kpi .v{font-family:Outfit,sans-serif;font-size:17px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums;color:var(--t,#27303B);white-space:nowrap}
+.rf-kpi .s{font-size:10.5px;color:var(--t3,#8A949F);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rf-kpi .v.up{color:var(--bad,#B24747)}.rf-kpi .v.dn{color:var(--ok,#2F7D59)}
+@media(max-width:1180px){.rf-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.rf-kpi:nth-child(3){border-right:none}.rf-kpi:nth-child(-n+3){border-bottom:1px solid var(--bds,#ECEFF2)}}
+@media(max-width:640px){.rf-kpis{grid-template-columns:1fr 1fr}.rf-kpi{border-right:none!important;border-bottom:1px solid var(--bds,#ECEFF2)}}
+
+/* ---------- Conferência com o extrato ---------- */
+.v26-conf{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:8px 15px 6px;padding:8px 11px;border-radius:9px;font-size:11.5px;color:var(--t2,#5A6470);background:var(--bg,#F6F7F9);border:1px solid var(--bds,#ECEFF2)}
+.v26-conf strong{font-variant-numeric:tabular-nums;color:var(--t,#27303B)}
+.v26-conf .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.v26-conf .tag{margin-left:auto;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px}
+.v26-conf.ok .dot{background:var(--ok,#2F7D59)}.v26-conf.ok .tag{background:var(--okbg,#EAF6F0);color:var(--ok,#2F7D59)}
+.v26-conf.bad .dot{background:#C08A2E}.v26-conf.bad .tag{background:#FBF3E3;color:#8A5E14}
+.v26-chip-ag{display:inline-flex;align-items:center;min-height:17px;padding:1px 7px;border-radius:999px;font-size:9.2px;font-weight:700;background:#FBF3E3;color:#8A5E14;border:1px solid rgba(160,110,34,.25)}
+
+/* ---------- Listas: primeiros lançamentos + botão para ver todos ---------- */
+.v26-mais{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 15px;border:none;border-top:1px dashed var(--bd,#DDE1E6);background:var(--card,#fff);color:var(--m,#8D5F78);font:600 12px Inter,sans-serif;cursor:pointer}
+.v26-mais:hover{background:var(--ml,#F7EEF3)}
+#fat-cats .li.v26-oculto,#conta-lista .li.v26-oculto,.v26-oculto{display:none!important}
+
+/* ---------- Painel ---------- */
+#painel-kpis>.sc:first-child{display:none!important}
+#painel-kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.v8-month-card .v{font-size:13px!important;white-space:nowrap!important;letter-spacing:-.01em}
+.v26-fat-wrap{background:var(--card,#fff);border:1px solid var(--bd,#DDE1E6);border-radius:15px;padding:16px 18px 12px;margin-bottom:18px}
+.v26-fat-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.v26-fat-head .t{font-family:Outfit,sans-serif;font-size:15px;font-weight:700;color:var(--t,#27303B)}
+.v26-fat-head .s{font-size:11.5px;color:var(--t3,#8A949F)}
+.v26-fat-bars{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;align-items:end;height:170px}
+.v26-fat-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:5px;cursor:pointer;min-width:0}
+.v26-fat-col .val{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--t2,#5A6470);white-space:nowrap}
+.v26-fat-col .bar{width:100%;max-width:58px;border-radius:7px 7px 3px 3px;background:#B24747;position:relative}
+.v26-fat-col .bar.proj{background:repeating-linear-gradient(135deg,#E7C9C9 0 6px,#F3E2E2 6px 12px);border:1px dashed #D9A5A5}
+.v26-fat-col .bar.atual{background:#8D5F78}
+.v26-fat-col .m{font-size:10px;font-weight:700;color:var(--t3,#8A949F);text-transform:uppercase;letter-spacing:.06em}
+.v26-fat-leg{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--t3,#8A949F);margin-top:10px}
+.v26-fat-leg span{display:inline-flex;align-items:center;gap:6px}
+.v26-fat-leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* ---------- Top categorias em duas colunas ---------- */
+@media(min-width:1100px){#top-cats>div{display:grid;grid-template-columns:1fr 1fr;column-gap:34px}#top-cats>div>div:first-child,#top-cats>div>.empty{grid-column:1/-1}}
+
+/* ---------- Parcelamentos: meses vazios recolhidos ---------- */
+.v26-parc-vazio{display:none!important}
+.v26-parc-nota{font-size:11.5px;color:var(--t3,#8A949F);margin:-4px 0 14px}
+
+@media(max-width:1050px){#v-mes .mes-control-row{grid-template-columns:1fr!important}#painel-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v26-fat-bars{gap:5px}.v26-fat-col .val{font-size:9.5px}}
+</style>
+<script id="layout-v26-js">
+(function(){
+  function $(s,r){return (r||document).querySelector(s);}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+  var LIMITE=15, abertas={};
+
+  /* Filtros na mesma faixa da navegação e da busca */
+  function juntarFiltros(){
+    var row=$('#v-mes .mes-control-row'),bar=$('#mes-filter-bar');
+    if(row&&bar&&bar.parentNode!==row)row.appendChild(bar);
+  }
+
+  /* Listas longas: mostra os lançamentos mais recentes e um botão para ver todos */
+  function limitar(id){
+    var box=document.getElementById(id);if(!box)return;
+    var old=box.parentNode.querySelector('.v26-mais[data-for="'+id+'"]');if(old)old.remove();
+    var linhas=$$('.li',box);
+    var filtrando=(($('#busca-mes')||{}).value||'').trim()||(($('#filtro-cat-mes')||{}).value||'todos')!=='todos'||(($('#filtro-tipo-mes')||{}).value||'todos')!=='todos';
+    linhas.forEach(function(l,i){l.classList.toggle('v26-oculto',!abertas[id]&&!filtrando&&i>=LIMITE);});
+    if(filtrando||linhas.length<=LIMITE)return;
+    var b=document.createElement('button');b.type='button';b.className='v26-mais';b.setAttribute('data-for',id);
+    b.textContent=abertas[id]?'Mostrar só os '+LIMITE+' mais recentes':'Ver todos os '+linhas.length+' lançamentos';
+    b.onclick=function(){abertas[id]=!abertas[id];limitar(id);if(!abertas[id])box.scrollIntoView({block:'nearest'});};
+    box.insertAdjacentElement('afterend',b);
+  }
+  window.toggleVerTudoCartao=function(){abertas['fat-cats']=!abertas['fat-cats'];limitar('fat-cats');var b=$('#btn-ver-tudo-cartao');if(b)b.textContent=abertas['fat-cats']?'Menos':'Tudo';};
+  window.toggleVerTudoConta=function(){abertas['conta-lista']=!abertas['conta-lista'];limitar('conta-lista');var b=$('#btn-ver-tudo-conta');if(b)b.textContent=abertas['conta-lista']?'Menos':'Tudo';};
+  try{toggleVerTudoCartao=window.toggleVerTudoCartao;toggleVerTudoConta=window.toggleVerTudoConta;}catch(e){}
+
+  /* Marca na conta os débitos ainda agendados no banco */
+  function marcarAgendados(){
+    $$('#conta-lista .li').forEach(function(li){
+      var b=li.querySelector('[data-edit]');if(!b||li.querySelector('.v26-chip-ag'))return;
+      var it=DB.items.filter(function(x){return x.id===b.getAttribute('data-edit');})[0];
+      if(it&&it._agendado){var row=li.querySelector('.v32-chip-row');if(row)row.insertAdjacentHTML('beforeend','<span class="v26-chip-ag">agendado</span>');}
+    });
+  }
+
+  /* Resumo da fatura: situação automática e indicadores do ciclo */
+  var INFO_SK='pjm-fatura-info-v1';
+  function info(m){try{return (JSON.parse(localStorage.getItem(INFO_SK)||'{}')[m])||{};}catch(e){return {};}}
+  function pagamentos(m){
+    var ini='2026-'+String(m).padStart(2,'0')+'-22', fimM=m+1, fim='2026-'+String(Math.min(fimM,12)).padStart(2,'0')+(fimM>12?'-31':'-15');
+    return DB.items.filter(function(i){return i.tipo==='saida'&&/ITAU BLACK|FATURA PAGA/i.test(i.nome||'')&&i.data>=ini&&i.data<=fim;});
+  }
+  function situacao(m,total){
+    var inf=info(m);
+    if(inf.situacao)return null;
+    var pg=pagamentos(m),pago=pg.filter(function(i){return !i._agendado;}).reduce(function(a,i){return a+(+i.valor||0);},0);
+    var ag=pg.filter(function(i){return i._agendado;})[0];
+    if(pago>=total-1)return ['Paga','var(--ok,#2F7D59)'];
+    if(ag)return ['Pagamento agendado · '+ag.data.slice(8)+'/'+ag.data.slice(5,7),'#8A5E14'];
+    if(pago>0)return ['Pago '+RK(pago),'#8A5E14'];
+    var hoje=new Date().toISOString().slice(0,10);
+    if(hoje>='2026-'+String(m).padStart(2,'0')+'-22')return ['Fechada','var(--m,#8D5F78)'];
+    return null;
+  }
+  function kpisFatura(){
+    var wrap=$('#resumo-fatura-host .rf-wrap');if(!wrap)return;
+    var m=mesAtual,its=DB.items.filter(function(i){return i.mes===m&&i.tipo==='cartao';});
+    var total=faturaTotal(m);
+    var novas=0,parc=0,cred=0,nNovas=0;
+    its.forEach(function(i){var v=+i.valor||0;if(v<0){cred+=v;return;}var p=String(i.parcela||'').match(/(\d+)\s*\/\s*(\d+)/);if(p&&+p[1]>1)parc+=v;else{novas+=v;nNovas++;}});
+    var prox=m<12?DB.items.filter(function(i){return i.mes===m+1&&i.tipo==='cartao'&&i.parcela;}).reduce(function(a,i){return a+(+i.valor||0);},0):0;
+    var ant=m>1?faturaTotal(m-1):0,dif=total-ant;
+    var s=situacao(m,total);
+    if(s){var bd=wrap.querySelector('.rf-badge');if(bd){bd.textContent=s[0];bd.style.background=s[1];}}
+    var pill=document.querySelector('#fechamento-mes .month-pill');var bd2=wrap.querySelector('.rf-badge');if(pill&&bd2)pill.textContent=bd2.textContent;
+    var old=wrap.querySelector('.rf-kpis');if(old)old.remove();
+    var h='<div class="rf-kpis">'
+      +k('Compras novas',RK(novas),nNovas+' lançamentos no ciclo')
+      +k('Parcelas antigas',RK(parc),'compras de meses anteriores')
+      +k('Estornos e créditos',RK(cred),'já abatidos do total','dn')
+      +k('Vs. fatura anterior',ant?((dif>0?'+ ':'− ')+RK(Math.abs(dif))):'—',ant?(MESES[m-2]+': '+RK(ant)):'',ant?(dif>0?'up':'dn'):'')
+      +k(m<12?'Já garantido em '+MESES[m]:'Parcelas seguintes',m<12?RK(prox):'—','parcelas que continuam')
+      +'</div>';
+    var line=wrap.querySelector('.rf-line');
+    (line||wrap).insertAdjacentHTML('afterend',h);
+    if(!line)wrap.appendChild(wrap.querySelector('.rf-kpis'));
+    function k(l,v,sub,cls){return '<div class="rf-kpi"><div class="l">'+l+'</div><div class="v '+(cls||'')+'">'+v+'</div><div class="s">'+(sub||'')+'</div></div>';}
+  }
+
+  /* Painel: fatura do cartão mês a mês, com parcelas já comprometidas */
+  function faturaPainel(){
+    var host=document.getElementById('resumo-body');if(!host)return;
+    var old=document.getElementById('v26-fat-painel');if(old)old.remove();
+    var hoje=new Date(),mh=hoje.getFullYear()===2026?hoje.getMonth()+1:12;
+    var meses=[5,6,7,8,9,10,11,12],vals=meses.map(function(m){return faturaTotal(m);});
+    var max=Math.max.apply(null,vals.concat([1]));
+    var h='<div class="v26-fat-wrap" id="v26-fat-painel"><div class="v26-fat-head"><div class="t">Fatura do cartão por mês</div>'
+      +'<div class="s">Cada fatura no mês em que é cobrada (ciclo 22 a 21). Meses futuros mostram apenas as parcelas já contratadas.</div></div><div class="v26-fat-bars">';
+    meses.forEach(function(m,i){
+      var v=vals[i],futuro=m>mh,cls=futuro?'proj':(m===mh?'atual':'');
+      var hgt=v>0?Math.max(6,Math.round(v/max*118)):3;
+      h+='<div class="v26-fat-col" onclick="goTo(\'mes\','+m+')" title="'+MESES[m-1]+': '+RK(v)+'"><div class="val">'+(v?RK(v).replace('R$ ',''):'—')+'</div>'
+        +'<div class="bar '+cls+'" style="height:'+hgt+'px"></div><div class="m">'+MAB[m-1]+'</div></div>';
+    });
+    h+='</div><div class="v26-fat-leg"><span><i style="background:#B24747"></i>Fatura cobrada</span><span><i style="background:#8D5F78"></i>Mês atual</span><span><i style="background:#E7C9C9;border:1px dashed #D9A5A5"></i>Parcelas já contratadas</span></div></div>';
+    host.insertAdjacentHTML('afterbegin',h);
+  }
+
+  /* Parcelamentos: esconde meses sem nenhum recebimento mensal, exceto o mês atual */
+  function parcelasEnxutas(){
+    var blocos=$$('#parc-lista .v8-parc-month');if(!blocos.length)return;
+    var atual=(new Date().getMonth()+1),oc=0;
+    blocos.forEach(function(b){
+      var nome=((b.querySelector('.v8-parc-month-h .m')||{}).textContent||'').trim();
+      var vazio=!b.querySelector('.pr');
+      var ehAtual=MESES[atual-1]===nome;
+      var esconder=vazio&&!ehAtual;b.classList.toggle('v26-parc-vazio',esconder);if(esconder)oc++;
+    });
+    var n=$('#v26-parc-nota');if(n)n.remove();
+    if(oc){var first=blocos[0];first.insertAdjacentHTML('beforebegin','<div class="v26-parc-nota" id="v26-parc-nota">'+oc+' meses sem recebimentos mensais estão ocultos. Use “Adicionar parcelamento” para lançar em qualquer mês.</div>');}
+  }
+
+  function aposRender(){
+    try{
+      var v=typeof vAtual!=='undefined'?vAtual:'';
+      if(v==='mes'){juntarFiltros();limitar('fat-cats');limitar('conta-lista');marcarAgendados();kpisFatura();}
+      if(v==='painel')faturaPainel();
+      if(v==='parcelamentos')parcelasEnxutas();
+    }catch(e){console.error('layout v26',e);}
+  }
+  var _render=window.render;
+  window.render=function(){var r=_render.apply(this,arguments);aposRender();return r;};
+  try{render=window.render;}catch(e){}
+  var _goTo=window.goTo;
+  window.goTo=function(){var r=_goTo.apply(this,arguments);setTimeout(aposRender,40);return r;};
+  try{goTo=window.goTo;}catch(e){}
+  if(typeof renderResumoFatura==='function'){var _rrf=renderResumoFatura;window.renderResumoFatura=function(){var r=_rrf.apply(this,arguments);try{kpisFatura();}catch(e){}return r;};try{renderResumoFatura=window.renderResumoFatura;}catch(e){}}
+  ['busca-mes','filtro-cat-mes','filtro-tipo-mes'].forEach(function(id){document.addEventListener('input',function(e){if(e.target&&e.target.id===id)setTimeout(function(){limitar('fat-cats');limitar('conta-lista');},0);});document.addEventListener('change',function(e){if(e.target&&e.target.id===id)setTimeout(function(){limitar('fat-cats');limitar('conta-lista');},0);});});
+
+  /* Importação colada: a fatura inteira vai para o mês aberto (ciclo 22 a 21) e as parcelas seguem nos meses seguintes */
+  window.importarFaturaTexto=function(txt){
+    var arr;try{arr=JSON.parse(txt);}catch(e){toast('Não consegui ler o texto colado.');return;}
+    if(!Array.isArray(arr)){toast('Formato não reconhecido.');return;}
+    var m=mesAtual,add=0;
+    function key(mes,d,v,p){return mes+'|'+d+'|'+(+v).toFixed(2)+'|'+(p||'');}
+    var est={};DB.items.forEach(function(i){if(i.tipo==='cartao'){var k=key(i.mes,i.data,i.valor,i.parcela);est[k]=(est[k]||0)+1;}});
+    function push(mes,c,p){var k=key(mes,c.d,c.v,p);if(est[k]>0){est[k]--;return;}DB.items.push({id:mkId(),mes:mes,nome:c.n,valor:c.v,cat:c.c||'Revisar categoria',tipo:'cartao',parcela:p,data:c.d,obs:'',_src:'fatura-colada'});add++;}
+    arr.forEach(function(c){
+      var p=(c.pn&&c.pn>1)?(c.pi+'/'+c.pn):'';push(m,c,p);
+      if(p)for(var k=1;c.pi+k<=c.pn&&m+k<=12;k++)push(m+k,c,(c.pi+k)+'/'+c.pn);
+    });
+    dbSave();render();var o=document.getElementById('import-overlay');if(o)o.remove();
+    toast(add?add+' lançamentos adicionados à fatura de '+MESES[m-1]+'.':'Nada novo: todos os lançamentos já estavam na fatura.');
+  };
+  try{importarFaturaTexto=window.importarFaturaTexto;}catch(e){}
+  window.importarFaturaJulho=function(){toast('A fatura de julho já está conciliada com o banco.');};
+  try{importarFaturaJulho=window.importarFaturaJulho;}catch(e){}
+  if(typeof window.abrirImportFatura==='function'){
+    var _ab=window.abrirImportFatura;
+    window.abrirImportFatura=function(){var r=_ab.apply(this,arguments);var ov=document.getElementById('import-overlay');
+      if(ov){$$('button.btn-s',ov).forEach(function(b){if(/julho|ciclo/i.test(b.textContent))b.style.display='none';});
+        $$('div',ov).forEach(function(d){if(/^Julho R\$|^— ou cole/.test((d.textContent||'').trim()))d.style.display='none';});}
+      return r;};
+    try{abrirImportFatura=window.abrirImportFatura;}catch(e){}
+  }
+  setTimeout(aposRender,60);
 })();
 </script>
 </body>
