@@ -16453,6 +16453,71 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
     if(diag&&fe&&!$('#m31-fim')){var w=document.createElement('div');w.id='m31-fim';w.className='m31-fim';diag.parentNode.insertBefore(w,diag);w.appendChild(fe);w.appendChild(diag);}
   }
 
+
+  /* ---------- 12. Salvamento na nuvem à prova de falhas ----------
+     O Firebase recusa chaves com . $ # [ ] / (ex.: categoria "Carro / Transporte" no orçamento).
+     Antes, a recusa era silenciosa: nada ia para a nuvem e, ao recarregar, a cópia antiga da nuvem
+     substituía as alterações. Agora as chaves são codificadas, a falha aparece na tela e,
+     se a última gravação falhou, os dados deste navegador têm prioridade e são reenviados. */
+  var PEND='fin_nuvem_pendente';
+  function encKey(k){return String(k).replace(/[%.$#\[\]\/]/g,function(c){return '%'+c.charCodeAt(0).toString(16).toUpperCase();});}
+  function decKey(k){return k.indexOf('%')<0?k:k.replace(/%(25|2E|24|23|5B|5D|2F)/g,function(m,h){return String.fromCharCode(parseInt(h,16));});}
+  function paraNuvem(o){
+    if(Array.isArray(o))return o.map(function(v){return v===undefined||typeof v==='function'?null:paraNuvem(v);});
+    if(o&&typeof o==='object'){var r={};Object.keys(o).forEach(function(k){var v=o[k];if(v===undefined||typeof v==='function')return;r[encKey(k)]=paraNuvem(v);});return r;}
+    if(typeof o==='number'&&!isFinite(o))return null;
+    return o;
+  }
+  function daNuvem(o){
+    if(Array.isArray(o)){for(var i=0;i<o.length;i++)o[i]=daNuvem(o[i]);return o;}
+    if(o&&typeof o==='object'){Object.keys(o).forEach(function(k){var v=daNuvem(o[k]),d=decKey(k);if(d!==k)delete o[k];o[d]=v;});return o;}
+    return o;
+  }
+  function hhmm(){var d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+  var avisouFalha=false;
+  function estadoNuvem(ok,msg){
+    var card=$('#sync-card');
+    if(card){var el2=$('#nuvem31',card);if(!el2){el2=document.createElement('div');el2.id='nuvem31';el2.style.cssText='grid-column:2;font-size:10.5px;margin-top:3px;font-weight:600';card.appendChild(el2);}
+      el2.textContent=ok?('Nuvem: salva às '+hhmm()):('Nuvem: não salvou — '+(msg||'dados guardados só neste navegador'));el2.style.color=ok?'var(--ok,#2F7D59)':'var(--bad,#B24747)';}
+    if(!ok&&!avisouFalha){avisouFalha=true;try{toast('Não consegui salvar na nuvem. As alterações estão guardadas neste navegador e serão reenviadas.');}catch(e){}}
+    if(ok)avisouFalha=false;
+  }
+  if(typeof cloudWriteAll==='function'){
+    window.cloudWriteAll=function(){
+      if(typeof _cloudUser==='undefined'||!_cloudUser)return;
+      var payload;
+      try{payload=paraNuvem(montarBackupCompleto());payload.salvoEm=Date.now();}
+      catch(e){try{localStorage.setItem(PEND,String(Date.now()));}catch(x){}estadoNuvem(false,'erro ao preparar os dados');return;}
+      try{
+        firebase.database().ref('users/'+_cloudUser.uid+'/financas').set(payload)
+          .then(function(){try{localStorage.removeItem(PEND);}catch(x){}estadoNuvem(true);})
+          .catch(function(e){try{localStorage.setItem(PEND,String(Date.now()));}catch(x){}estadoNuvem(false,(e&&e.code)||'');console.warn('Falha ao salvar na nuvem',e);});
+      }catch(e){try{localStorage.setItem(PEND,String(Date.now()));}catch(x){}estadoNuvem(false,'');console.warn('Falha ao salvar na nuvem',e);}
+    };
+    try{cloudWriteAll=window.cloudWriteAll;}catch(e){}
+  }
+  function pendenteLocal(){try{return !!localStorage.getItem(PEND);}catch(e){return false;}}
+  if(typeof cloudApplyBackup==='function'){
+    var _cab=cloudApplyBackup;
+    window.cloudApplyBackup=function(data){
+      if(data&&!data.__dec31){daNuvem(data);try{Object.defineProperty(data,'__dec31',{value:1,enumerable:false});}catch(e){}}
+      if(pendenteLocal()){window.__manterLocal31=true;return;} /* última gravação falhou: os dados deste navegador são os mais novos */
+      return _cab.apply(this,arguments);
+    };
+    try{cloudApplyBackup=window.cloudApplyBackup;}catch(e){}
+  }
+  if(typeof cloudRefreshRuntime==='function'){
+    var _crr=cloudRefreshRuntime;
+    window.cloudRefreshRuntime=function(data){
+      if(data&&!data.__dec31){daNuvem(data);try{Object.defineProperty(data,'__dec31',{value:1,enumerable:false});}catch(e){}}
+      if(window.__manterLocal31){window.__manterLocal31=false;try{render();}catch(e){}
+        setTimeout(function(){try{cloudWriteAll();toast('As alterações que estavam só neste navegador foram enviadas para a nuvem.');}catch(e){}},300);return;}
+      return _crr.apply(this,arguments);
+    };
+    try{cloudRefreshRuntime=window.cloudRefreshRuntime;}catch(e){}
+  }
+  window.v31Nuvem={paraNuvem:paraNuvem,daNuvem:daNuvem};
+
   /* ---------- 11. Ganchos ---------- */
   function apos(){
     try{reorganizarNav();mesesCompactos();}catch(e){console.error('v31 nav',e);}
