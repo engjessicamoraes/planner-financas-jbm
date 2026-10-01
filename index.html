@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Finanças 2026 — versão móvel corrigida</title>
+<!-- v33: o que você exclui, edita ou move não volta mais ao reabrir; anotações do planner e informações da fatura passam a ir para a nuvem; backup importado é enviado à nuvem. -->
 <!-- v31: importação dos PDFs do Itaú no próprio site (extrato e fatura, com conferência de saldo e total); contas do mês com situação; painel do plano; navegação reorganizada; categorização automática. -->
 <!-- v30: extrato até 30/09/2026; saldo inicial de outubro −1.673,48. -->
 <!-- v29: fatura de setembro/2026 fechada e extrato 28/07–26/09 conciliados; transferências da B&M como renda. -->
@@ -10112,7 +10113,10 @@ function montarBackupCompleto(){
     saldo:JSON.parse(localStorage.getItem(SALDO_SK)||'{}'),
     fatStatus:JSON.parse(localStorage.getItem(FAT_STATUS_SK)||'{}'),
     cofre:JSON.parse(localStorage.getItem('cofre26v1')||'{}'),
-    anotacoes:JSON.parse(localStorage.getItem('anot26v1')||'[]')
+    anotacoes:JSON.parse(localStorage.getItem('anot26v1')||'[]'),
+    planner:JSON.parse(localStorage.getItem('pjm-planner-diario-v1')||'{}'),
+    faturaInfo:JSON.parse(localStorage.getItem('pjm-fatura-info-v1')||'{}'),
+    metaBM:localStorage.getItem('metaBM26v1')||''
   };
 }
 
@@ -10288,6 +10292,9 @@ function cloudApplyBackup(data){
   if(data.fatStatus) put(FAT_STATUS_SK, data.fatStatus);
   if(data.cofre) put('cofre26v1', data.cofre);
   if(data.anotacoes) put('anot26v1', data.anotacoes);
+  if(data.planner) put('pjm-planner-diario-v1', data.planner);
+  if(data.faturaInfo) put('pjm-fatura-info-v1', data.faturaInfo);
+  if(data.metaBM) localStorage.setItem('metaBM26v1', String(data.metaBM));
 }
 
 function cloudRefreshRuntime(data){
@@ -10362,9 +10369,9 @@ firebase.auth().onAuthStateChanged(function(user){
   cloudRefreshRuntime = function(data){
     _cloudRefreshOriginal(data);
     var reaplicou = false;
-    try{ if(typeof importarFaturaAgosto2026==='function'){importarFaturaAgosto2026();reaplicou=true;} }catch(e){}
-    try{ if(typeof importarFaturaSetembro2026==='function'){importarFaturaSetembro2026();reaplicou=true;} }catch(e){}
-    try{ if(typeof importarExtratoContaCorrenteJulAgoSet==='function'){importarExtratoContaCorrenteJulAgoSet();reaplicou=true;} }catch(e){}
+    /* v33: as importações antigas já estão nos dados; reaplicá-las a cada abertura recriava
+       lançamentos excluídos e duplicava os que tiveram a categoria trocada */
+    try{ if(typeof importarExtratoContaCorrenteJulAgoSet==='function'&&DB&&!DB._extratoCcJulAgoSetImportadoEm){importarExtratoContaCorrenteJulAgoSet();reaplicou=true;} }catch(e){}
     try{ if(typeof __limparProjecoesFantasmaJulho==='function'){ if(__limparProjecoesFantasmaJulho())reaplicou=true; } }catch(e){}
     if(reaplicou && typeof render==='function')render();
   };
@@ -10433,7 +10440,13 @@ if(_btnImp&&_inpImp){
         if(backup.fatStatus)localStorage.setItem(FAT_STATUS_SK,JSON.stringify(backup.fatStatus));
         if(backup.cofre)localStorage.setItem('cofre26v1',JSON.stringify(backup.cofre));
         if(backup.anotacoes)localStorage.setItem('anot26v1',JSON.stringify(backup.anotacoes));
+        if(backup.planner)localStorage.setItem('pjm-planner-diario-v1',JSON.stringify(backup.planner));
+        if(backup.faturaInfo)localStorage.setItem('pjm-fatura-info-v1',JSON.stringify(backup.faturaInfo));
+        if(backup.metaBM)localStorage.setItem('metaBM26v1',String(backup.metaBM));
         DB=dbLoad();FINANC=financLoad()||FINANC;if(typeof anotLoad==='function'){ANOT_DB=anotLoad()||ANOT_DB;}
+        /* o backup importado passa a ser a versão da nuvem; sem isso, ao reabrir, a nuvem antiga voltava */
+        DB._v26Aplicado=1;try{localStorage.setItem(SK,JSON.stringify(DB));}catch(x){}
+        if(typeof cloudWriteAll==='function')cloudWriteAll();
         render();toast('Backup importado!');
       }catch(e){toast('Não foi possível importar o backup.');}
       ev.target.value='';
@@ -15333,9 +15346,16 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
   window.sincronizarV26=function(){
     var idsCorrigidos=idsUnicos();
     var rel={cartaoNovos:0,cartaoAtualizados:0,cartaoRemovidos:0,movidasOutubro:0,contaNovos:0,contaAtualizados:0,contaRemovidos:0};
-    try{sincCartao(rel);}catch(e){console.error('v26 cartão',e);}
-    try{sincConta(rel);}catch(e){console.error('v26 conta',e);}
+    /* v33: a conferência com o banco roda uma única vez. Depois disso, o que você
+       excluir, editar ou mover fica como você deixou — antes, a cada abertura do site,
+       os lançamentos excluídos voltavam e os valores editados eram desfeitos. */
+    var jaFeito=!!(DB._v26Aplicado||DB._v26SyncEm);
+    if(!jaFeito){
+      try{sincCartao(rel);}catch(e){console.error('v26 cartão',e);}
+      try{sincConta(rel);}catch(e){console.error('v26 conta',e);}
+    }
     saldosEFinanciamentos();
+    if(!DB._v26Aplicado){DB._v26Aplicado=1;try{dbSave();}catch(e){}}
     var houve=idsCorrigidos||rel.cartaoNovos||rel.cartaoAtualizados||rel.cartaoRemovidos||rel.movidasOutubro||rel.contaNovos||rel.contaAtualizados||rel.contaRemovidos;
     if(houve){DB._v26SyncEm=new Date().toISOString();try{dbSave();}catch(e){}}
     window.__v26rel=rel;
@@ -15344,6 +15364,9 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
 
   /* A importação parcial da fatura de setembro (até 06/09) foi substituída pela fatura fechada */
   try{importarFaturaSetembro2026=function(){};importarFaturaAgosto2026=function(){};}catch(e){}
+  /* v33: o botão antigo refazia as faturas de julho e agosto e duplicava lançamentos */
+  window.organizarFaturasPorCiclo=function(){if(typeof toast==='function')toast('As faturas de julho e agosto já estão conciliadas com o banco.');};
+  try{organizarFaturasPorCiclo=window.organizarFaturasPorCiclo;}catch(e){}
 
   sincronizarV26();
 
@@ -16536,6 +16559,26 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
       }catch(e){try{localStorage.setItem(PEND,String(Date.now()));}catch(x){}estadoNuvem(false,'');console.warn('Falha ao salvar na nuvem',e);}
     };
     try{cloudWriteAll=window.cloudWriteAll;}catch(e){}
+  }
+  /* v33: a alteração fica marcada como pendente desde o momento em que é feita (e não só quando
+     a gravação falha). Se a aba for fechada antes de a nuvem confirmar, na próxima abertura os
+     dados deste navegador são mantidos e reenviados, em vez de serem trocados pela versão antiga. */
+  if(typeof cloudScheduleWrite==='function'){
+    var _csw=cloudScheduleWrite;
+    window.cloudScheduleWrite=function(){
+      if(typeof _cloudUser!=='undefined'&&_cloudUser){
+        try{localStorage.setItem(PEND,String(Date.now()));}catch(x){}
+        var card=$('#sync-card'),el3=card&&$('#nuvem31',card);
+        if(el3){el3.textContent='Nuvem: salvando…';el3.style.color='var(--t3,#a89080)';}
+      }
+      return _csw.apply(this,arguments);
+    };
+    try{cloudScheduleWrite=window.cloudScheduleWrite;}catch(e){}
+    function gravarJa(){
+      try{if(typeof _cloudWriteTimer!=='undefined'&&_cloudWriteTimer){clearTimeout(_cloudWriteTimer);_cloudWriteTimer=null;cloudWriteAll();}}catch(e){}
+    }
+    window.addEventListener('pagehide',gravarJa);
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')gravarJa();});
   }
   function pendenteLocal(){try{return !!localStorage.getItem(PEND);}catch(e){return false;}}
   if(typeof cloudApplyBackup==='function'){
