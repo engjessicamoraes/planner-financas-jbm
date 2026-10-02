@@ -1,0 +1,65 @@
+/* ============================================================
+   CASCA DO APLICATIVO — v40 (comum a Finanças e Planner)
+   Barra superior com Pessoal | Empresa | Tarefas, indicador da
+   nuvem, barra inferior no celular e janela de Configurações.
+   As cores seguem a identidade B&M: marsala e dourado.
+   ============================================================ */
+:root{
+  --v40-marsala:#4B1F39;--v40-marsala-2:#5C2444;--v40-dourado:#B09358;
+  --v40-ok:#2F7D59;--v40-alerta:#B7791F;--v40-erro:#B24747;
+  --v40-top:52px;--v40-bottom:62px;
+}
+
+/* ---------- seletor Pessoal | Empresa | Tarefas ---------- */
+.appsw{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:11px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);flex-shrink:0}
+.appsw a{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 13px;border-radius:8px;color:rgba(255,255,255,.72);font:600 12.5px Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.appsw a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.appsw a.on{background:#fff;color:var(--v40-marsala);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.appsw a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- indicador da nuvem ---------- */
+.nv-pill{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:rgba(255,255,255,.86);font:500 11.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.nv-pill i{width:8px;height:8px;border-radius:50%;background:#9AA3AD;flex-shrink:0}
+.nv-pill[data-estado="ok"] i{background:#57C08A}
+.nv-pill[data-estado="salvando"] i,.nv-pill[data-estado="offline-pendente"] i{background:#E7B24B;animation:v40pulse 1s ease-in-out infinite}
+.nv-pill[data-estado="offline"] i{background:#E7B24B}
+.nv-pill[data-estado="erro"] i{background:#E26D6D}
+.nv-pill[data-estado="erro"]{border-color:rgba(226,109,109,.6)}
+@keyframes v40pulse{50%{opacity:.35}}
+.nv-aviso{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:3000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:11px 14px;border-radius:12px;background:#26303a;color:#fff;font:500 12.5px Inter,system-ui,sans-serif;box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.nv-aviso button{border:0;border-radius:8px;padding:6px 11px;background:#fff;color:var(--v40-marsala);font-weight:700;cursor:pointer}
+
+/* ---------- janela de Configurações ---------- */
+.v40-modal{position:fixed;inset:0;z-index:2600;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(31,22,28,.42);backdrop-filter:blur(3px)}
+.v40-modal.open{display:flex}
+.v40-box{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.25);font-family:Inter,system-ui,sans-serif;color:#27303B}
+.v40-box header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px;border-bottom:1px solid #EEE9E4}
+.v40-box h2{font:700 17px Outfit,Inter,sans-serif;color:var(--v40-marsala-2);margin:0}
+.v40-x{width:32px;height:32px;border-radius:9px;border:1px solid #E4DED2;background:#FBF9F6;cursor:pointer;font-size:18px;color:#5A6470}
+.v40-sec{padding:14px 20px;border-bottom:1px solid #F1ECE7}
+.v40-sec:last-child{border-bottom:0}
+.v40-sec h3{font:700 10.5px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8A949F;margin:0 0 9px}
+.v40-sec p{font-size:12.5px;line-height:1.5;color:#5A6470;margin:0 0 10px}
+.v40-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v40-btn{display:flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:8px 12px;border-radius:10px;border:1px solid #E4DED2;background:#FBF9F6;color:var(--v40-marsala-2);font:600 12px Inter,sans-serif;cursor:pointer;text-align:center}
+.v40-btn:hover{background:#F6EFF3;border-color:#D9C3CF}
+.v40-btn.pri{background:var(--v40-marsala-2);border-color:var(--v40-marsala-2);color:#fff}
+.v40-btn.pri:hover{background:#6E2C52}
+.v40-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #EEE9E4;font-size:12.5px}
+.v40-linha:last-child{border-bottom:0}
+.v40-seg{display:inline-flex;padding:2px;border-radius:9px;background:#F3EFEA;border:1px solid #E7E0D7;flex-shrink:0}
+.v40-seg button{border:0;background:transparent;padding:5px 10px;border-radius:7px;font:600 11.5px Inter,sans-serif;color:#7A6F66;cursor:pointer}
+.v40-seg button.on{background:#fff;color:var(--v40-marsala-2);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+@media(max-width:520px){.v40-btns{grid-template-columns:1fr}}
+
+/* ---------- barra inferior (celular) ---------- */
+.v40-bottom{display:none}
+@media(max-width:760px){
+  .v40-bottom{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:1250;height:calc(var(--v40-bottom) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-top:1px solid #E6E1DB;box-shadow:0 -6px 20px rgba(40,25,35,.06)}
+  .v40-bottom a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#7D7570;font:600 10px Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .v40-bottom a svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .v40-bottom a.on{color:var(--v40-marsala-2)}
+  .v40-bottom a.mais{position:relative}
+  .v40-bottom a.mais span.b{width:46px;height:46px;margin-top:-18px;border-radius:15px;background:linear-gradient(135deg,var(--v40-marsala-2),#7A3560);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(92,36,68,.35)}
+  .v40-bottom a.mais span.b svg{stroke:#fff;width:22px;height:22px}
+}
