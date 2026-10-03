@@ -23,6 +23,10 @@ python3 build.py
 | `src/tarefas-shell.js`, `src/tarefas-shell.css` | Seletor de áreas no Planner e cartão de contas a vencer. |
 | `src/shell.css` | Estilos comuns às duas páginas. |
 
+## Aplicativo no celular e uso sem internet
+
+O site pode ser instalado como aplicativo. No iPhone, abra no Safari, toque em Compartilhar e depois em "Adicionar à Tela de Início"; no Android, abra no Chrome e toque em "Instalar aplicativo". O `sw.js` guarda uma cópia das páginas e das bibliotecas, de modo que o site abre mais rápido e funciona sem internet: o que for lançado sem conexão fica no aparelho e é enviado à nuvem quando a conexão volta. Quando há internet, a versão mais nova das páginas é sempre buscada primeiro. Ao mudar a lista de arquivos guardados, aumente o número `VERSAO` no `sw.js`.
+
 ## Regras da aba Empresa
 
 Uma despesa conta como da empresa quando está na categoria **Trabalho / Empresa** ou quando é marcada manualmente na tela Despesas da empresa. Os repasses da B&M são as entradas classificadas como salário que não vêm do SENGE. Já os contratos Pronampe, FGI e Mútua começam classificados como empresa, mas a classificação pode ser trocada em Empresa › Dívidas da empresa ou em Configurações, e a escolha vale em todos os aparelhos.

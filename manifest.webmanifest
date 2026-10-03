@@ -1,0 +1,22 @@
+{
+  "name": "Finanças e Planner — Jéssica Moraes",
+  "short_name": "Jéssica B&M",
+  "description": "Finanças pessoais, finanças da B&M Soluções em Engenharia e planner de tarefas.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F5F3F0",
+  "theme_color": "#4B1F39",
+  "icons": [
+    {"src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Finanças pessoais", "url": "./index.html#pessoal", "icons": [{"src": "icones/icone-192.png", "sizes": "192x192"}]},
+    {"name": "Empresa (B&M)", "url": "./index.html#empresa", "icons": [{"src": "icones/icone-192.png", "sizes": "192x192"}]},
+    {"name": "Tarefas", "url": "./tarefas.html", "icons": [{"src": "icones/icone-192.png", "sizes": "192x192"}]}
+  ]
+}

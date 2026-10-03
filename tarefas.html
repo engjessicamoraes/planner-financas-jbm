@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!-- v40:cabeca:inicio -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4B1F39">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jéssica B&amp;M">
+<link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<!-- v40:cabeca:fim -->
 <title>Planner — Eng. Jéssica Moraes</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -5956,7 +5966,13 @@ var HT = (function() {
     var self=this,mudou=[],primeiro=this.primeiro;
     var legadoPendente=this.cfg.chaveLegadoPendente&&lsGet(this.cfg.chaveLegadoPendente);
     this.cfg.chaves.forEach(function(s){
-      if(self.sujo[s.k]||self.enviando[s.k])return; /* o envio em curso já mescla */
+      if(self.enviando[s.k])return; /* o envio em curso já mescla */
+      /* Depois da primeira leitura, um bloco com alteração pendente é mesclado
+         pelo próprio envio. Na primeira leitura, porém, ele precisa passar pela
+         regra abaixo: num aparelho novo, rotinas que gravam ao abrir a página
+         não podem sobrescrever os dados que já estão na nuvem. */
+      if(self.sujo[s.k]&&!primeiro)return;
+      self.sujo[s.k]=false;
       var remoto=self.daNuvem(s,val[s.k]);
       var local=self.ler(s);
       var b=self.getBase(s);
@@ -6036,7 +6052,7 @@ var HT = (function() {
 (function(){
   'use strict';
   if(!window.SyncNuvem||window.__modoLocal)return;
-  var aviso=null;
+  var aviso=null,liberadoSemNuvem=false;
   function editando(){
     var a=document.activeElement;
     if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return true;
@@ -6066,7 +6082,7 @@ var HT = (function() {
     podeAplicar:function(){return !editando();},
     aoReceber:function(chaves,primeiraLeitura){
       /* O Planner monta o estado ao abrir; dados novos exigem recarregar. */
-      if(primeiraLeitura){
+      if(primeiraLeitura&&!liberadoSemNuvem){
         /* Trava contra recarga em sequência, caso a página regrave algo ao abrir. */
         var ult=+(sessionStorage.getItem('nv-recarga')||0);
         if(chaves.length&&Date.now()-ult>15000){
@@ -6084,6 +6100,9 @@ var HT = (function() {
   cloudSyncDown=window.cloudSyncDown=function(){
     if(typeof _cloudUser==='undefined'||!_cloudUser)return;
     motor.iniciar(_cloudUser.uid);
+    /* Sem internet a nuvem não responde: depois de 4 s a tela é liberada com
+       os dados deste aparelho, e o que chegar depois vira aviso de atualização. */
+    setTimeout(function(){if(motor.primeiro){liberadoSemNuvem=true;try{cloudHideGate();}catch(e){}}},4000);
   };
   cloudWriteAll=window.cloudWriteAll=function(){motor.marcarTudo();motor.enviarTudo();};
   cloudScheduleWrite=window.cloudScheduleWrite=function(){motor.marcarTudo();};
@@ -6183,6 +6202,16 @@ var HT = (function() {
 
   function iniciar(){montarSeletor();observar();escutarNuvem();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar);else iniciar();
+})();
+</script>
+<script data-src="app.js">
+/* Instala o service worker (abre mais rápido e funciona sem internet).
+   Só roda em https; aberto direto do disco, o site segue como antes. */
+(function(){
+  if(!('serviceWorker' in navigator)||(location.protocol!=='https:'&&location.hostname!=='localhost'))return;
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('Service worker não registrado',e);});
+  });
 })();
 </script>
 <!-- v40:fim -->

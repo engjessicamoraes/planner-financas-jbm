@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!-- v40:cabeca:inicio -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4B1F39">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jéssica B&amp;M">
+<link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<!-- v40:cabeca:fim -->
 <title>Finanças 2026 — Jéssica Moraes</title>
 <!-- v33: o que você exclui, edita ou move não volta mais ao reabrir; anotações do planner e informações da fatura passam a ir para a nuvem; backup importado é enviado à nuvem. -->
 <!-- v31: importação dos PDFs do Itaú no próprio site (extrato e fatura, com conferência de saldo e total); contas do mês com situação; painel do plano; navegação reorganizada; categorização automática. -->
@@ -17307,7 +17317,13 @@ body.v40 .toast{z-index:3000!important}
     var self=this,mudou=[],primeiro=this.primeiro;
     var legadoPendente=this.cfg.chaveLegadoPendente&&lsGet(this.cfg.chaveLegadoPendente);
     this.cfg.chaves.forEach(function(s){
-      if(self.sujo[s.k]||self.enviando[s.k])return; /* o envio em curso já mescla */
+      if(self.enviando[s.k])return; /* o envio em curso já mescla */
+      /* Depois da primeira leitura, um bloco com alteração pendente é mesclado
+         pelo próprio envio. Na primeira leitura, porém, ele precisa passar pela
+         regra abaixo: num aparelho novo, rotinas que gravam ao abrir a página
+         não podem sobrescrever os dados que já estão na nuvem. */
+      if(self.sujo[s.k]&&!primeiro)return;
+      self.sujo[s.k]=false;
       var remoto=self.daNuvem(s,val[s.k]);
       var local=self.ler(s);
       var b=self.getBase(s);
@@ -17425,6 +17441,8 @@ body.v40 .toast{z-index:3000!important}
   cloudSyncDown=window.cloudSyncDown=function(){
     if(typeof _cloudUser==='undefined'||!_cloudUser){return;}
     motor.iniciar(_cloudUser.uid);
+    /* Sem internet a nuvem não responde: libera a tela com os dados deste aparelho. */
+    setTimeout(function(){if(motor.primeiro){try{cloudHideGate();}catch(e){}}},4000);
   };
   cloudWriteAll=window.cloudWriteAll=function(){motor.marcarTudo();motor.enviarTudo();};
   cloudScheduleWrite=window.cloudScheduleWrite=function(){motor.marcarTudo();};
@@ -18145,6 +18163,16 @@ body.v40 .toast{z-index:3000!important}
   },120);
   pintarPill(window.__modoLocal?{estado:'local',salvoEm:0,pendentes:0}:{estado:'salvando',salvoEm:0,pendentes:0});
   if(window.__motorFinancas&&window.__motorFinancas.ultimoStatus)pintarPill(window.__motorFinancas.ultimoStatus);
+})();
+</script>
+<script data-src="app.js">
+/* Instala o service worker (abre mais rápido e funciona sem internet).
+   Só roda em https; aberto direto do disco, o site segue como antes. */
+(function(){
+  if(!('serviceWorker' in navigator)||(location.protocol!=='https:'&&location.hostname!=='localhost'))return;
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('Service worker não registrado',e);});
+  });
 })();
 </script>
 <!-- v40:fim -->

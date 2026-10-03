@@ -236,7 +236,13 @@
     var self=this,mudou=[],primeiro=this.primeiro;
     var legadoPendente=this.cfg.chaveLegadoPendente&&lsGet(this.cfg.chaveLegadoPendente);
     this.cfg.chaves.forEach(function(s){
-      if(self.sujo[s.k]||self.enviando[s.k])return; /* o envio em curso já mescla */
+      if(self.enviando[s.k])return; /* o envio em curso já mescla */
+      /* Depois da primeira leitura, um bloco com alteração pendente é mesclado
+         pelo próprio envio. Na primeira leitura, porém, ele precisa passar pela
+         regra abaixo: num aparelho novo, rotinas que gravam ao abrir a página
+         não podem sobrescrever os dados que já estão na nuvem. */
+      if(self.sujo[s.k]&&!primeiro)return;
+      self.sujo[s.k]=false;
       var remoto=self.daNuvem(s,val[s.k]);
       var local=self.ler(s);
       var b=self.getBase(s);

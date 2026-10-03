@@ -42,6 +42,8 @@
   cloudSyncDown=window.cloudSyncDown=function(){
     if(typeof _cloudUser==='undefined'||!_cloudUser){return;}
     motor.iniciar(_cloudUser.uid);
+    /* Sem internet a nuvem não responde: libera a tela com os dados deste aparelho. */
+    setTimeout(function(){if(motor.primeiro){try{cloudHideGate();}catch(e){}}},4000);
   };
   cloudWriteAll=window.cloudWriteAll=function(){motor.marcarTudo();motor.enviarTudo();};
   cloudScheduleWrite=window.cloudScheduleWrite=function(){motor.marcarTudo();};
