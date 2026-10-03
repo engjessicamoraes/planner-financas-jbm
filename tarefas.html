@@ -6200,7 +6200,7 @@ var HT = (function() {
     }catch(e){console.warn('Contas a vencer indisponíveis',e);}
   }
 
-  function iniciar(){montarSeletor();observar();escutarNuvem();}
+  function iniciar(){document.body.classList.add('v40t');montarSeletor();observar();escutarNuvem();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar);else iniciar();
 })();
 </script>
@@ -6214,5 +6214,122 @@ var HT = (function() {
   });
 })();
 </script>
+<style data-src="tema.css">
+/* ============================================================
+   TEMA DE CORES B&M — v42
+   Camada final de cores para as duas páginas, aplicada por cima
+   dos estilos antigos (por isso os !important). Paleta da marca:
+   marsala (#5C2444) como cor principal, dourado (#B09358) como
+   destaque e fundo levemente rosado no lugar do cinza-claro.
+   body.v40  = Finanças · body.v40t = Planner
+   ============================================================ */
+body.v40,body.v40t{
+  --tm-marsala:#5C2444;--tm-marsala-esc:#3E1730;--tm-marsala-med:#7A3560;--tm-vinho-claro:#F6ECF1;
+  --tm-dourado:#B09358;--tm-dourado-claro:#F5ECDC;--tm-dourado-txt:#7A6230;
+  --tm-fundo:#F3ECEF;--tm-cartao:#FFFFFF;--tm-borda:#E7D8DF;--tm-borda-sua:#F0E6EA;
+  --tm-verde:#2F7D59;--tm-verde-claro:#E6F4EC;--tm-vermelho:#B24747;--tm-vermelho-claro:#FBEAEA;
+  --tm-texto:#2B1F26;--tm-texto2:#6B5862;
+  /* variáveis usadas pelos estilos antigos */
+  --bg:var(--tm-fundo);--card:var(--tm-cartao);--bd:var(--tm-borda);--bds:var(--tm-borda-sua);
+  --m:var(--tm-marsala);--m2:var(--tm-marsala-med);--ml:var(--tm-vinho-claro);
+  --g:var(--tm-dourado);--gl:var(--tm-dourado-claro);
+  background:var(--tm-fundo)!important;
+}
+body.v40 .main,body.v40 .page{background:transparent!important}
+
+/* ---------- menu lateral escuro ---------- */
+body.v40 .sb,body.v40t .sb{
+  background:linear-gradient(180deg,var(--tm-marsala) 0%,var(--tm-marsala-esc) 100%)!important;
+  border-right:0!important;box-shadow:2px 0 18px rgba(62,23,48,.18)!important;color:#fff!important}
+body.v40 .sb-ctx-tit{color:#fff!important}
+body.v40 .sb-ctx-tit small{color:rgba(255,255,255,.6)!important}
+body.v40 .sb .nav-group{border-color:rgba(255,255,255,.1)!important}
+body.v40 .sb .nav-group-toggle,body.v40t .sb .sb-sec,body.v40t .sb [class*="sb-lbl"],body.v40t .sb [class*="sec-t"]{color:#D9C08A!important;opacity:1!important}
+body.v40 .sb .nav-group-toggle::after{color:rgba(255,255,255,.5)!important}
+body.v40 .sb .ni,body.v40t .sb .ni{color:rgba(255,255,255,.82)!important;background:transparent!important;border-left-color:transparent!important;box-shadow:none!important}
+body.v40 .sb .ni svg,body.v40t .sb .ni svg{stroke:currentColor!important;opacity:.9}
+body.v40 .sb .ni:hover,body.v40t .sb .ni:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+body.v40 .sb .ni.on,body.v40t .sb .ni.on{background:rgba(255,255,255,.14)!important;color:#fff!important;font-weight:600!important;box-shadow:inset 3px 0 0 var(--tm-dourado)!important}
+body.v40 .sb .ni.on::before,body.v40t .sb .ni.on::before{background:var(--tm-dourado)!important}
+body.v40 .sb .ni-tag,body.v40t .sb .ni-ct{background:rgba(255,255,255,.14)!important;color:#fff!important;border:0!important}
+body.v40 .sb .ni.on .ni-tag,body.v40t .sb .ni.on .ni-ct{background:var(--tm-dourado)!important;color:#2B1F26!important}
+/* meses: grade compacta */
+body.v40 #sb-meses .ni{color:rgba(255,255,255,.85)!important}
+body.v40 #sb-meses .ni.m31-fech{color:rgba(255,255,255,.45)!important}
+body.v40 #sb-meses .ni.on{background:var(--tm-dourado)!important;color:#2B1F26!important;box-shadow:none!important}
+body.v40 .sb .m31-novo,body.v40 #ni-novo-mes{color:rgba(255,255,255,.6)!important}
+@media(max-width:760px){body.v40 .sb{box-shadow:8px 0 30px rgba(0,0,0,.3)!important}}
+
+/* ---------- títulos ---------- */
+body.v40 .pg-title{color:var(--tm-marsala)!important}
+body.v40 .pg-title::after{background:var(--tm-dourado)!important}
+body.v40 .pg-sub{color:var(--tm-texto2)!important}
+
+/* ---------- cartões ---------- */
+body.v40 div.sec,body.v40 .bm-card,body.v40 .split-card,body.v40 [class*="p31-card"],body.v40 .c31-wrap,body.v40 .pl-card{
+  background:var(--tm-cartao)!important;border-color:var(--tm-borda)!important;
+  box-shadow:0 2px 10px rgba(92,36,68,.07)!important}
+body.v40 div.sec>.sec-h,body.v40 .bm-card-h,body.v40 .split-card .hd,body.v40 .pl-card .pl-h{
+  background:linear-gradient(180deg,#FCF7F9,#F8F0F4)!important;border-bottom-color:var(--tm-borda-sua)!important}
+body.v40 .sec-t,body.v40 .bm-card-h .t{color:var(--tm-marsala)!important}
+
+/* indicadores: cada cartão com sua cor */
+body.v40 .bm-kpi,body.v40 .sc{position:relative;overflow:hidden;border:1px solid var(--tm-borda)!important;box-shadow:0 2px 10px rgba(92,36,68,.07)!important;background:#fff!important}
+body.v40 .bm-kpi::before,body.v40 .sc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tm-marsala)}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+1),body.v40 .scards>.sc:nth-child(4n+1){background:linear-gradient(135deg,#FFFFFF 55%,#F6ECF1)!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+2),body.v40 .scards>.sc:nth-child(4n+2){background:linear-gradient(135deg,#FFFFFF 55%,var(--tm-dourado-claro))!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+2)::before,body.v40 .scards>.sc:nth-child(4n+2)::before{background:var(--tm-dourado)}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+3),body.v40 .scards>.sc:nth-child(4n+3){background:linear-gradient(135deg,#FFFFFF 55%,var(--tm-verde-claro))!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+3)::before,body.v40 .scards>.sc:nth-child(4n+3)::before{background:var(--tm-verde)}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+4),body.v40 .scards>.sc:nth-child(4n+4){background:linear-gradient(135deg,#FFFFFF 55%,#F8E6DE)!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+4)::before,body.v40 .scards>.sc:nth-child(4n+4)::before{background:#C0622A}
+body.v40 .bm-kpi .l,body.v40 .sc-l{color:var(--tm-texto2)!important}
+
+/* Painel: cartões principais e faixa de resumo do mês */
+body.v40 #v-painel [class*="p31-"]>div,body.v40 .painel-kpi-grid>*{border-color:var(--tm-borda)!important}
+body.v40 .mes-stats-secondary>*,body.v40 [class*="fat-resumo"] [class*="kpi"]{border-color:var(--tm-borda)!important}
+
+/* barras de progresso */
+body.v40 .bm-bar>i{background:linear-gradient(90deg,var(--tm-marsala-med),var(--tm-dourado))!important}
+
+/* ---------- controles ---------- */
+body.v40 .mn-add,body.v40 .pl-btn:not(.sec),body.v40 .fb.pri,body.v40 .v40-btn.pri,body.v40 #btn-modal-save,body.v40 .imp31-box .pl-btn:not(.sec){
+  background:linear-gradient(135deg,var(--tm-marsala),var(--tm-marsala-med))!important;border-color:var(--tm-marsala)!important;color:#fff!important}
+body.v40 .bm-filtros button.on,body.v40 .parc-tab.on,body.v40 .v40-seg button.on{background:var(--tm-marsala)!important;border-color:var(--tm-marsala)!important;color:#fff!important}
+body.v40 .bm-link,body.v40 .v40-nota a{color:var(--tm-marsala)!important}
+body.v40 .mes-nav,body.v40 .mes-search input,body.v40 select{border-color:var(--tm-borda)!important}
+body.v40 .mn-lbl{color:var(--tm-marsala)!important}
+body.v40 .v40-nota{background:var(--tm-dourado-claro)!important;border-color:#E6D3AE!important;color:#5A4A2A!important}
+
+/* gráfico mês a mês da B&M */
+body.v40 .bm-mes .r{background:linear-gradient(180deg,var(--tm-marsala-med),var(--tm-marsala))!important}
+body.v40 .bm-mes .d{background:linear-gradient(180deg,#E3C487,var(--tm-dourado))!important}
+body.v40 .bm-leg i[style*="8D5F78"]{background:var(--tm-marsala)!important}
+body.v40 .bm-leg i[style*="E2B4A0"]{background:var(--tm-dourado)!important}
+
+/* barra inferior do celular */
+body.v40 .v40-bottom a.on{color:var(--tm-marsala)!important}
+body.v40 .v40-bottom a.on svg{stroke:var(--tm-marsala)}
+
+/* ---------- Planner ---------- */
+body.v40t{--c0:#fff}
+body.v40t .agenda-page,body.v40t .module,body.v40t main,body.v40t .content{background:transparent!important}
+body.v40t .dash-card{background:#fff!important;border-color:var(--tm-borda)!important;box-shadow:0 2px 10px rgba(92,36,68,.07)!important}
+body.v40t .agenda-dash>.dash-card:nth-child(1){background:linear-gradient(135deg,#fff 55%,var(--tm-vermelho-claro))!important}
+body.v40t .agenda-dash>.dash-card:nth-child(2){background:linear-gradient(135deg,#fff 55%,var(--tm-dourado-claro))!important}
+body.v40t .agenda-dash>.dash-card:nth-child(3){background:linear-gradient(135deg,#fff 55%,#FFF4DA)!important}
+body.v40t .agenda-dash>.dash-card:nth-child(4){background:linear-gradient(135deg,#fff 55%,var(--tm-vinho-claro))!important}
+body.v40t h1,body.v40t .agenda-hello,body.v40t .ag-hello,body.v40t .proj-title{color:var(--tm-marsala)!important}
+
+/* Painel: fatura, saldo e dívida com cor própria (faixa no topo) */
+body.v40 .p31-grid3>.p31-card{position:relative!important;overflow:hidden!important}
+body.v40 .p31-grid3>.p31-card::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--tm-marsala),var(--tm-marsala-med))}
+body.v40 .p31-grid3>.p31-card:nth-child(1){background:linear-gradient(140deg,#fff 50%,var(--tm-vinho-claro))!important}
+body.v40 .p31-grid3>.p31-card:nth-child(2){background:linear-gradient(140deg,#fff 50%,var(--tm-dourado-claro))!important}
+body.v40 .p31-grid3>.p31-card:nth-child(2)::before{background:linear-gradient(90deg,var(--tm-dourado),#D4B77C)}
+body.v40 .p31-grid3>.p31-card:nth-child(3){background:linear-gradient(140deg,#fff 50%,#F8E6DE)!important}
+body.v40 .p31-grid3>.p31-card:nth-child(3)::before{background:linear-gradient(90deg,#C0622A,#D98B5A)}
+body.v40 .p31-card .l{color:var(--tm-marsala)!important}
+</style>
 <!-- v40:fim -->
 </body>

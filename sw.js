@@ -8,7 +8,7 @@
      cache: vai direto ao Firebase.
    Ao alterar a lista de arquivos, aumente o número de VERSAO.
    ============================================================ */
-var VERSAO='jbm-v41-1';
+var VERSAO='jbm-v42-1';
 var PAGINAS=['./','./index.html','./tarefas.html','./manifest.webmanifest',
   './icones/icone-192.png','./icones/icone-512.png','./icones/apple-touch-icon.png','./icones/favicon-32.png'];
 var EXTERNOS=/^https:\/\/(www\.gstatic\.com\/firebasejs\/|fonts\.googleapis\.com\/|fonts\.gstatic\.com\/|cdn\.jsdelivr\.net\/|cdnjs\.cloudflare\.com\/|unpkg\.com\/)/;
@@ -23,7 +23,9 @@ self.addEventListener('activate',function(ev){
 });
 
 function redePrimeiro(req){
-  return fetch(req).then(function(res){
+  /* cache:'no-cache' faz o navegador confirmar com o servidor que tem a
+     versão mais nova, sem esperar o prazo de cache do GitHub Pages. */
+  return fetch(req,{cache:'no-cache'}).then(function(res){
     if(res&&res.ok){var copia=res.clone();caches.open(VERSAO).then(function(c){c.put(req,copia);});}
     return res;
   }).catch(function(){
