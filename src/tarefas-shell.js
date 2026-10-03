@@ -80,6 +80,6 @@
     }catch(e){console.warn('Contas a vencer indisponíveis',e);}
   }
 
-  function iniciar(){montarSeletor();observar();escutarNuvem();}
+  function iniciar(){document.body.classList.add('v40t');montarSeletor();observar();escutarNuvem();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar);else iniciar();
 })();

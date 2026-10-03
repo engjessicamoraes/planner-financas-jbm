@@ -22,6 +22,7 @@ python3 build.py
 | `src/planejamento.js` | Alertas de vencimento e metas dos cofrinhos. |
 | `src/tarefas-shell.js`, `src/tarefas-shell.css` | Seletor de áreas no Planner e cartão de contas a vencer. |
 | `src/shell.css` | Estilos comuns às duas páginas. |
+| `src/tema.css` | Cores da marca B&M (menu lateral marsala, destaques em dourado, fundo rosado), aplicadas por cima dos estilos antigos. |
 
 ## Aplicativo no celular e uso sem internet
 
