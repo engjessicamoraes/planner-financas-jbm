@@ -80,6 +80,33 @@
     }catch(e){console.warn('Contas a vencer indisponíveis',e);}
   }
 
-  function iniciar(){document.body.classList.add('v40t');montarSeletor();observar();escutarNuvem();}
+  /* ---------- abas numa segunda linha e títulos padronizados ---------- */
+  function moverAbas(){
+    var tabs=$('nav.nav .nav-tabs');if(!tabs||$('.v42-subnav'))return;
+    var bar=document.createElement('div');bar.className='v42-subnav';bar.setAttribute('aria-label','Seções do Planner');
+    bar.appendChild(tabs);
+    var nav=$('nav.nav');nav.parentNode.insertBefore(bar,nav.nextSibling);
+    /* deixa a aba ativa visível quando a lista rola (celular) */
+    tabs.addEventListener('click',function(ev){var t=ev.target.closest('.nav-tab');if(t&&t.scrollIntoView)t.scrollIntoView({inline:'nearest',block:'nearest'});});
+  }
+  function marcarTitulos(){
+    var mod=document.querySelector('.module.on');if(!mod)return;
+    if(mod.querySelector('.v42-tit'))return;
+    var cand=Array.prototype.filter.call(mod.querySelectorAll('div,h1,h2'),function(e){
+      if(e.closest('.pc,.cl-card,.mtg-panel,.fila-row,.dash-card'))return false;
+      var txt=(e.childNodes.length&&Array.prototype.some.call(e.childNodes,function(n){return n.nodeType===3&&n.textContent.trim().length>2;}));
+      return txt&&parseFloat(getComputedStyle(e).fontSize)>=20;
+    })[0];
+    if(!cand)return;
+    cand.classList.add('v42-tit');
+    var sub=cand.nextElementSibling;if(sub&&parseFloat(getComputedStyle(sub).fontSize)<=14)sub.classList.add('v42-sub');
+  }
+  function observarTitulos(){
+    var main=document.querySelector('.main');if(!main)return;
+    var t=null;new MutationObserver(function(){clearTimeout(t);t=setTimeout(marcarTitulos,30);}).observe(main,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+    marcarTitulos();
+  }
+
+  function iniciar(){document.body.classList.add('v40t');moverAbas();observarTitulos();montarSeletor();observar();escutarNuvem();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar);else iniciar();
 })();

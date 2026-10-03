@@ -1,0 +1,70 @@
+/* ============================================================
+   PLANNER — ORGANIZAÇÃO DO LAYOUT (v42)
+   1. As 10 abas (Agenda, Hoje, Empresa, Condomínios, Fila, SENGE,
+      Pessoal, Hábitos, Revisão, Modelos) saem da barra superior,
+      onde só cabiam três ou quatro, e vão para uma segunda linha
+      clara, com texto escuro e rolagem lateral no celular.
+   2. Títulos de todas as telas com o mesmo tamanho, peso e cor.
+   3. Margens iguais para cabeçalhos, post-it e cartões.
+   4. Cabeçalhos e grades dos cartões alinhados.
+   ============================================================ */
+body.v40t{--nav-h:98px!important}
+
+/* ---------- segunda linha com as abas ---------- */
+.v42-subnav{position:fixed;top:52px;left:0;right:0;height:46px;z-index:190;display:flex;align-items:stretch;
+  background:#FFFFFF;border-bottom:1px solid #EADCE3;box-shadow:0 2px 8px rgba(92,36,68,.05);
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.v42-subnav::-webkit-scrollbar{display:none}
+.v42-subnav .nav-tabs{display:flex!important;align-items:stretch!important;height:100%!important;flex:0 0 auto!important;
+  gap:2px!important;padding:0 16px 0 230px!important;margin:0!important;overflow:visible!important}
+.v42-subnav .nav-tab{position:relative;display:inline-flex!important;align-items:center!important;gap:7px!important;
+  height:100%!important;padding:0 14px!important;white-space:nowrap!important;
+  color:#5A4652!important;font:500 13px Inter,system-ui,sans-serif!important;background:transparent!important;
+  border:0!important;border-radius:0!important;opacity:1!important;cursor:pointer}
+.v42-subnav .nav-tab svg{width:15px!important;height:15px!important;stroke:currentColor!important;opacity:.85!important}
+.v42-subnav .nav-tab:hover{color:#5C2444!important;background:#FBF4F7!important}
+.v42-subnav .nav-tab.on{color:#5C2444!important;font-weight:700!important}
+.v42-subnav .nav-tab.on::after{content:""!important;position:absolute!important;left:12px!important;right:12px!important;bottom:0!important;
+  height:3px!important;border-radius:3px 3px 0 0!important;background:#B09358!important;opacity:1!important;display:block!important}
+.v42-subnav .nav-tab-ct{background:#F1E4EA!important;color:#5C2444!important;font-weight:700!important;border:0!important}
+.v42-subnav .nav-tab.on .nav-tab-ct{background:#7A3560!important;color:#fff!important}
+@media(max-width:760px){.v42-subnav .nav-tabs{padding:0 10px!important}.v42-subnav .nav-tab{padding:0 11px!important;font-size:12.5px!important}}
+
+/* ---------- títulos padronizados ---------- */
+body.v40t .v42-tit{font:700 24px Outfit,Inter,system-ui,sans-serif!important;color:#5C2444!important;letter-spacing:-.3px!important;line-height:1.2!important}
+body.v40t .v42-sub{font-size:13px!important;color:#6B5862!important}
+
+/* ---------- margens: tudo começa na mesma linha ---------- */
+body.v40t .proj-header,body.v40t .proj-toolbar{background:transparent!important;border:0!important;box-shadow:none!important}
+body.v40t .postit-box{width:auto!important;margin:6px 40px 4px!important;border-radius:14px!important;background:#FFFBF0!important;border:1px solid #EFDFB8!important}
+@media(max-width:760px){body.v40t .postit-box{margin:6px 18px 4px!important}}
+
+/* ---------- SENGE: painéis de reunião e grade de eventos ---------- */
+body.v40t .mtg-hdr{align-items:flex-start!important}
+body.v40t .sgbody>.divdr,body.v40t .sgbody>.hist-tog,body.v40t .sgbody>.hist-list,
+body.v40t .sgbody>.add-row,body.v40t .sgbody>.empty{grid-column:1/-1!important}
+
+/* ---------- Condomínios: cabeçalho do cartão ---------- */
+body.v40t .cl-hdr{align-items:flex-start!important;padding:16px 110px 14px 18px!important}
+body.v40t .cl-nome{font-weight:700!important;color:#5C2444!important}
+
+/* ---------- Fila: etiqueta alinhada aos campos ---------- */
+body.v40t .fila-ctrls{align-items:flex-end!important;flex-wrap:wrap;gap:10px!important}
+body.v40t .fila-tag{align-self:flex-end!important;margin-bottom:2px}
+
+/* ---------- cartões de tarefa ---------- */
+body.v40t .pc,body.v40t .cl-card,body.v40t .fila-row,body.v40t .mtg-panel{border-color:#EADCE3!important;box-shadow:0 2px 8px rgba(92,36,68,.05)!important}
+body.v40t .pc-hdr{align-items:center!important}
+
+/* selo "salvo" legível sobre a barra marsala */
+body.v40t .save-status{background:rgba(255,255,255,.18)!important;color:#fff!important;border:1px solid rgba(255,255,255,.3)!important}
+body.v40t .save-status.erro{background:#FBEAEA!important;color:#B24747!important}
+
+/* Fila no celular: nome em linha inteira, botões e pontuação abaixo */
+@media(max-width:760px){
+  body.v40t .fila-head{flex-wrap:wrap!important;row-gap:8px}
+  body.v40t .fila-head .fila-name{flex:1 1 calc(100% - 44px)!important;min-width:0}
+  body.v40t .fila-head .fila-acts{margin-left:37px!important}
+  body.v40t .fila-head .fila-score{margin-left:auto!important}
+  body.v40t .fila-ctrls{padding-left:0!important}
+}

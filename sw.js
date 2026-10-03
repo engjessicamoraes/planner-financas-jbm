@@ -8,7 +8,7 @@
      cache: vai direto ao Firebase.
    Ao alterar a lista de arquivos, aumente o número de VERSAO.
    ============================================================ */
-var VERSAO='jbm-v42-1';
+var VERSAO='jbm-v42-2';
 var PAGINAS=['./','./index.html','./tarefas.html','./manifest.webmanifest',
   './icones/icone-192.png','./icones/icone-512.png','./icones/apple-touch-icon.png','./icones/favicon-32.png'];
 var EXTERNOS=/^https:\/\/(www\.gstatic\.com\/firebasejs\/|fonts\.googleapis\.com\/|fonts\.gstatic\.com\/|cdn\.jsdelivr\.net\/|cdnjs\.cloudflare\.com\/|unpkg\.com\/)/;
