@@ -20,9 +20,10 @@ python3 build.py
 | `src/financas-shell.js`, `src/financas-shell.css` | Barra superior, troca entre Pessoal e Empresa, Configurações, botão Lançar e barra inferior no celular. |
 | `src/empresa.js` | Aba Empresa: Painel B&M, Despesas da empresa, Dívidas da empresa e Relatório mensal. |
 | `src/planejamento.js` | Alertas de vencimento e metas dos cofrinhos. |
+| `src/tarefas-layout.css` | Organização do Planner: abas numa segunda linha, títulos padronizados e alinhamento de margens e cartões. |
 | `src/tarefas-shell.js`, `src/tarefas-shell.css` | Seletor de áreas no Planner e cartão de contas a vencer. |
 | `src/shell.css` | Estilos comuns às duas páginas. |
-| `src/tema.css` | Cores da marca B&M (menu lateral marsala, destaques em dourado, fundo rosado), aplicadas por cima dos estilos antigos. |
+| `src/tema.css` | Cores da marca B&M (barra superior marsala, menu lateral claro, destaques em dourado, fundo rosado), aplicadas por cima dos estilos antigos. |
 
 ## Aplicativo no celular e uso sem internet
 
