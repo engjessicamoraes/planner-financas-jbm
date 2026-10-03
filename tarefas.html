@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!-- v40:cabeca:inicio -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4B1F39">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jéssica B&amp;M">
+<link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<!-- v40:cabeca:fim -->
 <title>Planner — Eng. Jéssica Moraes</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -5620,4 +5630,589 @@ var HT = (function() {
 @media(max-width:760px){:root{--pjm-gut:16px}}
 </style>
 
+<!-- v40:inicio (gerado por build.py a partir de src/; não editar aqui) -->
+<style data-src="shell.css">
+/* ============================================================
+   CASCA DO APLICATIVO — v40 (comum a Finanças e Planner)
+   Barra superior com Pessoal | Empresa | Tarefas, indicador da
+   nuvem, barra inferior no celular e janela de Configurações.
+   As cores seguem a identidade B&M: marsala e dourado.
+   ============================================================ */
+:root{
+  --v40-marsala:#4B1F39;--v40-marsala-2:#5C2444;--v40-dourado:#B09358;
+  --v40-ok:#2F7D59;--v40-alerta:#B7791F;--v40-erro:#B24747;
+  --v40-top:52px;--v40-bottom:62px;
+}
+
+/* ---------- seletor Pessoal | Empresa | Tarefas ---------- */
+.appsw{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:11px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);flex-shrink:0}
+.appsw a{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 13px;border-radius:8px;color:rgba(255,255,255,.72);font:600 12.5px Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.appsw a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.appsw a.on{background:#fff;color:var(--v40-marsala);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.appsw a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- indicador da nuvem ---------- */
+.nv-pill{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:rgba(255,255,255,.86);font:500 11.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.nv-pill i{width:8px;height:8px;border-radius:50%;background:#9AA3AD;flex-shrink:0}
+.nv-pill[data-estado="ok"] i{background:#57C08A}
+.nv-pill[data-estado="salvando"] i,.nv-pill[data-estado="offline-pendente"] i{background:#E7B24B;animation:v40pulse 1s ease-in-out infinite}
+.nv-pill[data-estado="offline"] i{background:#E7B24B}
+.nv-pill[data-estado="erro"] i{background:#E26D6D}
+.nv-pill[data-estado="erro"]{border-color:rgba(226,109,109,.6)}
+@keyframes v40pulse{50%{opacity:.35}}
+.nv-aviso{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:3000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:11px 14px;border-radius:12px;background:#26303a;color:#fff;font:500 12.5px Inter,system-ui,sans-serif;box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.nv-aviso button{border:0;border-radius:8px;padding:6px 11px;background:#fff;color:var(--v40-marsala);font-weight:700;cursor:pointer}
+
+/* ---------- janela de Configurações ---------- */
+.v40-modal{position:fixed;inset:0;z-index:2600;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(31,22,28,.42);backdrop-filter:blur(3px)}
+.v40-modal.open{display:flex}
+.v40-box{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.25);font-family:Inter,system-ui,sans-serif;color:#27303B}
+.v40-box header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px;border-bottom:1px solid #EEE9E4}
+.v40-box h2{font:700 17px Outfit,Inter,sans-serif;color:var(--v40-marsala-2);margin:0}
+.v40-x{width:32px;height:32px;border-radius:9px;border:1px solid #E4DED2;background:#FBF9F6;cursor:pointer;font-size:18px;color:#5A6470}
+.v40-sec{padding:14px 20px;border-bottom:1px solid #F1ECE7}
+.v40-sec:last-child{border-bottom:0}
+.v40-sec h3{font:700 10.5px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8A949F;margin:0 0 9px}
+.v40-sec p{font-size:12.5px;line-height:1.5;color:#5A6470;margin:0 0 10px}
+.v40-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v40-btn{display:flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:8px 12px;border-radius:10px;border:1px solid #E4DED2;background:#FBF9F6;color:var(--v40-marsala-2);font:600 12px Inter,sans-serif;cursor:pointer;text-align:center}
+.v40-btn:hover{background:#F6EFF3;border-color:#D9C3CF}
+.v40-btn.pri{background:var(--v40-marsala-2);border-color:var(--v40-marsala-2);color:#fff}
+.v40-btn.pri:hover{background:#6E2C52}
+.v40-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #EEE9E4;font-size:12.5px}
+.v40-linha:last-child{border-bottom:0}
+.v40-seg{display:inline-flex;padding:2px;border-radius:9px;background:#F3EFEA;border:1px solid #E7E0D7;flex-shrink:0}
+.v40-seg button{border:0;background:transparent;padding:5px 10px;border-radius:7px;font:600 11.5px Inter,sans-serif;color:#7A6F66;cursor:pointer}
+.v40-seg button.on{background:#fff;color:var(--v40-marsala-2);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+@media(max-width:520px){.v40-btns{grid-template-columns:1fr}}
+
+/* ---------- barra inferior (celular) ---------- */
+.v40-bottom{display:none}
+@media(max-width:760px){
+  .v40-bottom{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:1250;height:calc(var(--v40-bottom) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-top:1px solid #E6E1DB;box-shadow:0 -6px 20px rgba(40,25,35,.06)}
+  .v40-bottom a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#7D7570;font:600 10px Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .v40-bottom a svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .v40-bottom a.on{color:var(--v40-marsala-2)}
+  .v40-bottom a.mais{position:relative}
+  .v40-bottom a.mais span.b{width:46px;height:46px;margin-top:-18px;border-radius:15px;background:linear-gradient(135deg,var(--v40-marsala-2),#7A3560);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(92,36,68,.35)}
+  .v40-bottom a.mais span.b svg{stroke:#fff;width:22px;height:22px}
+}
+</style>
+<style data-src="tarefas-shell.css">
+/* Planner: seletor de áreas e cartão de contas a vencer (v40). */
+.nav .appsw.v40-tar{margin:0 6px 0 12px;align-self:center}
+.v40-contas{background:#FFFBF3;border:1px solid #EFDDB8;border-left:4px solid #B7791F;border-radius:15px;margin:-8px 0 24px;overflow:hidden;font-family:Inter,system-ui,sans-serif}
+.v40-contas.bad{background:#FFF6F5;border-color:#F0CFCB;border-left-color:#B24747}
+.v40-contas .vh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px}
+.v40-contas .vh b{display:block;font-size:13.5px;color:#27303B}
+.v40-contas .vh span{font-size:11.5px;color:#7D858E}
+.v40-contas .vh a{font-size:12px;font-weight:600;color:#6E2C52;text-decoration:none;white-space:nowrap}
+.v40-contas .vi{display:grid;grid-template-columns:10px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:8px 16px;font-size:12.5px;border-top:1px solid rgba(0,0,0,.05)}
+.v40-contas .vi i{width:8px;height:8px;border-radius:50%;background:#B7791F}
+.v40-contas .vi.atrasado i{background:#B24747}
+.v40-contas .vi .n{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v40-contas .vi .q{color:#7D858E;font-size:11.5px;white-space:nowrap}
+.v40-contas .vi.atrasado .q{color:#B24747;font-weight:600}
+.v40-contas .vi .v{font-weight:700;font-variant-numeric:tabular-nums}
+@media(max-width:1100px){.nav .appsw.v40-tar a svg{display:none}.nav .appsw.v40-tar a{padding:0 9px}}
+@media(max-width:760px){
+  .nav .appsw.v40-tar{margin:0 4px 0 6px}
+  .nav .nav-app-name,.nav .nav-app-sub{display:none}
+  .nav .nav-right{padding:0 8px!important;border-left:0!important}
+  .nav .nav-right .save-status,.nav .nav-btn-backup{display:none!important}
+  .nav .nav-btn-add{font-size:0!important;padding:0!important;width:34px;height:34px;justify-content:center}
+  .nav .nav-btn-add svg{margin:0!important;width:15px;height:15px}
+  .nav .nav-brand{width:auto!important;min-width:0!important;flex:0 0 auto!important;padding:0 8px 0 12px!important;border-right:0!important}
+  .nav .appsw.v40-tar a{font-size:11.5px;padding:0 8px;height:28px}
+  .v40-contas .vi{grid-template-columns:10px minmax(0,1fr) auto}.v40-contas .vi .q{grid-column:2;grid-row:2}
+}
+</style>
+<script data-src="nuvem.js">
+/* ============================================================
+   SINCRONIZAÇÃO COM A NUVEM — v40
+   Substitui o envio integral dos dados a cada alteração.
+
+   Como funciona:
+   1. A página escuta a nuvem em tempo real. Quando outro aparelho
+      grava algo, a alteração chega aqui sem recarregar.
+   2. Para cada bloco de dados (lançamentos, metas, saldos...), o site
+      guarda a "base": a última versão que esteve igual nos dois lados.
+   3. Ao gravar ou receber, faz uma mesclagem em três vias (base, este
+      aparelho, nuvem): o que só um lado mudou é aceito; listas com
+      "id" são mescladas item a item. Assim, um lançamento feito no
+      celular não é apagado por uma edição feita no computador.
+   4. A gravação usa transação do Firebase, que repete a mesclagem se
+      a nuvem mudou no meio do caminho.
+   5. O estado (salvo, salvando, sem conexão, falha) é publicado no
+      evento "nuvem-status" para o indicador da barra superior.
+   ============================================================ */
+(function(){
+  'use strict';
+  if(window.SyncNuvem)return;
+
+  /* ---------- utilitários de dados ---------- */
+  function isObj(x){return !!x&&typeof x==='object'&&!Array.isArray(x);}
+  function canon(x){
+    if(x===undefined||x===null)return 'null';
+    if(typeof x!=='object')return JSON.stringify(x);
+    if(Array.isArray(x))return '['+x.map(canon).join(',')+']';
+    return '{'+Object.keys(x).sort().map(function(k){return JSON.stringify(k)+':'+canon(x[k]);}).join(',')+'}';
+  }
+  function eq(a,b){return canon(a)===canon(b);}
+  function intKey(k){return /^(0|[1-9][0-9]{0,8})$/.test(k);}
+  /* Reproduz a forma como o Firebase devolve os dados: sem nulos, sem
+     listas ou objetos vazios, e chaves numéricas densas viram lista. */
+  function norm(x){
+    if(x===undefined||x===null||typeof x==='function')return undefined;
+    if(typeof x==='number')return isFinite(x)?x:undefined;
+    if(typeof x!=='object')return x;
+    var src={},n=0,max=-1,todasInt=true;
+    Object.keys(x).forEach(function(k){
+      var v=norm(x[k]);if(v===undefined)return;
+      src[k]=v;n++;
+      if(intKey(k)){if(+k>max)max=+k;}else todasInt=false;
+    });
+    if(!n)return undefined;
+    if(todasInt&&n*2>max+1){
+      var a=[];for(var i=0;i<=max;i++)a.push(src[i]===undefined?null:src[i]);
+      return a;
+    }
+    if(Array.isArray(x)){var o={};Object.keys(src).forEach(function(k){o[k]=src[k];});return o;}
+    return src;
+  }
+  function comId(a){return Array.isArray(a)&&a.length>0&&a.every(function(e){return isObj(e)&&e.id!==undefined&&e.id!==null;});}
+  /* Mesclagem em três vias: b = base, l = este aparelho, r = nuvem. */
+  function merge3(b,l,r){
+    if(eq(l,r))return l;
+    if(eq(b,l))return r;
+    if(eq(b,r))return l;
+    if(l===undefined)return r; /* excluído aqui e alterado lá: mantém a alteração */
+    if(r===undefined)return l;
+    if(isObj(l)&&isObj(r)){
+      var bo=isObj(b)?b:{},out={},vistos={};
+      Object.keys(l).concat(Object.keys(r)).forEach(function(k){
+        if(vistos[k])return;vistos[k]=1;
+        var m=merge3(bo[k],l[k],r[k]);
+        if(m!==undefined)out[k]=m;
+      });
+      return out;
+    }
+    if(Array.isArray(l)&&Array.isArray(r)&&comId(l)&&comId(r)){
+      var bm={},rm={},usados={},res=[];
+      if(comId(b))b.forEach(function(e){bm[String(e.id)]=e;});
+      r.forEach(function(e){rm[String(e.id)]=e;});
+      l.forEach(function(e){
+        var id=String(e.id);if(usados[id])return;usados[id]=1;
+        var m=merge3(bm[id],e,rm[id]);if(m!==undefined)res.push(m);
+      });
+      r.forEach(function(e){
+        var id=String(e.id);if(usados[id])return;usados[id]=1;
+        var m=merge3(bm[id],undefined,e);if(m!==undefined)res.push(m);
+      });
+      return res;
+    }
+    return l; /* conflito no mesmo valor: prevalece a edição deste aparelho */
+  }
+
+  /* O Firebase não aceita . $ # [ ] / em chaves (ex.: "Carro / Transporte"). */
+  function encKey(k){return String(k).replace(/[%.$#\[\]\/]/g,function(c){return '%'+c.charCodeAt(0).toString(16).toUpperCase();});}
+  function decKey(k){return k.indexOf('%')<0?k:k.replace(/%(25|2E|24|23|5B|5D|2F)/g,function(m,h){return String.fromCharCode(parseInt(h,16));});}
+  function paraNuvem(o){
+    if(Array.isArray(o))return o.map(function(v){return v===undefined?null:paraNuvem(v);});
+    if(isObj(o)){var r={};Object.keys(o).forEach(function(k){r[encKey(k)]=paraNuvem(o[k]);});return r;}
+    return o;
+  }
+  function daNuvem(o){
+    if(Array.isArray(o))return o.map(daNuvem);
+    if(isObj(o)){var r={};Object.keys(o).forEach(function(k){r[decKey(k)]=daNuvem(o[k]);});return r;}
+    return o;
+  }
+
+  /* ---------- armazenamento local ---------- */
+  var setNativo=Storage.prototype.setItem,remNativo=Storage.prototype.removeItem;
+  var interno=0;
+  function lsSet(k,v){interno++;try{setNativo.call(localStorage,k,v);}finally{interno--;}}
+  function lsDel(k){interno++;try{remNativo.call(localStorage,k);}finally{interno--;}}
+  function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+
+  /* ---------- motor ---------- */
+  function Motor(cfg){
+    this.cfg=cfg;
+    this.porLs={};this.sujo={};this.enviando={};this.ultimoLocal={};
+    this.ref=null;this.ligado=false;this.conectado=true;this.erro='';
+    this.salvoEm=+(lsGet(this.chaveMeta('salvoEm'))||0);
+    this.primeiro=true;this.timer=null;this.adiadas={};
+    var self=this;
+    cfg.chaves.forEach(function(s){self.porLs[s.ls]=s;});
+  }
+  Motor.prototype.chaveMeta=function(n){return '__nuvem__/'+this.cfg.caminho+'/'+n;};
+  Motor.prototype.ler=function(s){
+    var raw=lsGet(s.ls);if(raw===null||raw==='')return undefined;
+    if(s.fmt==='raw')return raw;
+    try{var v=JSON.parse(raw);return s.fmt==='json'?norm(v):v;}catch(e){return undefined;}
+  };
+  Motor.prototype.gravarLocal=function(s,v){
+    if(v===undefined){lsDel(s.ls);return;}
+    lsSet(s.ls,s.fmt==='raw'?String(v):JSON.stringify(v));
+  };
+  Motor.prototype.daNuvem=function(s,val){
+    if(val===null||val===undefined)return undefined;
+    if(s.fmt==='raw')return String(val);
+    if(s.fmt==='jsonstr'){if(typeof val!=='string')return undefined;try{return JSON.parse(val);}catch(e){return undefined;}}
+    return norm(daNuvem(val));
+  };
+  Motor.prototype.paraNuvem=function(s,v){
+    if(s.fmt==='raw')return String(v);
+    if(s.fmt==='jsonstr')return JSON.stringify(v);
+    return paraNuvem(v);
+  };
+  Motor.prototype.getBase=function(s){
+    var raw=lsGet(this.chaveMeta('base/'+s.k));
+    if(raw===null)return null; /* null = ainda sem base (primeira vez neste aparelho) */
+    try{return {v:raw==='__vazio__'?undefined:JSON.parse(raw)};}catch(e){return null;}
+  };
+  Motor.prototype.setBase=function(s,v){
+    try{lsSet(this.chaveMeta('base/'+s.k),v===undefined?'__vazio__':JSON.stringify(v));}
+    catch(e){console.warn('Sem espaço para guardar a base de sincronização',e);}
+  };
+  Motor.prototype.pendentes=function(){
+    var self=this;return Object.keys(this.sujo).filter(function(k){return self.sujo[k];}).length+
+      Object.keys(this.enviando).filter(function(k){return self.enviando[k];}).length;
+  };
+  Motor.prototype.status=function(){
+    var st;
+    if(!this.ligado)st='local';
+    else if(this.erro)st='erro';
+    else if(!this.conectado)st=this.pendentes()?'offline-pendente':'offline';
+    else if(this.pendentes())st='salvando';
+    else st='ok';
+    var det={estado:st,salvoEm:this.salvoEm,pendentes:this.pendentes(),erro:this.erro,caminho:this.cfg.caminho};
+    this.ultimoStatus=det;
+    try{window.dispatchEvent(new CustomEvent('nuvem-status',{detail:det}));}catch(e){}
+    return det;
+  };
+  Motor.prototype.marcar=function(lsKey){
+    var s=this.porLs[lsKey];if(!s)return;
+    this.sujo[s.k]=true;this.status();
+    if(!this.ligado)return;
+    var self=this;clearTimeout(this.timer);
+    this.timer=setTimeout(function(){self.enviarTudo();},700);
+  };
+  Motor.prototype.marcarTudo=function(){
+    var self=this;this.cfg.chaves.forEach(function(s){
+      var v=self.ler(s),c=canon(v);
+      if(self.ultimoLocal[s.k]!==c){self.ultimoLocal[s.k]=c;self.marcar(s.ls);}
+    });
+  };
+  Motor.prototype.enviarTudo=function(){
+    clearTimeout(this.timer);this.timer=null;
+    var self=this;
+    Object.keys(this.sujo).forEach(function(k){if(self.sujo[k])self.enviar(k);});
+  };
+  Motor.prototype.spec=function(k){return this.cfg.chaves.filter(function(s){return s.k===k;})[0];};
+  Motor.prototype.enviar=function(k){
+    var s=this.spec(k),self=this;
+    if(!s||!this.ligado)return;
+    if(this.primeiro){this.sujo[k]=true;return;} /* só envia depois de conhecer a nuvem */
+    if(this.enviando[k]){this.reenviar=this.reenviar||{};this.reenviar[k]=true;return;}
+    this.sujo[k]=false;this.enviando[k]=true;this.status();
+    var localNoInicio=this.ler(s),resultado;
+    var b=this.getBase(s);
+    this.ref.child(s.k).transaction(function(cur){
+      var remoto=self.daNuvem(s,cur);
+      var base=b?b.v:remoto; /* sem base: este aparelho tem a última palavra */
+      resultado=merge3(base,localNoInicio,remoto);
+      if(resultado===undefined)return; /* nunca apaga um bloco inteiro: aborta */
+      if(eq(resultado,remoto)&&cur!==null)return; /* nada a gravar */
+      return self.paraNuvem(s,resultado);
+    },function(err,committed,snap){
+      self.enviando[k]=false;
+      if(err){
+        self.sujo[k]=true;
+        self.erro=(err&&err.code)||String(err);
+        console.warn('Falha ao salvar "'+k+'" na nuvem',err);
+        self.status();
+        clearTimeout(self.timerErro);
+        self.timerErro=setTimeout(function(){self.erro='';self.enviarTudo();},15000);
+        return;
+      }
+      self.erro='';
+      var remoto=snap?self.daNuvem(s,snap.val()):undefined;
+      if(committed||remoto!==undefined){
+        self.setBase(s,remoto);
+        var atual=self.ler(s);
+        if(eq(atual,localNoInicio)&&!eq(atual,remoto)){
+          self.gravarLocal(s,remoto);self.ultimoLocal[k]=canon(remoto);
+          self.aplicar([k]);
+        }else if(!eq(atual,localNoInicio)){self.sujo[k]=true;}
+      }
+      self.salvoEm=Date.now();lsSet(self.chaveMeta('salvoEm'),String(self.salvoEm));
+      if(self.reenviar&&self.reenviar[k]){self.reenviar[k]=false;self.sujo[k]=true;}
+      self.status();
+      if(self.sujo[k])self.marcar(s.ls);
+    },false);
+  };
+  Motor.prototype.aplicar=function(chaves,primeiraLeitura){
+    var self=this;
+    chaves.forEach(function(k){self.adiadas[k]=1;});
+    var podeAgora=primeiraLeitura||(this.cfg.podeAplicar?this.cfg.podeAplicar():true);
+    if(!podeAgora){clearTimeout(this.timerAplicar);this.timerAplicar=setTimeout(function(){self.aplicar([]);},1500);return;}
+    var lista=Object.keys(this.adiadas);this.adiadas={};
+    if(!lista.length&&!primeiraLeitura)return;
+    try{this.cfg.aoReceber&&this.cfg.aoReceber(lista,!!primeiraLeitura);}catch(e){console.error('Falha ao aplicar dados da nuvem',e);}
+  };
+  Motor.prototype.receber=function(val){
+    val=val||{};
+    var self=this,mudou=[],primeiro=this.primeiro;
+    var legadoPendente=this.cfg.chaveLegadoPendente&&lsGet(this.cfg.chaveLegadoPendente);
+    this.cfg.chaves.forEach(function(s){
+      if(self.enviando[s.k])return; /* o envio em curso já mescla */
+      /* Depois da primeira leitura, um bloco com alteração pendente é mesclado
+         pelo próprio envio. Na primeira leitura, porém, ele precisa passar pela
+         regra abaixo: num aparelho novo, rotinas que gravam ao abrir a página
+         não podem sobrescrever os dados que já estão na nuvem. */
+      if(self.sujo[s.k]&&!primeiro)return;
+      self.sujo[s.k]=false;
+      var remoto=self.daNuvem(s,val[s.k]);
+      var local=self.ler(s);
+      var b=self.getBase(s);
+      if(eq(local,remoto)){if(!b||!eq(b.v,remoto))self.setBase(s,remoto);return;}
+      var resultado;
+      if(!b){
+        /* Primeira vez com este sistema: a nuvem vale, a menos que o
+           sistema anterior tenha marcado alterações locais não enviadas. */
+        if(remoto===undefined||legadoPendente)resultado=local;
+        else resultado=remoto;
+      }else resultado=merge3(b.v,local,remoto);
+      if(!eq(resultado,local)){
+        self.gravarLocal(s,resultado);self.ultimoLocal[s.k]=canon(resultado);mudou.push(s.k);
+      }
+      if(eq(resultado,remoto))self.setBase(s,remoto);
+      else{
+        if(!b)self.setBase(s,remoto);
+        self.sujo[s.k]=true;
+      }
+    });
+    if(legadoPendente&&this.cfg.chaveLegadoPendente)lsDel(this.cfg.chaveLegadoPendente);
+    this.primeiro=false;
+    if(this.pendentes())this.marcar(this.cfg.chaves[0].ls);
+    this.status();
+    if(mudou.length||primeiro)this.aplicar(mudou,primeiro);
+  };
+  Motor.prototype.iniciar=function(uid){
+    if(this.ligado)return;
+    var self=this;
+    this.ligado=true;
+    /* O que mudou antes do login é tratado pela mesclagem da primeira leitura. */
+    this.sujo={};
+    this.ref=firebase.database().ref('users/'+uid+'/'+this.cfg.caminho);
+    this.cfg.chaves.forEach(function(s){self.ultimoLocal[s.k]=canon(self.ler(s));});
+    this.ref.on('value',function(snap){self.receber(snap.val());},function(err){
+      self.erro=(err&&err.code)||'sem permissão';self.status();
+      console.warn('Falha ao escutar a nuvem',err);
+      if(self.cfg.aoFalharLeitura)self.cfg.aoFalharLeitura(err);
+    });
+    firebase.database().ref('.info/connected').on('value',function(s){
+      self.conectado=!!s.val();self.status();
+      if(self.conectado&&self.pendentes())self.enviarTudo();
+    });
+    window.addEventListener('pagehide',function(){if(self.timer)self.enviarTudo();});
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&self.timer)self.enviarTudo();});
+    /* Rede de segurança: alterações gravadas sem passar pelos ganchos. */
+    setInterval(function(){self.marcarTudo();},4000);
+    this.status();
+  };
+
+  var motores=[];
+  /* Gancho único no localStorage: qualquer gravação numa chave
+     sincronizada agenda o envio daquela chave. */
+  var setAtual=Storage.prototype.setItem,remAtual=Storage.prototype.removeItem;
+  Storage.prototype.setItem=function(k,v){
+    var r=setAtual.call(this,k,v);
+    if(!interno&&this===localStorage)motores.forEach(function(m){if(m.porLs[k]){m.ultimoLocal[m.porLs[k].k]=null;m.marcar(k);}});
+    return r;
+  };
+  Storage.prototype.removeItem=function(k){
+    var r=remAtual.call(this,k);
+    if(!interno&&this===localStorage)motores.forEach(function(m){if(m.porLs[k])m.marcar(k);});
+    return r;
+  };
+
+  window.SyncNuvem={
+    criar:function(cfg){var m=new Motor(cfg);motores.push(m);return m;},
+    motores:motores,
+    _t:{merge3:merge3,norm:norm,eq:eq,canon:canon}
+  };
+})();
+</script>
+<script data-src="tarefas-nuvem.js">
+/* Liga o motor de sincronização (nuvem.js) aos dados do Planner.
+   Antes, o post-it não ia para a nuvem e a leitura só acontecia uma vez
+   por sessão do navegador (marcador compartilhado com o Finanças). */
+(function(){
+  'use strict';
+  if(!window.SyncNuvem||window.__modoLocal)return;
+  var aviso=null,liberadoSemNuvem=false;
+  function editando(){
+    var a=document.activeElement;
+    if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return true;
+    return !!document.querySelector('.modal.open,.modal.on,.overlay.open,.ov.open,[role="dialog"]:not([hidden])');
+  }
+  function pedirRecarga(){
+    if(aviso)return;
+    aviso=document.createElement('div');
+    aviso.className='nv-aviso';
+    aviso.innerHTML='Há alterações feitas em outro aparelho. <button type="button">Atualizar agora</button>';
+    aviso.querySelector('button').onclick=function(){location.reload();};
+    document.body.appendChild(aviso);
+    /* Recarrega sozinho quando a página volta a ficar visível e nada está em edição. */
+    document.addEventListener('visibilitychange',function(){
+      if(document.visibilityState==='visible'&&!editando())location.reload();
+    });
+  }
+  var motor=SyncNuvem.criar({
+    caminho:'planner',
+    chaves:[
+      {k:'planner',ls:'pjm-v16',fmt:'jsonstr'},
+      {k:'reuniao',ls:'pjm-mtg-v1',fmt:'jsonstr'},
+      {k:'habitos',ls:'ht-v3',fmt:'jsonstr'},
+      {k:'postit',ls:'pjm-postit-v1',fmt:'jsonstr'},
+      {k:'capacidade',ls:'pjm-capacidade-dia',fmt:'raw'}
+    ],
+    podeAplicar:function(){return !editando();},
+    aoReceber:function(chaves,primeiraLeitura){
+      /* O Planner monta o estado ao abrir; dados novos exigem recarregar. */
+      if(primeiraLeitura&&!liberadoSemNuvem){
+        /* Trava contra recarga em sequência, caso a página regrave algo ao abrir. */
+        var ult=+(sessionStorage.getItem('nv-recarga')||0);
+        if(chaves.length&&Date.now()-ult>15000){
+          try{sessionStorage.setItem('nv-recarga',String(Date.now()));}catch(e){}
+          location.reload();return;
+        }
+        try{cloudHideGate();}catch(e){}
+        return;
+      }
+      if(chaves.length)pedirRecarga();
+    },
+    aoFalharLeitura:function(){try{cloudHideGate();}catch(e){}}
+  });
+  window.__motorPlanner=motor;
+  cloudSyncDown=window.cloudSyncDown=function(){
+    if(typeof _cloudUser==='undefined'||!_cloudUser)return;
+    motor.iniciar(_cloudUser.uid);
+    /* Sem internet a nuvem não responde: depois de 4 s a tela é liberada com
+       os dados deste aparelho, e o que chegar depois vira aviso de atualização. */
+    setTimeout(function(){if(motor.primeiro){liberadoSemNuvem=true;try{cloudHideGate();}catch(e){}}},4000);
+  };
+  cloudWriteAll=window.cloudWriteAll=function(){motor.marcarTudo();motor.enviarTudo();};
+  cloudScheduleWrite=window.cloudScheduleWrite=function(){motor.marcarTudo();};
+  try{if(typeof _cloudUser!=='undefined'&&_cloudUser)motor.iniciar(_cloudUser.uid);}catch(e){}
+  /* Mantém o selo "salvo/salvando" do cabeçalho em sintonia com o motor. */
+  window.addEventListener('nuvem-status',function(ev){
+    if(typeof setSaveStatus!=='function')return;
+    var st=ev.detail.estado;
+    if(st==='salvando'||st==='offline-pendente')setSaveStatus('salvando');
+    else if(st==='erro')setSaveStatus('erro');
+    else if(st==='ok'){try{__ultimoSalvo=ev.detail.salvoEm||Date.now();}catch(e){}setSaveStatus('ok');}
+  });
+})();
+</script>
+<script data-src="tarefas-shell.js">
+/* ============================================================
+   PLANNER — integração com o Finanças (v40)
+   - Seletor Pessoal | Empresa | Tarefas na barra superior, igual ao
+     do Finanças, para circular entre as três áreas com um clique.
+   - Cartão "Contas a vencer" na Agenda, com o que está atrasado ou
+     vence nos próximos dias (publicado pelo Finanças na nuvem).
+   ============================================================ */
+(function(){
+  'use strict';
+  function $(s,r){return (r||document).querySelector(s);}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function R(v){return 'R$ '+(parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  var ICO={
+    pessoal:'<svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>',
+    empresa:'<svg viewBox="0 0 16 16"><rect x="2" y="6" width="12" height="9" rx="1"/><path d="M5 6V4a3 3 0 0 1 6 0v2"/></svg>',
+    tarefas:'<svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/><rect x="1" y="1" width="14" height="14" rx="3"/></svg>'
+  };
+
+  /* ---------- seletor de áreas ---------- */
+  function montarSeletor(){
+    var nav=$('nav.nav');if(!nav||$('.appsw',nav))return;
+    var sw=document.createElement('div');sw.className='appsw v40-tar';sw.setAttribute('aria-label','Área');
+    sw.innerHTML='<a href="index.html#pessoal">'+ICO.pessoal+'Pessoal</a><a href="index.html#empresa">'+ICO.empresa+'Empresa</a><a class="on" href="tarefas.html">'+ICO.tarefas+'Tarefas</a>';
+    var brand=$('.nav-brand',nav);
+    if(brand)brand.insertAdjacentElement('afterend',sw);else nav.insertBefore(sw,nav.firstChild);
+  }
+
+  /* ---------- contas a vencer ---------- */
+  var dados=null;
+  try{dados=JSON.parse(localStorage.getItem('v40-vencimentos')||'null');}catch(e){}
+  function dm(d){return d?d.slice(8,10)+'/'+d.slice(5,7):'';}
+  function diasAte(d){var h=new Date();h.setHours(12,0,0,0);return Math.round((new Date(d+'T12:00:00')-h)/864e5);}
+  function quando(v){
+    var d=diasAte(v.venc);
+    if(v.estado==='atrasado'||d<0)return 'atrasada desde '+dm(v.venc);
+    if(d===0)return 'vence hoje';if(d===1)return 'vence amanhã';
+    return 'vence em '+d+' dias ('+dm(v.venc)+')';
+  }
+  function cartao(){
+    var itens=(dados&&dados.itens)||[];
+    if(!itens.length)return null;
+    var atras=itens.filter(function(v){return v.estado==='atrasado'||diasAte(v.venc)<0;}).length;
+    var tot=itens.reduce(function(a,v){return a+(parseFloat(v.valor)||0);},0);
+    var d=document.createElement('div');d.id='v40-contas';d.className='v40-contas'+(atras?' bad':'');
+    var h='<div class="vh"><div><b>'+(atras?atras+' conta(s) atrasada(s)':'Contas a vencer')+'</b><span>'+itens.length+' conta(s) · '+R(tot)+'</span></div><a href="index.html#pessoal">Abrir no Finanças →</a></div>';
+    itens.slice(0,5).forEach(function(v){
+      var at=v.estado==='atrasado'||diasAte(v.venc)<0;
+      h+='<div class="vi'+(at?' atrasado':'')+'"><i></i><span class="n">'+esc(v.nome)+'</span><span class="q">'+quando(v)+'</span><span class="v">'+R(v.valor)+'</span></div>';
+    });
+    d.innerHTML=h;return d;
+  }
+  function inserir(){
+    var mod=document.getElementById('mod-agenda');if(!mod)return;
+    var dash=mod.querySelector('.agenda-dash');if(!dash)return;
+    var velho=document.getElementById('v40-contas');
+    if(velho&&velho.previousElementSibling===dash&&velho.getAttribute('data-k')===chave())return;
+    if(velho)velho.remove();
+    var c=cartao();if(!c)return;
+    c.setAttribute('data-k',chave());
+    dash.insertAdjacentElement('afterend',c);
+  }
+  function chave(){return JSON.stringify(dados&&dados.itens||[]);}
+  function observar(){
+    var mod=document.getElementById('mod-agenda');if(!mod)return;
+    new MutationObserver(function(){inserir();}).observe(mod,{childList:true,subtree:true});
+    inserir();
+  }
+  /* Lê da nuvem a lista publicada pelo Finanças (vale para o celular que só abre o Planner). */
+  function escutarNuvem(){
+    try{
+      if(window.__modoLocal||typeof firebase==='undefined')return;
+      firebase.auth().onAuthStateChanged(function(u){
+        if(!u)return;
+        firebase.database().ref('users/'+u.uid+'/financas/vencimentos').on('value',function(s){
+          var v=s.val();if(!v)return;
+          dados=v;try{localStorage.setItem('v40-vencimentos',JSON.stringify(v));}catch(e){}
+          inserir();
+        });
+      });
+    }catch(e){console.warn('Contas a vencer indisponíveis',e);}
+  }
+
+  function iniciar(){montarSeletor();observar();escutarNuvem();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar);else iniciar();
+})();
+</script>
+<script data-src="app.js">
+/* Instala o service worker (abre mais rápido e funciona sem internet).
+   Só roda em https; aberto direto do disco, o site segue como antes. */
+(function(){
+  if(!('serviceWorker' in navigator)||(location.protocol!=='https:'&&location.hostname!=='localhost'))return;
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('Service worker não registrado',e);});
+  });
+})();
+</script>
+<!-- v40:fim -->
 </body>
