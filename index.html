@@ -14,6 +14,7 @@
 <link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
 <!-- v40:cabeca:fim -->
 <title>Finanças 2026 — Jéssica Moraes</title>
+<!-- v34: importa a fatura aberta salva da tela do internet banking (consulta de fatura), sem duplicar o que já foi lançado; parcelas antecipadas não são projetadas de novo. -->
 <!-- v33: o que você exclui, edita ou move não volta mais ao reabrir; anotações do planner e informações da fatura passam a ir para a nuvem; backup importado é enviado à nuvem. -->
 <!-- v31: importação dos PDFs do Itaú no próprio site (extrato e fatura, com conferência de saldo e total); contas do mês com situação; painel do plano; navegação reorganizada; categorização automática. -->
 <!-- v30: extrato até 30/09/2026; saldo inicial de outubro −1.673,48. -->
@@ -15872,19 +15873,79 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
       confere:!!ini&&falhas.length===0&&saldos.length>0,conferidos:ok,falhas:falhas};
   }
 
+  /* ---------- Fatura salva da tela do internet banking ("consulta de fatura") ----------
+     Página impressa em PDF pelo navegador: cada lançamento tem data ("18 out."), descrição,
+     a etiqueta wallet/virtual e o valor; nas compras parceladas o valor fica um pouco acima
+     da linha, com "parcela 1 de 2" logo abaixo. Serve tanto para a fatura aberta (parcial)
+     quanto para uma fatura já fechada. */
+  var MES_AB={jan:1,fev:2,mar:3,abr:4,mai:5,jun:6,jul:7,ago:8,set:9,out:10,nov:11,dez:12};
+  async function lerFaturaWeb(doc){
+    var its=[];
+    for(var p=1;p<=doc.numPages;p++){
+      var pg=await doc.getPage(p),tc=await pg.getTextContent();
+      tc.items.forEach(function(it){var s=(it.str||'').replace(/\s+/g,' ').trim();if(s)its.push({p:p,x:it.transform[4],y:it.transform[5],s:s});});
+    }
+    var reVal=/^(-?)\s?R\$\s?([\d.]+,\d{2})$/;
+    /* total e mês da fatura exibida */
+    var total=null,status='',mesF=null,anoF=null;
+    var hdr=its.filter(function(i){return /^fatura (aberta|fechada|paga|atual|futura|prevista)$/i.test(i.s);})[0];
+    if(hdr){
+      status=hdr.s.toLowerCase().replace('fatura ','');
+      var cand=its.filter(function(i){return i.p===hdr.p&&i.y<hdr.y&&hdr.y-i.y<80&&Math.abs(i.x-hdr.x)<20&&reVal.test(i.s);}).sort(function(a,b){return b.y-a.y;})[0];
+      if(cand){var mm=cand.s.match(reVal);total=num((mm[1]||'')+mm[2]);}
+    }
+    var meses=its.filter(function(i){return /^(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez) \d{2}$/i.test(i.s);});
+    function valorColuna(m){var c=its.filter(function(i){return i.p===m.p&&i.y<m.y&&m.y-i.y<30&&Math.abs(i.x-m.x)<30&&reVal.test(i.s);})[0];if(!c)return null;var mm=c.s.match(reVal);return num((mm[1]||'')+mm[2]);}
+    function statusColuna(m){var c=its.filter(function(i){return i.p===m.p&&i.y>m.y&&i.y-m.y<30&&Math.abs(i.x-m.x)<30;})[0];return c?c.s.toLowerCase():'';}
+    var escolhido=null;
+    if(total!==null)escolhido=meses.filter(function(m){var v=valorColuna(m);return v!==null&&Math.abs(v-total)<0.011;})[0]||null;
+    if(!escolhido)escolhido=meses.filter(function(m){return statusColuna(m)===(status||'aberta');})[0]||null;
+    if(escolhido){var a=escolhido.s.toLowerCase().split(' ');mesF=MES_AB[a[0]];anoF=2000+(+a[1]);}
+    var diaFech=21,mf=its.filter(function(i){return /^dia \d{1,2}$/i.test(i.s);});
+    var ate=its.filter(function(i){return /^at[eé] o$/i.test(i.s);})[0];
+    if(ate){var d=mf.filter(function(i){return i.p===ate.p&&Math.abs(i.y-ate.y)<2;})[0];if(d)diaFech=+d.s.replace(/\D/g,'');}
+    /* linhas de lançamento */
+    var rows=its.filter(function(i){return i.x<110&&/^\d{2} (jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)\.?$/i.test(i.s);});
+    var usados=new Set(),itens=[],pagamentos=[];
+    rows.forEach(function(r){
+      var mesmo=its.filter(function(i){return i.p===r.p&&Math.abs(i.y-r.y)<2&&i.x>110&&i.x<340&&!/^(wallet|virtual|f[ií]sico|digital)$/i.test(i.s);}).sort(function(a,b){return a.x-b.x;});
+      var nome=mesmo.map(function(i){return i.s;}).join(' ').replace(/\s+/g,' ').trim();
+      var vals=its.filter(function(i){return i.p===r.p&&i.x>=340&&!usados.has(i)&&reVal.test(i.s)&&i.y-r.y>=-3&&i.y-r.y<=30;}).sort(function(a,b){return (a.y-r.y)-(b.y-r.y);});
+      if(!vals.length||!nome)return;
+      var v=vals[0];usados.add(v);
+      var mm=v.s.match(reVal),valor=num((mm[1]||'')+mm[2]);
+      var dm=r.s.toLowerCase().match(/^(\d{2}) (\w{3})/),dia=+dm[1],mes=MES_AB[dm[2]];
+      var ano=anoF||new Date().getFullYear();if(mesF&&mes>mesF)ano--;
+      var data=ano+'-'+String(mes).padStart(2,'0')+'-'+String(dia).padStart(2,'0');
+      if(/^pagamento (efetuado|recebido)|^pagto/i.test(nome)){pagamentos.push({data:data,valor:valor});return;}
+      var parc='',pm=nome.match(/^(.*?)\s?(\d{2})\/(\d{2})$/);
+      if(pm&&+pm[3]>=2&&+pm[2]>=1&&+pm[2]<=+pm[3]){nome=pm[1].trim();parc=(+pm[2])+'/'+(+pm[3]);}
+      itens.push({d:dia,m:mes,nome:nome.toUpperCase(),valor:valor,parcela:parc,data:data,intl:/^iof/i.test(nome)});
+    });
+    var soma=Math.round(itens.reduce(function(a,i){return a+i.valor;},0)*100)/100;
+    return {tipo:'fatura',origem:'internet',parcial:status==='aberta',status:status,mes:mesF,ano:anoF,
+      fechamento:(anoF&&mesF)?(anoF+'-'+String(mesF).padStart(2,'0')+'-'+String(diaFech).padStart(2,'0')):null,
+      itens:itens,pagamentos:pagamentos,total:total,soma:soma,confere:total!==null&&Math.abs(soma-total)<0.011};
+  }
+
   async function lerPdfItau(pdfjs, bytes){
     var doc=await pdfjs.getDocument({data:bytes}).promise;
     var p1=await doc.getPage(1);
     var tc=await p1.getTextContent();
     var texto=tc.items.map(function(i){return i.str;}).join(' ');
     var tipo=detectar(texto);
+    if(!tipo){
+      var tt=texto;for(var q=2;q<=Math.min(3,doc.numPages);q++){var tq=await (await doc.getPage(q)).getTextContent();tt+=' '+tq.items.map(function(i){return i.str;}).join(' ');}
+      var tz=tt.replace(/\s+/g,'');
+      if(/consultadefatura/i.test(tz)&&/fatura(aberta|fechada|paga)|lan[cç]amentos/i.test(tz))return lerFaturaWeb(doc);
+    }
     if(!tipo&&doc.numPages>1){var p2=await doc.getPage(2);var tc2=await p2.getTextContent();tipo=detectar(tc2.items.map(function(i){return i.str;}).join(' '));}
     if(tipo==='fatura'){var vp=p1.getViewport({scale:1});return lerFatura(await allLines(doc, vp.width*0.598));}
     if(tipo==='extrato')return lerExtrato(await allLines(doc, null));
     return {tipo:null};
   }
 
-  var api={lerPdfItau:lerPdfItau,lerFatura:lerFatura,lerExtrato:lerExtrato,allLines:allLines,num:num};
+  var api={lerPdfItau:lerPdfItau,lerFaturaWeb:lerFaturaWeb,lerFatura:lerFatura,lerExtrato:lerExtrato,allLines:allLines,num:num};
   if(typeof module!=='undefined'&&module.exports)module.exports=api; else root.BankParse=api;
 })(typeof window!=='undefined'?window:globalThis);
 </script>
@@ -15992,8 +16053,17 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
     var ap=aprendidas();
     var canon=r.itens.map(function(i){return {data:i.data,nome:i.nome,valor:i.valor,parcela:i.parcela};});
     var fech=canon.reduce(function(a,c){return c.data>a?c.data:a;},'');
+    /* fatura aberta (tela do internet banking): o ciclo só fecha no dia do fechamento, então o que
+       você lançou até lá continua neste mês mesmo que o banco ainda não mostre */
+    if(r.parcial&&r.fechamento&&r.fechamento>fech)fech=r.fechamento;
     var claimed=new Set();
-    var pool=DB.items.filter(function(i){return (i.tipo==='cartao'||i.tipo==='dani')&&i.mes>=M-1&&i.mes<=M+1;});
+    var P0=DB._faturasPdf||{};
+    var pool=DB.items.filter(function(i){
+      if(!(i.tipo==='cartao'||i.tipo==='dani')||i.mes<M-1||i.mes>M+1)return false;
+      /* lançamentos de outra fatura já fechada e importada do banco não são puxados para esta */
+      if(i.mes!==M&&i._src&&P0[i.mes]&&!P0[i.mes].parcial)return false;
+      return true;
+    });
     var idx={};pool.forEach(function(i){var k=(i.data||'')+'|'+sv(i.valor)+'|'+pn(i.parcela);(idx[k]=idx[k]||[]).push(i);});
     canon.forEach(function(c){
       var k=c.data+'|'+sv(c.valor)+'|'+pn(c.parcela);
@@ -16026,7 +16096,9 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
     for(var mm=M+1;mm<=12;mm++){
       if(P[mm])break;
       var k2=mm-M,proj=[];
-      canon.forEach(function(c){var p=pn(c.parcela);if(!p)return;var a=+p.split('/')[0],b=+p.split('/')[1];if(a+k2<=b)proj.push({data:c.data,nome:c.nome,valor:c.valor,parcela:(a+k2)+'/'+b});});
+      /* parcela que o banco já antecipou nesta fatura (ex.: 2/3 e 3/3 juntas) não é projetada de novo */
+      var jaNaFatura={};canon.forEach(function(c){if(c.parcela)jaNaFatura[c.data+'|'+sv(c.valor)+'|'+pn(c.parcela)]=1;});
+      canon.forEach(function(c){var p=pn(c.parcela);if(!p)return;var a=+p.split('/')[0],b=+p.split('/')[1];if(a+k2<=b&&!jaNaFatura[c.data+'|'+sv(c.valor)+'|'+(a+k2)+'/'+b])proj.push({data:c.data,nome:c.nome,valor:c.valor,parcela:(a+k2)+'/'+b});});
       var poolm=DB.items.filter(function(i){return i.tipo==='cartao'&&i.mes===mm;});
       var cl=new Set();
       proj.forEach(function(c){
@@ -16038,7 +16110,9 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
       DB.items=DB.items.filter(function(i){return !(i.tipo==='cartao'&&i.mes===mm&&!cl.has(i)&&CARD_IMPORT[i._src]&&i.parcela&&i.data&&i.data<=fech);});
       rep.removidos+=a2-DB.items.length;
     }
-    P[M]={total:r.total,n:canon.length,em:new Date().toISOString()};DB._faturasPdf=P;
+    P[M]={total:r.total,n:canon.length,em:new Date().toISOString()};
+    if(r.parcial){P[M].parcial=1;P[M].ate=canon.reduce(function(a,c){return c.data>a?c.data:a;},'');}
+    DB._faturasPdf=P;
     rep.totalBanco=r.total;
     return rep;
   }
@@ -16147,8 +16221,10 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
     if(x.erro)return '<div class="imp31-card bad"><div class="t">'+esc(x.nome)+'</div><div class="s">'+esc(x.erro)+'</div></div>';
     if(r.tipo==='fatura'){
       var ok=r.confere;
-      return '<div class="imp31-card '+(ok?'ok':'warn')+'"><div class="t">Fatura de '+MESES[r.mes-1]+' · '+r.itens.length+' lançamentos</div>'
-        +'<div class="s">'+(ok?'✓ A soma confere com o total da fatura: <b>'+R(r.total)+'</b>':'Atenção: a soma lida ('+R(r.soma)+') não bate com o total da fatura ('+R(r.total||0)+'). Confira antes de aplicar.')+'</div>'
+      var ultima=r.itens.reduce(function(a,c){return c.data>a?c.data:a;},'');
+      return '<div class="imp31-card '+(ok?'ok':'warn')+'"><div class="t">Fatura de '+MESES[r.mes-1]+(r.parcial?' (aberta, lançamentos até '+dm(ultima)+')':'')+' · '+r.itens.length+' lançamentos</div>'
+        +'<div class="s">'+(ok?'✓ A soma confere com o '+(r.parcial?'valor parcial':'total')+' da fatura: <b>'+R(r.total)+'</b>':'Atenção: a soma lida ('+R(r.soma)+') não bate com o '+(r.parcial?'valor parcial':'total')+' da fatura ('+R(r.total||0)+'). Confira antes de aplicar.')+'</div>'
+        +(r.parcial?'<div class="s">Quando a fatura fechar, importe o PDF da fatura fechada: ele substitui esta leitura sem duplicar.</div>':'')
         +(rep&&!rep.erro?'<div class="nums"><span><b>'+rep.novos+'</b> novos</span><span><b>'+rep.conferidos+'</b> já estavam no app</span><span><b>'+rep.removidos+'</b> removidos ou corrigidos</span><span><b>'+rep.proj+'</b> parcelas futuras criadas</span></div>'
           +(rep.fora.length?'<div class="s">'+rep.fora.length+' lançamento(s) que você digitou não aparecem nesta fatura e foram mantidos: '+rep.fora.slice(0,4).map(function(i){return esc(i.nome)+' ('+R(i.valor)+')';}).join(', ')+'.</div>':''):'')
         +(rep&&rep.erro?'<div class="s">'+esc(rep.erro)+'</div>':'')+'</div>';
@@ -16205,7 +16281,7 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
     lidos=[];
     var ov=document.createElement('div');ov.id='imp31';
     ov.innerHTML='<div class="imp31-box"><div class="imp31-h"><div><div class="imp31-title">Importar do banco</div>'
-      +'<div class="imp31-sub">Extrato da conta corrente ou fatura do cartão do Itaú, em PDF. O app confere com o saldo ou o total do banco e não duplica o que já existe.</div></div>'
+      +'<div class="imp31-sub">Extrato da conta corrente ou fatura do cartão do Itaú, em PDF (também vale a fatura aberta salva da tela do internet banking). O app confere com o saldo ou o total do banco e não duplica o que já existe.</div></div>'
       +'<button class="imp31-x" id="imp31-x" aria-label="Fechar">×</button></div>'
       +'<label class="imp31-drop" id="imp31-drop"><input type="file" id="imp31-file" accept="application/pdf,.pdf" multiple hidden>'
       +'<div class="big">Arraste os PDFs aqui</div><div class="small">ou clique para escolher · pode enviar o extrato e a fatura juntos</div></label>'
