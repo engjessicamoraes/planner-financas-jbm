@@ -5652,7 +5652,7 @@ var HT = (function() {
 .appsw a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- indicador da nuvem ---------- */
-.nv-pill{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:rgba(255,255,255,.86);font:500 11.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.nv-pill{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:30px;min-width:124px;box-sizing:border-box;padding:0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:rgba(255,255,255,.86);font:500 11.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
 .nv-pill i{width:8px;height:8px;border-radius:50%;background:#9AA3AD;flex-shrink:0}
 .nv-pill[data-estado="ok"] i{background:#57C08A}
 .nv-pill[data-estado="salvando"] i,.nv-pill[data-estado="offline-pendente"] i{background:#E7B24B;animation:v40pulse 1s ease-in-out infinite}
@@ -5928,7 +5928,10 @@ body.v40t .save-status.erro{background:#FBEAEA!important;color:#B24747!important
     lsSet(s.ls,s.fmt==='raw'?String(v):JSON.stringify(v));
   };
   Motor.prototype.daNuvem=function(s,val){
-    if(val===null||val===undefined)return undefined;
+    /* Texto vazio na nuvem vale como "sem valor", igual ao que ler() devolve para o
+       aparelho; sem isso, um campo vazio ficava eternamente "diferente" e o site
+       reenviava e redesenhava a tela a cada 4 segundos. */
+    if(val===null||val===undefined||val==='')return undefined;
     if(s.fmt==='raw')return String(val);
     if(s.fmt==='jsonstr'){if(typeof val!=='string')return undefined;try{return JSON.parse(val);}catch(e){return undefined;}}
     return norm(daNuvem(val));

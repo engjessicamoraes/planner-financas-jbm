@@ -126,7 +126,10 @@
     lsSet(s.ls,s.fmt==='raw'?String(v):JSON.stringify(v));
   };
   Motor.prototype.daNuvem=function(s,val){
-    if(val===null||val===undefined)return undefined;
+    /* Texto vazio na nuvem vale como "sem valor", igual ao que ler() devolve para o
+       aparelho; sem isso, um campo vazio ficava eternamente "diferente" e o site
+       reenviava e redesenhava a tela a cada 4 segundos. */
+    if(val===null||val===undefined||val==='')return undefined;
     if(s.fmt==='raw')return String(val);
     if(s.fmt==='jsonstr'){if(typeof val!=='string')return undefined;try{return JSON.parse(val);}catch(e){return undefined;}}
     return norm(daNuvem(val));

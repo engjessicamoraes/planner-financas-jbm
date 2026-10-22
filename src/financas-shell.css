@@ -42,7 +42,7 @@ body.ctx-empresa .nav-group[data-group="empresa"]>.nav-group-toggle{display:none
   #app-top .appsw a{padding:0 10px;font-size:12px}
   #app-top .appsw a svg{display:none}
   #app-top .at-lancar{display:none}
-  #app-top .nv-pill{width:34px;padding:0;justify-content:center}
+  #app-top .nv-pill{width:34px;min-width:0;padding:0;justify-content:center}
   #app-top .nv-pill span{display:none}
   body.v40 .action-undo{bottom:calc(var(--v40-bottom) + 14px)!important}
   body.v40 .sb-ctx-tit{padding-top:18px}
