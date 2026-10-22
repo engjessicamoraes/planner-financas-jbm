@@ -216,6 +216,9 @@
     ["2026-10-20", "ANTHROPIC", 238.95, ""],
     ["2026-10-20", "Repasse de IOF (compras internacionais)", 32.23, ""]
   ];
+  /* fatura do banco disponível para a conferência permanente (src/conferencia-fatura.js) */
+  window.__FATURA_BANCO=window.__FATURA_BANCO||{};
+  window.__FATURA_BANCO[10]={total:16736.84,itens:FECHADA,fonte:'PDF da fatura fechada (22/10/2026)'};
   function nuvemPronta(){
     if(window.__modoLocal||!window.__motorFinancas)return true;
     return !window.__motorFinancas.primeiro;
@@ -269,7 +272,7 @@
       if(rep){
         try{toast('Fatura de outubro conferida com o banco: '+rep.novos+' incluído(s), '+rep.conferidos+' já estavam, '+rep.removidos+' repetido(s) removido(s).');}catch(e){}
         var fora=(rep.fora||[]).filter(function(i){return i.mes===10;});
-        if(fora.length)setTimeout(function(){mostrarFora(fora);},600);
+        if(fora.length)setTimeout(function(){if(window.revisarFatura)window.revisarFatura(10);else mostrarFora(fora);},600);
       }
       return true;
     }
