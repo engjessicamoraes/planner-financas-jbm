@@ -18,7 +18,7 @@
 .appsw a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- indicador da nuvem ---------- */
-.nv-pill{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:rgba(255,255,255,.86);font:500 11.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.nv-pill{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:30px;min-width:124px;box-sizing:border-box;padding:0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:rgba(255,255,255,.86);font:500 11.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
 .nv-pill i{width:8px;height:8px;border-radius:50%;background:#9AA3AD;flex-shrink:0}
 .nv-pill[data-estado="ok"] i{background:#57C08A}
 .nv-pill[data-estado="salvando"] i,.nv-pill[data-estado="offline-pendente"] i{background:#E7B24B;animation:v40pulse 1s ease-in-out infinite}
