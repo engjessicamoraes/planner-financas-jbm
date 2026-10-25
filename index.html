@@ -18560,6 +18560,36 @@ body.v40 .toast{z-index:3000!important}
   function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function dm(d){return d?d.slice(8,10)+'/'+d.slice(5,7):'';}
   function banco(m){return (window.__FATURA_BANCO||{})[m]||null;}
+  /* A conferência só vale depois que os dados da nuvem chegaram: num aparelho ainda
+     desatualizado, lançamentos que já existem na nuvem apareceriam como "faltando",
+     e incluí-los criaria cópias quando a sincronização terminasse. */
+  function nuvemPronta(){
+    if(window.__modoLocal||!window.__motorFinancas)return true;
+    var M=window.__motorFinancas;return !M.primeiro&&!M.pendentes();
+  }
+  var IMPORTADOS={'fatura-import':1,'Agosto2026.pdf':1,'Setembro2026.pdf':1,'Maio.pdf':1,'fatura-v26':1,'fatura-pdf':1,'fatura-pdf-proj':1,'fatura-colada':1};
+  /* Cópias de lançamentos importados do banco que sobram num mês com a fatura do banco
+     guardada são sempre repetições (vindas de outro aparelho ou de uma inclusão em dobro):
+     saem sozinhas. Lançamentos digitados à mão continuam indo para a revisão. */
+  var limpando=false;
+  function limparRepetidosImportados(m){
+    if(limpando||!nuvemPronta())return 0;
+    var r=conferir(m);if(!r)return 0;
+    var rep=r.extras.filter(function(i){return IMPORTADOS[i._src];});
+    if(!rep.length)return 0;
+    limpando=true;
+    try{
+      var ids={};rep.forEach(function(i){ids[i.id]=1;});
+      var guard=DB._repetidosRemovidos||[];
+      guard.push({em:new Date().toISOString(),mes:m,itens:JSON.parse(JSON.stringify(rep))});
+      DB._repetidosRemovidos=guard.slice(-20);
+      DB.items=DB.items.filter(function(i){return !ids[i.id];});
+      try{dbSave();}catch(e){}
+      try{toast(rep.length+' lançamento(s) repetido(s) da fatura de '+(typeof MESES!=='undefined'?MESES[m-1]:m)+' removido(s) para bater com o banco.');}catch(e){}
+      try{render();}catch(e){}
+    }finally{limpando=false;}
+    return rep.length;
+  }
 
   function conferir(m){
     var b=banco(m);if(!b||typeof DB==='undefined')return null;
@@ -18587,6 +18617,8 @@ body.v40 .toast{z-index:3000!important}
       +'<b>'+brl(i.valor)+'</b><span class="bt">'+botoes+'</span></div>';
   }
   window.revisarFatura=function(m){
+    if(!nuvemPronta()){try{toast('Aguarde: os dados ainda estão chegando da nuvem.');}catch(e){}return;}
+    limparRepetidosImportados(m);
     var r=conferir(m);if(!r)return;
     var old=$('#cf40');if(old)old.remove();
     var ov=document.createElement('div');ov.id='cf40';
@@ -18611,7 +18643,10 @@ body.v40 .toast{z-index:3000!important}
       if((id=t.getAttribute('data-cf-del'))){DB.items=DB.items.filter(function(i){return String(i.id)!==id;});salvarERender();window.revisarFatura(m);return;}
       if((id=t.getAttribute('data-cf-keep'))){DB.items.forEach(function(i){if(String(i.id)===id)i._mantido=1;});salvarERender();window.revisarFatura(m);return;}
       if((id=t.getAttribute('data-cf-add'))!==null&&t.hasAttribute('data-cf-add')){
-        var c=r.faltam[+id];var cat='Revisar categoria';try{if(typeof catCartao==='function')cat=catCartao(c.nome);}catch(x){}
+        var atual=conferir(m),c=r.faltam[+id];
+        /* confere de novo na hora: se o lançamento já chegou por outro aparelho, não inclui */
+        if(!atual.faltam.some(function(f){return f.data===c.data&&sv(f.valor)===sv(c.valor)&&pn(f.parcela)===pn(c.parcela);})){window.revisarFatura(m);return;}
+        var cat='Revisar categoria';try{if(typeof catCartao==='function')cat=catCartao(c.nome);}catch(x){}
         DB.items.push({id:(typeof mkId==='function'?mkId():'cf'+Date.now()),mes:m,nome:c.nome,valor:c.valor,cat:cat,tipo:'cartao',parcela:c.parcela||'',data:c.data,obs:'',_src:'fatura-pdf'});
         salvarERender();window.revisarFatura(m);return;}
       if(t.getAttribute('data-cf-unkeep')){e.preventDefault();DB.items.forEach(function(i){if(i.mes===m&&i._mantido)delete i._mantido;});salvarERender();window.revisarFatura(m);return;}
@@ -18624,7 +18659,8 @@ body.v40 .toast{z-index:3000!important}
     if(typeof vAtual!=='undefined'&&vAtual!=='mes'){if(old)old.remove();return;}
     var m=typeof mesAtual!=='undefined'?mesAtual:null;
     var host=$('#resumo-fatura-host .rf-wrap');
-    var r=m?conferir(m):null;
+    if(m&&nuvemPronta())limparRepetidosImportados(m);
+    var r=m&&nuvemPronta()?conferir(m):null;
     if(!host||!r){if(old)old.remove();return;}
     var dif=Math.round((r.site-r.banco)*100)/100;
     var ok=!r.extras.length&&!r.faltam.length;
@@ -18660,6 +18696,7 @@ body.v40 .toast{z-index:3000!important}
   var _r=window.render;if(typeof _r==='function'){window.render=function(){var x=_r.apply(this,arguments);agendar();return x;};try{render=window.render;}catch(e){}}
   var _g=window.goTo;if(typeof _g==='function'){window.goTo=function(){var x=_g.apply(this,arguments);agendar();return x;};try{goTo=window.goTo;}catch(e){}}
   window.addEventListener('dados-atualizados',agendar);
+  window.addEventListener('nuvem-status',function(ev){if(ev.detail&&ev.detail.caminho==='financas'&&ev.detail.estado==='ok')agendar();});
   agendar();
 })();
 </script>
