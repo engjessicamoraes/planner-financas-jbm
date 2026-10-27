@@ -10,7 +10,7 @@ import re, pathlib
 RAIZ = pathlib.Path(__file__).parent
 PAGINAS = {
     'index.html': ['shell.css', 'financas-shell.css', 'nuvem.js', 'financas-nuvem.js',
-                   'empresa.js', 'planejamento.js', 'financas-shell.js', 'app.js', 'fatura-out26.js', 'conferencia-fatura.js', 'tema.css'],
+                   'empresa.js', 'planejamento.js', 'financas-shell.js', 'app.js', 'fatura-out26.js', 'conferencia-fatura.js', 'dani-planilha.js', 'tema.css'],
     'tarefas.html': ['shell.css', 'tarefas-shell.css', 'tarefas-layout.css', 'nuvem.js', 'tarefas-nuvem.js', 'tarefas-shell.js', 'app.js', 'tema.css'],
 }
 
