@@ -38,7 +38,7 @@
     var mesSel='';
     if(opc.mesSel){
       mesSel='<select class="rc-mes" data-rc-mes="'+esc(p.id)+'" title="Mês previsto"><option value="">Sem mês</option>'
-        +[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].map(function(i){return '<option value="'+i+'"'+(m===i?' selected':'')+'>'+nomeMes(i)+'</option>';}).join('')+'</select>';
+        +Array.apply(null,{length:24}).map(function(_,k){return k+1;}).map(function(i){return '<option value="'+i+'"'+(m===i?' selected':'')+'>'+nomeMes(i)+'</option>';}).join('')+'</select>';
     }
     return '<div class="rc-row'+(rec?' rec':' pend')+'">'
       +'<label class="rc-ck" title="Marcar ou desmarcar como recebido"><input type="checkbox" data-rc-ok="'+esc(p.id)+'"'+(rec?' checked':'')+'><span>'+(rec?'Recebido':'Receber')+'</span></label>'
