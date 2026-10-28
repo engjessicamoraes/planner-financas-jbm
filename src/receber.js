@@ -29,7 +29,7 @@
     return r+(p.p&&p.p!=='-'?' · parcela '+p.p:'');
   }
   function soma(l){return l.reduce(function(a,p){return a+(+p.v||0);},0);}
-  var aba='mes';
+  var aba='mes',mesVer=0;
 
   function salvarERender(){try{dbSave();}catch(e){}try{if(typeof buildSb==='function')buildSb();}catch(e){}desenhar();}
 
@@ -40,7 +40,7 @@
       mesSel='<select class="rc-mes" data-rc-mes="'+esc(p.id)+'" title="Mês previsto"><option value="">Sem mês</option>'
         +[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].map(function(i){return '<option value="'+i+'"'+(m===i?' selected':'')+'>'+nomeMes(i)+'</option>';}).join('')+'</select>';
     }
-    return '<div class="rc-row'+(rec?' rec':'')+'">'
+    return '<div class="rc-row'+(rec?' rec':' pend')+'">'
       +'<label class="rc-ck" title="Marcar ou desmarcar como recebido"><input type="checkbox" data-rc-ok="'+esc(p.id)+'"'+(rec?' checked':'')+'><span>'+(rec?'Recebido':'Receber')+'</span></label>'
       +'<div class="rc-d">'+(opc.cliente?'<b>'+esc(p.n||'Sem nome')+'</b> · ':'')+esc(desc(p))
       +(rec&&p.recebidoEm?'<small>recebido em '+esc(p.recebidoEm.slice(8,10)+'/'+p.recebidoEm.slice(5,7))+'</small>':'')+'</div>'
@@ -61,32 +61,37 @@
     var semMes=pend.filter(function(p){return !mesDe(p);});
     var ateAgora=pend.filter(function(p){var m=mesDe(p);return m&&m<=hoje;});
     var proximos=pend.filter(function(p){var m=mesDe(p);return m&&m>hoje;});
-    var h='<div class="rc-kpis">'
-      +'<button data-rc-aba="mes"><div class="l">Vence até '+(hoje>=1&&hoje<=12?MESES[hoje-1].toLowerCase():'agora')+'</div><div class="v'+(ateAgora.length?' warn':'')+'">'+R(soma(ateAgora))+'</div><div class="s">'+ateAgora.length+' parcela(s), inclusive atrasadas</div></button>'
-      +'<button data-rc-aba="mes"><div class="l">Próximos meses</div><div class="v">'+R(soma(proximos))+'</div><div class="s">'+proximos.length+' parcela(s)</div></button>'
-      +'<button data-rc-aba="etapa"><div class="l">Por etapa (sem mês)</div><div class="v">'+R(soma(semMes))+'</div><div class="s">'+semMes.length+' parcela(s)</div></button>'
-      +'<button data-rc-aba="recebido"><div class="l">Já recebido</div><div class="v ok">'+R(soma(rec))+'</div><div class="s">'+rec.length+' parcela(s)</div></button>'
-      +'</div>'
-      +'<div class="ar32-bar"><div class="pd32-tabs">'
-      +[['mes','Por mês',ateAgora.length+proximos.length],['etapa','Por etapa',semMes.length],['recebido','Recebidos',rec.length],['cliente','Por cliente',P.length]]
-        .map(function(a){return '<button class="pd32-tab'+(aba===a[0]?' on':'')+'" data-rc-aba="'+a[0]+'">'+a[1]+' <b>'+a[2]+'</b></button>';}).join('')
+    var meses={};P.forEach(function(p){var m=mesDe(p);if(m)(meses[m]=meses[m]||[]).push(p);});
+    var ultimo=Math.max(12,Object.keys(meses).map(Number).reduce(function(a,b){return Math.max(a,b);},0));
+    if(!mesVer)mesVer=Math.min(Math.max(hoje,1),ultimo);
+    var h='<div class="ar32-bar"><div class="pd32-tabs">'
+      +[['mes','Por mês'],['etapa','Por etapa ('+semMes.length+')'],['cliente','Por cliente']]
+        .map(function(a){return '<button class="pd32-tab'+(aba===a[0]?' on':'')+'" data-rc-aba="'+a[0]+'">'+a[1]+'</button>';}).join('')
       +'</div><button class="pl-btn" id="rc-add">+ Adicionar</button></div>';
 
     if(aba==='mes'){
-      if(!ateAgora.length&&!proximos.length)h+='<div class="pl-empty">Nenhuma parcela com mês definido em aberto.</div>';
-      if(ateAgora.length){
-        var porM={};ateAgora.forEach(function(p){(porM[mesDe(p)]=porM[mesDe(p)]||[]).push(p);});
-        Object.keys(porM).map(Number).sort(function(a,b){return a-b;}).forEach(function(m){
-          var l=porM[m].sort(function(a,b){return String(a.n).localeCompare(String(b.n));});
-          h+=bloco(nomeMes(m),soma(l),l.map(function(p){return linha(p,{cliente:true});}).join(''),m<hoje?'atrasado':'este mês');
-        });
+      var doMes=(meses[mesVer]||[]).slice().sort(function(a,b){return String(a.n).localeCompare(String(b.n))||String(a.p).localeCompare(String(b.p));});
+      var previsto=soma(doMes),recebido=soma(doMes.filter(function(p){return p.s!=='pendente';})),falta=previsto-recebido;
+      var nFalta=doMes.filter(function(p){return p.s==='pendente';}).length;
+      h+='<div class="rc-nav"><button data-rc-mesnav="-1" aria-label="Mês anterior"'+(mesVer<=1?' disabled':'')+'>‹</button><div class="t">'+nomeMes(mesVer)+(mesVer<=12?' '+ANO():'')+'</div><button data-rc-mesnav="1" aria-label="Próximo mês"'+(mesVer>=ultimo?' disabled':'')+'>›</button></div>'
+        +'<div class="rc-kpis3">'
+        +'<div><div class="l">A receber no mês</div><div class="v">'+R(previsto)+'</div><div class="s">'+doMes.length+' parcela(s)</div></div>'
+        +'<div class="ok"><div class="l">Recebido</div><div class="v">'+R(recebido)+'</div><div class="s">'+(doMes.length-nFalta)+' parcela(s)</div></div>'
+        +'<div class="'+(nFalta?'bad':'ok')+'"><div class="l">Falta receber</div><div class="v">'+R(falta)+'</div><div class="s">'+(nFalta?nFalta+' parcela(s)':'tudo recebido ✓')+'</div></div>'
+        +'</div>';
+      /* faixa com os meses do ano: vermelho = falta receber, verde = tudo recebido */
+      h+='<div class="rc-ano">';
+      for(var i=1;i<=ultimo;i++){
+        var l=meses[i]||[],f=soma(l.filter(function(p){return p.s==='pendente';}));
+        var cls=!l.length?'vazio':(f>0.004?(i<=hoje?'bad':'fut'):'ok');
+        h+='<button class="rc-chip '+cls+(i===mesVer?' on':'')+'" data-rc-mes-ir="'+i+'"><b>'+nomeMes(i).slice(0,3)+(i>12?'/'+String(ANO()+Math.floor((i-1)/12)).slice(2):'')+'</b><span>'+(!l.length?'—':(f>0.004?R(f):'✓'))+'</span></button>';
       }
-      var porP={};proximos.forEach(function(p){(porP[mesDe(p)]=porP[mesDe(p)]||[]).push(p);});
-      Object.keys(porP).map(Number).sort(function(a,b){return a-b;}).forEach(function(m){
-        var l=porP[m].sort(function(a,b){return String(a.n).localeCompare(String(b.n));});
-        h+=bloco(nomeMes(m),soma(l),l.map(function(p){return linha(p,{cliente:true});}).join(''));
-      });
-      if(semMes.length)h+='<div class="rc-dica">Há '+semMes.length+' parcela(s) sem mês, que dependem de etapa, somando '+R(soma(semMes))+'. <a href="#" data-rc-aba="etapa">Ver por etapa</a></div>';
+      h+='</div>';
+      h+='<div class="rc-mesview">';
+      if(!doMes.length)h+='<div class="pl-empty">Nenhuma parcela prevista para '+nomeMes(mesVer)+'.</div>';
+      else h+=bloco(nomeMes(mesVer),previsto,doMes.map(function(p){return linha(p,{cliente:true});}).join(''),nFalta?nFalta+' em aberto':'tudo recebido');
+      h+='</div>';
+      if(semMes.length)h+='<div class="rc-dica">Fora dos meses: '+semMes.length+' parcela(s) que dependem de etapa, somando '+R(soma(semMes))+'. <a href="#" data-rc-aba="etapa">Ver por etapa</a></div>';
     }else if(aba==='etapa'){
       h+='<div class="rc-dica">Parcelas que dependem de uma etapa do serviço (aprovação, emissão de certificado, entrega). Quando a etapa acontecer, marque como recebida; se já souber o mês, escolha ao lado.</div>';
       if(!semMes.length)h+='<div class="pl-empty">Nenhuma parcela sem mês.</div>';
@@ -109,6 +114,10 @@
     host.innerHTML=h;
     host.classList.add('rc-on');
     $$('[data-rc-aba]',host).forEach(function(b){b.onclick=function(e){e.preventDefault();aba=this.getAttribute('data-rc-aba');desenhar();};});
+    var faixa=$('.rc-ano',host),on=faixa&&$('.rc-chip.on',faixa);
+    if(on)faixa.scrollLeft=Math.max(0,on.offsetLeft-faixa.offsetLeft-(faixa.clientWidth-on.offsetWidth)/2);
+    $$('[data-rc-mesnav]',host).forEach(function(b){b.onclick=function(){mesVer+=parseInt(this.getAttribute('data-rc-mesnav'),10);desenhar();};});
+    $$('[data-rc-mes-ir]',host).forEach(function(b){b.onclick=function(){mesVer=parseInt(this.getAttribute('data-rc-mes-ir'),10);desenhar();};});
     var add=$('#rc-add',host);if(add)add.onclick=function(){if(typeof abrirFormParc==='function')abrirFormParc();};
     $$('[data-rc-ok]',host).forEach(function(c){c.onchange=function(){
       var id=this.getAttribute('data-rc-ok'),p=(DB.parcs||[]).filter(function(x){return String(x.id)===id;})[0];if(!p)return;
@@ -157,7 +166,21 @@
     +'.rc-ck input{width:18px;height:18px;accent-color:var(--ok,#2F7D59);cursor:pointer;margin:0}.rc-row.rec .rc-ck{color:var(--ok,#2F7D59)}'
     +'.rc-mes{font:500 12px Inter,sans-serif;border:1px solid var(--bd,#DDE1E6);border-radius:8px;padding:5px 6px;background:var(--card,#fff);color:inherit;width:100%}'
     +'.rc-dica{font-size:12.5px;color:var(--t2,#5A6470);line-height:1.5;margin:4px 2px 12px}.rc-dica a{color:var(--m,#8D5F78);font-weight:600}'
-    +'@media(max-width:800px){.rc-kpis{grid-template-columns:1fr 1fr}.rc-row{grid-template-columns:auto minmax(0,1fr) auto;row-gap:6px}.rc-row .rc-d{grid-column:2/4}.rc-row .rc-m,.rc-row .rc-mes{grid-column:1/3}.rc-row .rc-v{grid-column:3/4}.rc-row .c31-b{display:none}}';
+    +'.rc-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 12px}.rc-nav .t{font:700 18px Outfit,Inter,sans-serif;min-width:170px;text-align:center}'
+    +'.rc-nav button{width:34px;height:34px;border-radius:10px;border:1px solid var(--bd,#DDE1E6);background:var(--card,#fff);font-size:18px;cursor:pointer;color:inherit}.rc-nav button:disabled{opacity:.35;cursor:default}'
+    +'.rc-kpis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}'
+    +'.rc-kpis3>div{background:var(--card,#fff);border:1px solid var(--bd,#DDE1E6);border-radius:14px;padding:13px 16px}'
+    +'.rc-kpis3 .l{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3,#8A949F)}'
+    +'.rc-kpis3 .v{font:700 21px Outfit,Inter,sans-serif;margin-top:4px;font-variant-numeric:tabular-nums}.rc-kpis3 .s{font-size:11.5px;color:var(--t3,#8A949F);margin-top:2px}'
+    +'.rc-kpis3 .ok .v,.rc-kpis3 .ok.v{color:#2F7D59}.rc-kpis3>.ok .v{color:#2F7D59}.rc-kpis3>.bad .v{color:#B23B3B}.rc-kpis3>.bad{border-color:#EBC4C4;background:#FDF5F5}.rc-kpis3>.ok:last-child{border-color:#BFE0CC;background:#F2FAF5}'
+    +'.rc-ano{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px;margin-bottom:4px}'
+    +'.rc-chip{flex:0 0 auto;min-width:74px;border:1px solid var(--bd,#DDE1E6);background:var(--card,#fff);border-radius:10px;padding:6px 8px;cursor:pointer;text-align:center;font:inherit;color:inherit}'
+    +'.rc-chip b{display:block;font-size:11.5px}.rc-chip span{display:block;font-size:10.5px;font-variant-numeric:tabular-nums;margin-top:1px}'
+    +'.rc-chip.bad{border-color:#EBC4C4;background:#FDF5F5}.rc-chip.bad span{color:#B23B3B;font-weight:600}.rc-chip.ok{border-color:#BFE0CC;background:#F2FAF5}.rc-chip.ok span{color:#2F7D59;font-weight:700}'
+    +'.rc-chip.fut span{color:var(--t2,#5A6470)}.rc-chip.vazio{opacity:.5}.rc-chip.on{outline:2px solid var(--m,#8D5F78);outline-offset:1px}'
+    +'.rc-mesview .rc-row.pend{background:#FDF5F5;box-shadow:inset 3px 0 0 #C24A4A}.rc-mesview .rc-row.pend .rc-v{color:#B23B3B}.rc-mesview .rc-row.pend .rc-ck{color:#B23B3B}'
+    +'.rc-mesview .rc-row.rec{background:#F2FAF5;box-shadow:inset 3px 0 0 #2F7D59}.rc-mesview .rc-row.rec .rc-v{color:#2F7D59}'
+    +'@media(max-width:800px){.rc-kpis3{grid-template-columns:1fr 1fr 1fr;gap:6px}.rc-kpis3>div{padding:10px}.rc-kpis3 .v{font-size:15px}.rc-kpis{grid-template-columns:1fr 1fr}.rc-row{grid-template-columns:auto minmax(0,1fr) auto;row-gap:6px}.rc-row .rc-d{grid-column:2/4}.rc-row .rc-m,.rc-row .rc-mes{grid-column:1/3}.rc-row .rc-v{grid-column:3/4}.rc-row .c31-b{display:none}}';
   document.head.appendChild(st);
   setTimeout(depois,200);
 })();
