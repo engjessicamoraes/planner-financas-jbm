@@ -15770,6 +15770,14 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
   /* Reconstrói as linhas de texto de uma página; colSplit separa as duas colunas da fatura */
   async function pageLines(page, colSplit){
     var tc=await page.getTextContent();
+    if(colSplit==='auto'){
+      /* as colunas mudam de posição de uma página para outra: acha a coluna da direita
+         pelo alinhamento das datas (dd/mm) e corta um pouco antes dela */
+      var vw=page.getViewport({scale:1}).width,cont={};
+      tc.items.forEach(function(it){if(/^\d{2}\/\d{2}$/.test((it.str||'').trim())){var cx=Math.round(it.transform[4]/4)*4;cont[cx]=(cont[cx]||0)+1;}});
+      var dir=Object.keys(cont).map(Number).filter(function(x){return x>vw*0.45&&cont[x]>=3;}).sort(function(a,b){return cont[b]-cont[a];})[0];
+      colSplit=dir?dir-6:vw*0.598;
+    }
     var its=[];
     tc.items.forEach(function(it){
       if(!it.str||!it.str.trim())return;
@@ -15827,6 +15835,7 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
       m=t.match(/^(\d{2})\/(\d{2})\s+(.+?)\s+(-\s?[\d.]+,\d{2}|[\d.]+,\d{2})$/);
       if(!m)return;
       var nome=m[3].trim(),parc='';
+      if(/^PAGAMENTO(\s|$)/i.test(nome)&&num(m[4])<0)return; /* pagamento da fatura anterior */
       var pm=nome.match(/^(.*?)\s?(\d{2})\/(\d{2})$/);
       if(pm&&+pm[3]>=2&&+pm[2]>=1&&+pm[2]<=+pm[3]){nome=pm[1].trim();parc=(+pm[2])+'/'+(+pm[3]);}
       itens.push({d:+m[1],m:+m[2],nome:nome.replace(/\s+/g,' '),valor:num(m[4]),parcela:parc,intl:secao==='intl'});
@@ -15845,25 +15854,59 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
   /* ---------- Extrato ---------- */
   function lerExtrato(lines){
     var tx=[],saldos=[],ini=null,fut=false,saldoTopo=null,m;
+    /* Layout novo (a partir de nov/2026): lista do mais recente para o mais antigo, sem as
+       linhas "SALDO"; o saldo do fim de cada dia vem numa linha só com a data e o valor, e a
+       descrição pode continuar na linha de baixo. */
+    var reSaldoDia=/^(\d{2})\/(\d{2})\/(\d{4})\s+(-?[\d.]+,\d{2})$/;
+    var novo=!lines.some(function(l){return /SALDO ANTERIOR/i.test(l.text);})&&lines.some(function(l){return reSaldoDia.test(l.text);});
+    var ultTx=null;
     lines.forEach(function(l){
       var t=l.text;
       if(/lan[cç]amentos futuros|sa[ií]das futuras/i.test(t)){fut=true;}
+      if(novo&&/^Lan[cç]amentos$/i.test(t)){fut=false;}
       if(saldoTopo===null&&(m=t.match(/^R\$\s*(-?[\d.]+,\d{2})/)))saldoTopo=num(m[1]);
+      if(novo&&(m=t.match(reSaldoDia))){
+        if(!fut)saldos.push({data:m[3]+'-'+m[2]+'-'+m[1],saldo:num(m[4])});
+        ultTx=null;return;
+      }
+      if(novo&&ultTx&&ultTx.page===l.page&&ultTx.y-l.y<22&&ultTx.y>l.y&&!/^\d{2}\/\d{2}\/\d{4}/.test(t)&&!/^Data\s/.test(t)&&t.length<60){
+        ultTx.tx.desc=(ultTx.tx.desc+' '+t).replace(/\s+/g,' ');ultTx.y=l.y;return;
+      }
+      ultTx=null;
       m=t.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(.+?)\s+(-?[\d.]+,\d{2})(?:\s+(-?[\d.]+,\d{2}))?$/);
       if(!m)return;
       var data=m[3]+'-'+m[2]+'-'+m[1],desc=m[4].replace(/\s+/g,' ').trim(),v=num(m[5]);
       if(/SALDO ANTERIOR/i.test(desc)){ini={data:data,saldo:v};return;}
       if(/^SALDO/i.test(desc)){saldos.push({data:data,saldo:m[6]?num(m[6]):v});return;}
-      tx.push({data:data,desc:desc,valor:v,fut:fut});
+      var nt={data:data,desc:desc,valor:v,fut:fut};tx.push(nt);
+      if(novo)ultTx={tx:nt,page:l.page,y:l.y};
     });
-    /* conferência: saldo acumulado no fim de cada dia contra o saldo do banco */
+    if(novo&&saldos.length){
+      /* o saldo mais antigo é o ponto de partida; o do dia de hoje vem no topo da página */
+      saldos.sort(function(a,b){return a.data<b.data?-1:a.data>b.data?1:0;});
+      ini=saldos.shift();
+      tx=tx.filter(function(t){return t.fut||t.data>ini.data;});
+    }
+    /* conferência: saldo acumulado no fim de cada dia contra o saldo do banco.
+       No layout novo o saldo negativo aparece sem o sinal de menos (só em vermelho):
+       quando a conta bate com o valor invertido, o saldo é negativo. */
     var ok=0,falhas=[];
-    if(ini){
-      var dias={};tx.forEach(function(t){if(!t.fut)dias[t.data]=(dias[t.data]||0)+t.valor;});
+    function conferir(sinalIni){
+      var dias={},o=0,f=[];tx.forEach(function(t){if(!t.fut)dias[t.data]=(dias[t.data]||0)+t.valor;});
       saldos.forEach(function(s){
-        var acc=ini.saldo;Object.keys(dias).forEach(function(d){if(d<=s.data)acc+=dias[d];});
-        if(Math.abs(acc-s.saldo)<0.011)ok++;else falhas.push({data:s.data,banco:s.saldo,calc:Math.round(acc*100)/100});
+        var acc=ini.saldo*sinalIni;Object.keys(dias).forEach(function(d){if(d<=s.data&&d>ini.data)acc+=dias[d];});
+        acc=Math.round(acc*100)/100;
+        if(Math.abs(acc-s.saldo)<0.011)o++;
+        else if(novo&&Math.abs(acc+s.saldo)<0.011){o++;f.push({inv:s});}
+        else f.push({data:s.data,banco:s.saldo,calc:acc});
       });
+      return {ok:o,f:f};
+    }
+    if(ini){
+      var r1=conferir(1),r2=novo?conferir(-1):{ok:-1};
+      var r=r1;if(r2.ok>r1.ok){r=r2;ini.saldo=-ini.saldo;}
+      ok=r.ok;
+      r.f.forEach(function(x){if(x.inv)x.inv.saldo=-x.inv.saldo;else falhas.push(x);});
     }
     var real=tx.filter(function(t){return !t.fut;});
     var ultimo=null;if(ini){ultimo=ini.saldo+real.reduce(function(a,t){return a+t.valor;},0);ultimo=Math.round(ultimo*100)/100;}
@@ -15940,7 +15983,7 @@ var V26_ORIG_CATS=["30017 iguatemi po|Supermercado","30022 barra sul camic|Resta
       if(/consultadefatura/i.test(tz)&&/fatura(aberta|fechada|paga)|lan[cç]amentos/i.test(tz))return lerFaturaWeb(doc);
     }
     if(!tipo&&doc.numPages>1){var p2=await doc.getPage(2);var tc2=await p2.getTextContent();tipo=detectar(tc2.items.map(function(i){return i.str;}).join(' '));}
-    if(tipo==='fatura'){var vp=p1.getViewport({scale:1});return lerFatura(await allLines(doc, vp.width*0.598));}
+    if(tipo==='fatura'){var vp=p1.getViewport({scale:1});return lerFatura(await allLines(doc, 'auto'));}
     if(tipo==='extrato')return lerExtrato(await allLines(doc, null));
     return {tipo:null};
   }
