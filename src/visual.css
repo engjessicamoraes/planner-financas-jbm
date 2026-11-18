@@ -1,117 +1,40 @@
 /* ============================================================
-   VISUAL B&M — v45
-   Camada final, aplicada depois do tema de cores. Objetivo: um
-   visual sóbrio de ferramenta de trabalho, com a identidade da
-   B&M (marsala como cor principal, dourado só em detalhes) e sem
-   os enfeites genéricos (faixas coloridas, degradês, rótulos em
-   caixa alta, cinzas fracos).
+   VISUAL B&M — v46
+   Camada final, aplicada depois do tema de cores (tema.css).
+   As cores continuam as do tema; esta camada só cuida de:
+   fonte única, números alinhados, contraste dos textos
+   secundários e a retirada dos enfeites genéricos (faixas
+   coloridas na lateral, fundos em degradê, caixa alta).
    ============================================================ */
 body.v40{
-  --vs-tinta:#2A1F25;--vs-tinta2:#584650;--vs-tinta3:#6F5D67;
-  --vs-fundo:#F6F3F1;--vs-painel:#FBF9F8;--vs-cartao:#FFFFFF;
-  --vs-linha:#E5DDD9;--vs-linha-sua:#EFE9E6;
-  --vs-marsala:#5C2444;--vs-marsala-esc:#431A32;--vs-marsala-claro:#F3EAEE;
-  --vs-dourado:#B09358;--vs-dourado-txt:#7A6230;
-  --vs-verde:#2C7352;--vs-vermelho:#A63D3D;
-  /* variáveis dos estilos antigos, apontadas para a nova paleta */
-  --t:var(--vs-tinta);--t2:var(--vs-tinta2);--t3:var(--vs-tinta3);--neu:var(--vs-tinta2);
-  --tm-texto:var(--vs-tinta);--tm-texto2:var(--vs-tinta2);
-  --bg:var(--vs-fundo);--tm-fundo:var(--vs-fundo);--card:#fff;
-  --bd:var(--vs-linha);--bds:var(--vs-linha-sua);--tm-borda:var(--vs-linha);--tm-borda-sua:var(--vs-linha-sua);
-  --ok:var(--vs-verde);--bad:var(--vs-vermelho);--tm-verde:var(--vs-verde);--tm-vermelho:var(--vs-vermelho);
-  --sem-negative:var(--vs-vermelho);--sem-positive:var(--vs-verde);
-  background:var(--vs-fundo)!important;color:var(--vs-tinta);
+  /* textos secundários mais escuros, para atingir o contraste mínimo */
+  --t2:#584650;--t3:#6F5D67;--neu:#584650;--tm-texto2:#584650;
   font-variant-numeric:tabular-nums;
   -webkit-font-smoothing:antialiased;
 }
 /* uma família só, em todo o site */
 body.v40{font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif!important}
 body.v40 button,body.v40 input,body.v40 select,body.v40 textarea{font-family:inherit}
-body.v40 ::selection{background:#E9D7E0;color:var(--vs-tinta)}
-body.v40 :focus-visible{outline:2px solid var(--vs-marsala)!important;outline-offset:2px}
-body.v40 input,body.v40 select,body.v40 textarea{color:var(--vs-tinta)}
-body.v40 input::placeholder,body.v40 textarea::placeholder{color:var(--vs-tinta3)!important;opacity:1}
+body.v40 ::selection{background:#E9D7E0}
+body.v40 :focus-visible{outline:2px solid #5C2444!important;outline-offset:2px}
+body.v40 input::placeholder,body.v40 textarea::placeholder{color:#6F5D67!important;opacity:1}
 
-/* ---------- barra superior: marsala chapado, sem degradê ---------- */
-body.v40 #app-top{background:var(--vs-marsala-esc)!important;box-shadow:none!important;border-bottom:1px solid #2E1222}
-body.v40 #app-top .appsw{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:none!important}
-body.v40 #app-top .appsw a.on{background:#fff!important;color:var(--vs-marsala-esc)!important;box-shadow:none!important}
-body.v40 #app-top .nv-pill,body.v40 #app-top button{box-shadow:none!important}
-
-/* ---------- menu lateral ---------- */
-body.v40 .sb{background:var(--vs-painel)!important;border-right:1px solid var(--vs-linha)!important}
-body.v40 .sb .nav-group-toggle{color:var(--vs-tinta3)!important;font-size:12.5px!important;font-weight:600!important}
-body.v40 .sb .ni{color:var(--vs-tinta)!important}
-body.v40 .sb .ni:hover{background:#F1EBE8!important;color:var(--vs-marsala)!important}
-body.v40 .sb .ni.on{background:var(--vs-marsala-claro)!important;color:var(--vs-marsala)!important;box-shadow:none!important}
-body.v40 .sb .ni.on::before{display:none!important}
-body.v40 #sb-meses .ni.on{background:var(--vs-marsala)!important;color:#fff!important}
-body.v40 #sb-meses .ni.m31-fech{color:#8E7C86!important}
-body.v40 .sb .ni-tag{background:#EDE4E8!important;color:var(--vs-marsala)!important}
-
-/* ---------- títulos de página: sem o traço decorativo ---------- */
-body.v40 .pg-title{color:var(--vs-tinta)!important;letter-spacing:-.01em}
-body.v40 .pg-title::after{display:none!important}
-body.v40 .pg-sub{color:var(--vs-tinta2)!important}
-
-/* ---------- cartões: borda fina, sem degradê e sem faixa colorida ---------- */
-body.v40 div.sec,body.v40 .bm-card,body.v40 .split-card,body.v40 [class*="p31-card"],body.v40 .c31-wrap,body.v40 .pl-card,body.v40 .v26-fat-wrap{
-  background:#fff!important;border:1px solid var(--vs-linha)!important;box-shadow:0 1px 2px rgba(42,31,37,.04)!important;border-radius:12px!important}
-body.v40 div.sec>.sec-h,body.v40 .bm-card-h,body.v40 .split-card .hd,body.v40 .pl-card .pl-h{
-  background:#fff!important;border-bottom:1px solid var(--vs-linha-sua)!important}
-body.v40 .sec-t,body.v40 .bm-card-h .t{color:var(--vs-tinta)!important}
-body.v40 #v-mes .mes-primary-grid>.sec{box-shadow:0 1px 2px rgba(42,31,37,.04)!important}
-body.v40 #v-mes .mes-primary-grid>.sec .sec-t{color:var(--vs-tinta)!important}
+/* ---------- sem faixas coloridas na lateral ou no topo dos cartões ---------- */
 body.v40 .p31-grid3>.p31-card::before,body.v40 .bm-kpi::before,body.v40 .sc::before{display:none!important;content:none!important}
-body.v40 .bm-kpis>.bm-kpi,body.v40 .scards>.sc{background:#fff!important;border:1px solid var(--vs-linha)!important;box-shadow:none!important}
-body.v40 .bm-kpi .l,body.v40 .sc-l{color:var(--vs-tinta2)!important}
 body.v40 [style*="border-left:4px"],body.v40 [style*="border-left: 4px"],body.v40 [style*="border-left:3px"],body.v40 .imp31-card{border-left-width:1px!important}
 
-/* avisos: fundo neutro, sem bege */
-body.v40 .pl-alert{background:#FBF4F4!important;border:1px solid #EBD3D3!important;border-left-width:1px!important;color:var(--vs-tinta)!important;border-radius:10px!important}
+/* ---------- sem fundos em degradê: cada cartão fica com a sua cor, chapada ---------- */
+body.v40 div.sec,body.v40 [class*="p31-card"],body.v40 .c31-wrap,body.v40 .pl-card,body.v40 .split-card{background-image:none!important}
+body.v40 div.sec>.sec-h,body.v40 .bm-card-h,body.v40 .split-card .hd,body.v40 .pl-card .pl-h{background-image:none!important;background-color:#FCF8FA!important}
+body.v40 .p31-grid3>.p31-card:nth-child(n){background:#fff!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+1),body.v40 .scards>.sc:nth-child(4n+1){background:#FBF4F8!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+2),body.v40 .scards>.sc:nth-child(4n+2){background:#FBF6EC!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+3),body.v40 .scards>.sc:nth-child(4n+3){background:#F1F8F4!important}
+body.v40 .bm-kpis>.bm-kpi:nth-child(4n+4),body.v40 .scards>.sc:nth-child(4n+4){background:#FBF1EC!important}
 
-/* ---------- números: o vermelho fica só para o que estourou ---------- */
-body.v40 .rf-total,body.v40 .rf-wrap .rf-v,body.v40 [class*="rf-valor"]{color:var(--vs-tinta)!important}
-
-/* ---------- gráfico da fatura por mês ---------- */
-body.v40 .v26-fat-head .t{font-size:15px!important;font-weight:600!important;color:var(--vs-tinta)!important}
-body.v40 .v26-fat-col .bar{background:#B9A2AE!important;border-radius:4px 4px 2px 2px!important}
-body.v40 .v26-fat-col .bar.atual{background:var(--vs-marsala)!important}
-body.v40 .v26-fat-col .bar.proj{background:#F1EAEE!important;border:1px dashed #B9A2AE!important}
-body.v40 .v26-fat-col .val{color:var(--vs-tinta2)!important}
-body.v40 .v26-fat-col .m{color:var(--vs-tinta2)!important;font-weight:600!important}
-body.v40 .v26-fat-leg i[style*="B24747"],body.v40 .v26-fat-leg i[style*="b24747"]{background:#B9A2AE!important}
-body.v40 .v26-fat-leg i[style*="8D5F78"],body.v40 .v26-fat-leg i[style*="8d5f78"]{background:var(--vs-marsala)!important}
-body.v40 .v26-fat-leg i[style*="repeating"]{background:#F1EAEE!important;border:1px dashed #B9A2AE}
-
-/* ---------- botões ---------- */
-body.v40 .pl-btn:not(.sec),body.v40 .mn-add,body.v40 .btn-p{background:var(--vs-marsala)!important;border-color:var(--vs-marsala)!important;color:#fff!important;box-shadow:none!important;background-image:none!important}
-body.v40 .pl-btn:not(.sec):hover,body.v40 .mn-add:hover{background:var(--vs-marsala-esc)!important}
-body.v40 .fb,body.v40 .pl-btn.sec{background:#fff!important;border:1px solid var(--vs-linha)!important;color:var(--vs-tinta)!important;box-shadow:none!important}
-body.v40 .fb:hover,body.v40 .pl-btn.sec:hover{border-color:#CDBFC6!important;background:var(--vs-painel)!important}
-
-/* ---------- listas ---------- */
-body.v40 .li-nome{color:var(--vs-tinta)!important}
-body.v40 .fat-date-sep span,body.v40 .conta-day-total{color:var(--vs-tinta2)!important}
-body.v40 .v32-chip{color:var(--vs-tinta2)!important}
-
-/* ---------- ajustes depois da prévia com os dados reais ---------- */
-/* nenhum cartão com fundo em degradê */
-body.v40 div.sec,body.v40 [class*="p31-card"],body.v40 .bm-kpi,body.v40 .sc,body.v40 .c31-wrap,body.v40 .pl-card,body.v40 .split-card{background-image:none!important}
-/* valores dos indicadores em tinta; a cor fica para o que é bom ou ruim de verdade */
-body.v40 .sc .sc-v,body.v40 .bm-kpi .v{color:var(--vs-tinta)!important}
-/* total da fatura e despesas em tinta; créditos e entradas em verde */
-body.v40 .rf-hero .big{color:var(--vs-tinta)!important}
-body.v40 .li-val.cartao,body.v40 .li-val.saida{color:var(--vs-tinta)!important}
-body.v40 .li-val.ok,body.v40 .li-val.entrada{color:var(--vs-verde)!important}
-/* notas de rodapé: neutras, sem o bege */
-body.v40 .v40-nota{background:var(--vs-painel)!important;border:1px solid var(--vs-linha)!important;color:var(--vs-tinta2)!important}
 /* conselho genérico que não fala da situação real: some */
 body.v40 #fin-summary-note{display:none!important}
-/* selo de situação da fatura (Aberta/Fechada) */
-body.v40 .rf-badge{background:var(--vs-marsala-claro)!important;color:var(--vs-marsala)!important;font-weight:600!important}
-/* o cartão da fatura no Painel tinha um degradê com seletor mais forte */
-body.v40 .p31-grid3>.p31-card:nth-child(n),body.v40 .bm-kpis>.bm-kpi:nth-child(n),body.v40 .scards>.sc:nth-child(n){background:#fff!important;background-image:none!important}
+
 @media(max-width:760px){
   /* gráfico: no celular só o valor do mês atual e do próximo ficam escritos (os outros aparecem ao tocar) */
   body.v40 .v26-fat-col .val{visibility:hidden}
