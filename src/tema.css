@@ -24,10 +24,10 @@ body.v40 .main,body.v40 .page{background:transparent!important}
 body.v40 .sb,body.v40t .sb{
   background:#FBF6F8!important;border-right:1px solid #EADCE3!important;box-shadow:none!important;color:#3B2A33!important}
 body.v40 .sb-ctx-tit{color:#5C2444!important}
-body.v40 .sb-ctx-tit small{color:#8A7480!important}
+body.v40 .sb-ctx-tit small{color:#6F5D67!important}
 body.v40 .sb .nav-group{border-color:#EFE3E9!important}
 body.v40 .sb .nav-group-toggle,body.v40t .sb .sb-sec,body.v40t .sb [class*="sb-lbl"],body.v40t .sb [class*="sec-t"]{color:#9A6B83!important;opacity:1!important}
-body.v40 .sb .nav-group-toggle::after{color:#B9A3AF!important}
+body.v40 .sb .nav-group-toggle::after{color:#8E7C86!important}
 body.v40 .sb .ni,body.v40t .sb .ni{color:#3B2A33!important;background:transparent!important;border:0!important;border-left-color:transparent!important;box-shadow:none!important}
 body.v40 .sb .ni svg,body.v40t .sb .ni svg{stroke:currentColor!important;opacity:.8}
 body.v40 .sb .ni:hover,body.v40t .sb .ni:hover{background:#F3E6EC!important;color:#5C2444!important}
@@ -38,9 +38,9 @@ body.v40 .sb .ni.on .ni-tag,body.v40t .sb .ni.on .ni-ct{background:#7A3560!impor
 body.v40t .sb *{border-color:#EFE3E9}
 /* meses: grade compacta */
 body.v40 #sb-meses .ni{color:#3B2A33!important}
-body.v40 #sb-meses .ni.m31-fech{color:#A8949F!important}
+body.v40 #sb-meses .ni.m31-fech{color:#8E7C86!important}
 body.v40 #sb-meses .ni.on{background:#7A3560!important;color:#fff!important;box-shadow:none!important}
-body.v40 .sb .m31-novo,body.v40 #ni-novo-mes{color:#8A7480!important}
+body.v40 .sb .m31-novo,body.v40 #ni-novo-mes{color:#6F5D67!important}
 @media(max-width:760px){body.v40 .sb{box-shadow:8px 0 30px rgba(60,30,45,.18)!important}}
 
 /* ---------- barras superiores num marsala mais claro ---------- */
@@ -65,14 +65,6 @@ body.v40 .sec-t,body.v40 .bm-card-h .t{color:var(--tm-marsala)!important}
 
 /* indicadores: cada cartão com sua cor */
 body.v40 .bm-kpi,body.v40 .sc{position:relative;overflow:hidden;border:1px solid var(--tm-borda)!important;box-shadow:0 2px 10px rgba(92,36,68,.07)!important;background:#fff!important}
-body.v40 .bm-kpi::before,body.v40 .sc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tm-marsala)}
-body.v40 .bm-kpis>.bm-kpi:nth-child(4n+1),body.v40 .scards>.sc:nth-child(4n+1){background:linear-gradient(135deg,#FFFFFF 55%,#F6ECF1)!important}
-body.v40 .bm-kpis>.bm-kpi:nth-child(4n+2),body.v40 .scards>.sc:nth-child(4n+2){background:linear-gradient(135deg,#FFFFFF 55%,var(--tm-dourado-claro))!important}
-body.v40 .bm-kpis>.bm-kpi:nth-child(4n+2)::before,body.v40 .scards>.sc:nth-child(4n+2)::before{background:var(--tm-dourado)}
-body.v40 .bm-kpis>.bm-kpi:nth-child(4n+3),body.v40 .scards>.sc:nth-child(4n+3){background:linear-gradient(135deg,#FFFFFF 55%,var(--tm-verde-claro))!important}
-body.v40 .bm-kpis>.bm-kpi:nth-child(4n+3)::before,body.v40 .scards>.sc:nth-child(4n+3)::before{background:var(--tm-verde)}
-body.v40 .bm-kpis>.bm-kpi:nth-child(4n+4),body.v40 .scards>.sc:nth-child(4n+4){background:linear-gradient(135deg,#FFFFFF 55%,#F8E6DE)!important}
-body.v40 .bm-kpis>.bm-kpi:nth-child(4n+4)::before,body.v40 .scards>.sc:nth-child(4n+4)::before{background:#C0622A}
 body.v40 .bm-kpi .l,body.v40 .sc-l{color:var(--tm-texto2)!important}
 
 /* Painel: cartões principais e faixa de resumo do mês */
@@ -114,7 +106,6 @@ body.v40t h1,body.v40t .agenda-hello,body.v40t .ag-hello,body.v40t .proj-title{c
 
 /* Painel: fatura, saldo e dívida com cor própria (faixa no topo) */
 body.v40 .p31-grid3>.p31-card{position:relative!important;overflow:hidden!important}
-body.v40 .p31-grid3>.p31-card::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--tm-marsala),var(--tm-marsala-med))}
 body.v40 .p31-grid3>.p31-card:nth-child(1){background:linear-gradient(140deg,#fff 50%,var(--tm-vinho-claro))!important}
 body.v40 .p31-grid3>.p31-card:nth-child(2){background:linear-gradient(140deg,#fff 50%,var(--tm-dourado-claro))!important}
 body.v40 .p31-grid3>.p31-card:nth-child(2)::before{background:linear-gradient(90deg,var(--tm-dourado),#D4B77C)}

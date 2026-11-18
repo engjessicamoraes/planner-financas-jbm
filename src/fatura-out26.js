@@ -231,12 +231,12 @@
     var ov=document.createElement('div');ov.id='fora26';
     ov.style.cssText='position:fixed;inset:0;z-index:99990;background:rgba(30,20,25,.45);display:flex;align-items:center;justify-content:center;padding:16px';
     var lin=fora.map(function(i){return '<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd,#e0d8ce)">'
-      +'<span style="width:44px;color:var(--t3,#a89080);font-size:12px">'+esc((i.data||'').slice(8,10)+'/'+(i.data||'').slice(5,7))+'</span>'
-      +'<span style="flex:1;font-size:13px">'+esc(i.nome)+'<br><small style="color:var(--t3,#a89080)">'+esc(i.cat||'')+'</small></span>'
+      +'<span style="width:44px;color:var(--t3,#6F5D67);font-size:12px">'+esc((i.data||'').slice(8,10)+'/'+(i.data||'').slice(5,7))+'</span>'
+      +'<span style="flex:1;font-size:13px">'+esc(i.nome)+'<br><small style="color:var(--t3,#6F5D67)">'+esc(i.cat||'')+'</small></span>'
       +'<b style="font-size:13px">'+brl(i.valor)+'</b>'
       +'<button data-del26="'+esc(i.id)+'" style="border:1px solid var(--bd,#e0d8ce);background:none;border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer">Excluir</button></div>';}).join('');
     var tot=fora.reduce(function(a,i){return a+(+i.valor||0);},0);
-    ov.innerHTML='<div style="background:var(--card,#fff);color:var(--t1,#2b2024);max-width:560px;width:100%;max-height:85vh;overflow:auto;border-radius:14px;padding:20px;font-family:Inter,Arial,sans-serif">'
+    ov.innerHTML='<div style="background:var(--card,#fff);color:var(--t1,#2b2024);max-width:560px;width:100%;max-height:85vh;overflow:auto;border-radius:14px;padding:20px;font-family:IBM Plex Sans,Arial,sans-serif">'
       +'<div style="font-weight:700;font-size:16px;margin-bottom:6px">Fatura de outubro conferida com o banco</div>'
       +'<div style="font-size:13px;line-height:1.5;margin-bottom:10px">Os lançamentos do banco somam <b>R$ 16.736,84</b>. Os lançamentos abaixo foram digitados no site, mas não aparecem na fatura, e somam <b>'+brl(tot)+'</b>. Se forem repetições de compras que já estão na fatura, exclua; se forem de outro cartão ou de outra fatura, pode manter.</div>'
       +lin+'<div style="text-align:right;margin-top:14px"><button id="fora26-ok" style="background:var(--m,#4B1F39);color:#fff;border:0;border-radius:9px;padding:9px 16px;font-weight:600;cursor:pointer">Concluir</button></div></div>';

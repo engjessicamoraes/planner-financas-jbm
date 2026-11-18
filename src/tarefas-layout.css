@@ -19,7 +19,7 @@ body.v40t{--nav-h:98px!important}
   gap:2px!important;padding:0 16px 0 230px!important;margin:0!important;overflow:visible!important}
 .v42-subnav .nav-tab{position:relative;display:inline-flex!important;align-items:center!important;gap:7px!important;
   height:100%!important;padding:0 14px!important;white-space:nowrap!important;
-  color:#5A4652!important;font:500 13px Inter,system-ui,sans-serif!important;background:transparent!important;
+  color:#5A4652!important;font:500 13px IBM Plex Sans,system-ui,sans-serif!important;background:transparent!important;
   border:0!important;border-radius:0!important;opacity:1!important;cursor:pointer}
 .v42-subnav .nav-tab svg{width:15px!important;height:15px!important;stroke:currentColor!important;opacity:.85!important}
 .v42-subnav .nav-tab:hover{color:#5C2444!important;background:#FBF4F7!important}
@@ -31,7 +31,7 @@ body.v40t{--nav-h:98px!important}
 @media(max-width:760px){.v42-subnav .nav-tabs{padding:0 10px!important}.v42-subnav .nav-tab{padding:0 11px!important;font-size:12.5px!important}}
 
 /* ---------- títulos padronizados ---------- */
-body.v40t .v42-tit{font:700 24px Outfit,Inter,system-ui,sans-serif!important;color:#5C2444!important;letter-spacing:-.3px!important;line-height:1.2!important}
+body.v40t .v42-tit{font:700 24px IBM Plex Sans,Inter,system-ui,sans-serif!important;color:#5C2444!important;letter-spacing:-.3px!important;line-height:1.2!important}
 body.v40t .v42-sub{font-size:13px!important;color:#6B5862!important}
 
 /* ---------- margens: tudo começa na mesma linha ---------- */
