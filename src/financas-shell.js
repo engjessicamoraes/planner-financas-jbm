@@ -123,7 +123,7 @@
       if(contexto==='empresa'){var c=el('f-cat');if(c){c.value='Trabalho / Empresa';c.dispatchEvent(new Event('change'));}}
       try{atualizarTituloModal();}catch(e){}
       var dica=el('v40-dica-emp');
-      if(!dica){var w=el('f-cat-wrap');if(w){dica=document.createElement('div');dica.id='v40-dica-emp';dica.style.cssText='font-size:11px;color:#8A949F;margin-top:5px;line-height:1.4';dica.textContent='Gastos da B&M: use a categoria "Trabalho / Empresa" — eles aparecem na aba Empresa, em Despesas da empresa.';w.appendChild(dica);}}
+      if(!dica){var w=el('f-cat-wrap');if(w){dica=document.createElement('div');dica.id='v40-dica-emp';dica.style.cssText='font-size:12.5px;color:#6F5D67;margin-top:5px;line-height:1.4';dica.textContent='Gastos da B&M: use a categoria "Trabalho / Empresa" — eles aparecem na aba Empresa, em Despesas da empresa.';w.appendChild(dica);}}
     }catch(e){console.error(e);}
   }
 

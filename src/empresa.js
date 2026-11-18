@@ -221,7 +221,7 @@
     h+=tabela('Despesas da empresa',desp.map(function(i){return [E(i.nome),i.tipo==='saida'?'Conta':'Cartão',ROT_REEMB[statusReemb(i)],RK(i.valor)];}),['Descrição','Meio','Reembolso','Valor'],'Nenhuma despesa da empresa neste mês.',totDesp);
     h+=tabela('Parcelas de dívidas da empresa',divs.map(function(d){return [E(d.nome),'até '+E(d.fim),RK(d.parcela)];}),['Contrato','Término','Parcela'],'Nenhuma parcela da empresa neste mês.',totDiv);
     h+='<h3>Pendências</h3><table class="bm-tabela"><tbody><tr><td>A receber de clientes ('+pend.length+' parcela(s))</td><td>'+RK(totPend)+'</td></tr><tr><td>Despesas do mês ainda não reembolsadas</td><td>'+RK(reemb)+'</td></tr></tbody></table>';
-    h+='<p style="font-size:11px;color:#8A949F;margin-top:18px">Repasses consideram as entradas classificadas como salário, exceto as do SENGE. Em janeiro e fevereiro as entradas foram lançadas de forma agregada e podem incluir outras fontes.</p></div>';
+    h+='<p style="font-size:12.5px;color:#6F5D67;margin-top:18px">Repasses consideram as entradas classificadas como salário, exceto as do SENGE. Em janeiro e fevereiro as entradas foram lançadas de forma agregada e podem incluir outras fontes.</p></div>';
     c.innerHTML=h;
   }
 
